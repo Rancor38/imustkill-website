@@ -1,38 +1,191 @@
-.App {
+@import url('https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Sedan+SC&display=swap');
+
+body {
+  font-family: "Sedan SC", serif;
+  font-weight: 400;
+  font-style: normal;
+  background-color: #000000;
+  margin: 0;
+  padding: 0;
+  margin-bottom: 100px;
+}
+
+.container {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #000000;
+  border-radius: 15px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.section {
+  margin-bottom: 40px; /* Add margin at the bottom to separate sections */
+  background-color: #181818;
+  border-radius: 15px;
+  padding: 6px;
+  margin-bottom: 5px;
+  box-shadow: 0 0px 20px rgba(0, 0, 0, 0.2);;
+}
+
+.section ul {
+  list-style-type: disc; /* Use bullets for unordered lists */
+  margin-left: 20px; /* Indent the list */
+}
+
+.section ol {
+  color: white;
+  margin-left: 20px; /* Indent the list */
+}
+
+.section ul li {
+  color: #c5c5c5;
+  line-height: 1.5;
+}
+
+h1 {
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+h1, h2, h3 {
+  color: #e6e6e6;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+p {
+  color: #e4e4e4;
+  line-height: 1.6;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  font-family: "Sedan SC", serif;
+  font-weight: 400;
+  font-style: normal;
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #ff6600;
+  color: #fff;
+  border: double;
+  border-radius: 5px;
+  font-size: 16px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button a {
+  height: 100px;
+  width: 150px;
   color: white;
+  text-decoration: none;
 }
 
-.App-link {
-  color: #61dafb;
+button a:hover{
+  color: white;
+  text-decoration: none;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+a {
+  font-family: "Sedan SC", serif;
+  font-weight: 400;
+  font-style: normal;
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #ff6600;
+  color: #fff;
+  border: double;
+  border-radius: 5px;
+  font-size: 16px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  height: 60px;
+  text-align: center;
+  display: grid;
+  place-items: center;
+  width: 100px;
+  color: white;
+  text-decoration: none;
+}
+
+a:hover {
+  transform: scale(1.05);
+  background-color: #ffa163b7;
+  text-decoration: none;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 1.0);
+}
+
+
+
+button:hover {
+  transform: scale(1.05);
+  background-color: #ffa163b7;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 1.0);
+}
+
+.home-button-container {
+  position: fixed;
+  bottom: -50px;
+  width: 100%; /* Ensures it spans the full width of the viewport */
+  z-index: 999; /* Optional: Adjust z-index if needed */
+}
+
+.character-sheet-img {
+  max-width: 70vw;
+  height: auto;
+  display: block; /* Ensures the image behaves like a block element */
+  margin: 0 auto; /* Centers the image horizontally */
+}
+
+.flashy-menu {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.flashy-menu-item {
+  flex: 0 0 calc(33.33% - 20px);
+  margin: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+}
+
+.flashy-menu-item button{
+  min-width: 150px;
+  max-width: 150px;
+  height: 100px;
+}
+
+.download-menu-spacinator {
+  display: flex;
+  justify-content: space-around;
+}
+
+.monster-listinator{
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.monster-listinator button{
+  margin-top: 10px;
+}
+
+table {
+  color: #e6e6e6;
+  border: double;
 }

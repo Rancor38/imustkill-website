@@ -1,0 +1,26 @@
+[
+    {
+      "Name": "Insectoid",
+      "Description": "A giant praying mantis monster that disguises itself in the skin of a villager for years, even decades, as it lies in weight for the kill. When it will spring forth and devour all members of an immediate family, reproduce, and then return to hiding. The disguised villager has no awareness the monster is themselves.",
+      "Actions": "Attack 6",
+      "Damage": "1",
+      "Special Abilities": "Null",
+      "Body": "6",
+      "Agility": "8",
+      "Focus": "5",
+      "Fate": "2",
+      "Insight": "0"
+    },
+    {
+      "Name": "Ravenwolf",
+      "Description": "A wolf with a raven's head that eats people and mimics the sounds of their loved ones to lure people outside.",
+      "Actions": "Attack 5",
+      "Damage": "1",
+      "Special Abilities": "Null",
+      "Agility": "5",
+      "Focus": "3",
+      "Fate": "2",
+      "Insight": "0"
+    }
+  ]
+  

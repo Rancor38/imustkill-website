@@ -1,0 +1,165 @@
+{
+    "equipment": [
+      {
+        "name": "50 Feet of Rope",
+        "description": "Essential for climbing, securing items, and creating makeshift tools."
+      },
+      {
+        "name": "Torch",
+        "description": "A portable light source, often used for exploration or signaling."
+      },
+      {
+        "name": "Flint and Steel",
+        "description": "Enables the creation of fire for warmth, light, or survival purposes."
+      },
+      {
+        "name": "Grappling Hook",
+        "description": "Used to scale walls or navigate challenging terrain."
+      },
+      {
+        "name": "Piton",
+        "description": "Metal spike driven into rock for secure anchor points during climbing."
+      },
+      {
+        "name": "Hammer",
+        "description": "A versatile tool for construction, breaking objects, or securing equipment."
+      },
+      {
+        "name": "Lantern",
+        "description": "Provides steady light for extended periods, useful in dark environments."
+      },
+      {
+        "name": "Whale Oil",
+        "description": "Fuel for lanterns, roughly one hour's worth, also handy for creating controlled fires. This oil is pungent."
+      },
+      {
+        "name": "Candles",
+        "description": "Compact light sources for short-term illumination."
+      },
+      {
+        "name": "Chalk",
+        "description": "Marking surfaces or leaving signals in various environments."
+      },
+      {
+        "name": "Small Bell",
+        "description": "Acts as an alarm or a signaling device."
+      },
+      {
+        "name": "String",
+        "description": "Multipurpose for crafting, securing items, or creating simple traps."
+      },
+      {
+        "name": "Soap",
+        "description": "Minimizes personal odor to avoid detection in stealthy situations."
+      },
+      {
+        "name": "Spyglass",
+        "description": "Enhances vision for scouting and observing distant objects."
+      },
+      {
+        "name": "Whistle",
+        "description": "Used for communication, signaling, or attracting attention."
+      },
+      {
+        "name": "Bear Trap",
+        "description": "A strong, spring-loaded trap designed to catch and immobilize large animals."
+      },
+      {
+        "name": "Snare Trap",
+        "description": "A simple yet effective trap for catching small to medium-sized creatures."
+      },
+      {
+        "name": "Caltrop",
+        "description": "Sharp object scattered on the ground to impede or injure pursuers."
+      },
+      {
+        "name": "Mirror",
+        "description": "Can be used for signaling, checking blind spots, or redirecting light."
+      },
+      {
+        "name": "Block and Tackle",
+        "description": "A mechanical advantage system for lifting or moving heavy objects."
+      },
+      {
+        "name": "Crowbar",
+        "description": "A sturdy tool for prying open doors, crates, or other sealed objects."
+      },
+      {
+        "name": "Perfume",
+        "description": "Masks or alters personal scent, useful for deception or avoiding detection."
+      },
+      {
+        "name": "30 Feet of Light Chain",
+        "description": "Versatile for various tasks, including securing objects or creating makeshift restraints."
+      },
+      {
+        "name": "10 Feet of Heavy Chain",
+        "description": "Stronger and more durable, suitable for more robust tasks."
+      },
+      {
+        "name": "Iron Nails",
+        "description": "Common fasteners for construction or creating makeshift structures."
+      },
+      {
+        "name": "Iron Hook",
+        "description": "A versatile tool for grappling, securing items, or creating improvised devices."
+      },
+      {
+        "name": "Lockpicks",
+        "description": "Essential for opening locked doors or containers."
+      },
+      {
+        "name": "Manacles",
+        "description": "Restraints for capturing or detaining individuals."
+      },
+      {
+        "name": "Metal File",
+        "description": "Useful for shaping metal objects or improvising tools."
+      },
+      {
+        "name": "Noose",
+        "description": "A looped cord for trapping or capturing animals."
+      },
+      {
+        "name": "Scissors",
+        "description": "Handy for cutting various materials in a quiet and controlled manner."
+      },
+      {
+        "name": "Scroll",
+        "description": "A blank document for containing information, spells, or instructions."
+      },
+      {
+        "name": "Quill",
+        "description": "A feathered pen for writing or drawing."
+      },
+      {
+        "name": "Pen",
+        "description": "A more common writing instrument compared to a quill."
+      },
+      {
+        "name": "Ink",
+        "description": "Fluid for writing or drawing with pens or quills."
+      },
+      {
+        "name": "Small Bag of Sand",
+        "description": "Used for creating distractions, dousing fires, checking for traps, or drying ink."
+      },
+      {
+        "name": "Boar-sized Net",
+        "description": "Captures or restrains creatures, useful for hunting or trapping."
+      },
+      {
+        "name": "Acid Vial",
+        "description": "A corrosive substance that can damage objects or creatures. Test Body or Agility to throw this vial, dealing 1 damage. Creatures hit by acid must make a successful Focus test or waste their next turn wincing."
+      },
+      {
+        "name": "Lute",
+        "description": "A musical instrument for entertainment or distraction."
+      },
+      {
+        "name": "Bomb",
+        "description": "An explosive device for various tactical or destructive purposes. Test Body or Agility to throw this bomb, all creatures within 20’ of the center of it must test Agility. On failure they take 1 damage, on a success they take none."
+      }
+    ]
+  }
+  
