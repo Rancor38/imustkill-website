@@ -1,10 +1,9 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { Container, Typography, Paper, Table, TableBody, TableCell, TableContainer, TableRow, Button } from '@mui/material';
 import HomeButton from './HomeButton';
 
-
 const MonsterDetail = () => {
-
     const [monstersData, setMonstersData] = useState([]);
 
     useEffect(() => {
@@ -21,57 +20,118 @@ const MonsterDetail = () => {
         fetchMonstersData();
     }, []);
 
-  const { name } = useParams();
-  const monster = monstersData.find(monster => monster.Name === name);
+    const { name } = useParams();
+    const monster = monstersData.find(monster => monster.Name === name);
 
-  if (!monster) {
-    return <div>Monster not found</div>;
-  }
+    if (!monster) {
+        return (
+            <Container
+                sx={{
+                    bgcolor: '#121212',
+                    color: '#e0e0e0',
+                    padding: '20px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    minHeight: '100vh',
+                }}
+            >
+                <Typography variant="h2">Monster not found</Typography>
+                <HomeButton />
+            </Container>
+        );
+    }
 
-  return (
-    <div>
-      <h2>{monster.Name}</h2>
-      <p>{monster.Description}</p>
-      <table>
-        <tbody>
-          <tr>
-            <td>Actions:</td>
-            <td>{monster.Actions}</td>
-          </tr>
-          <tr>
-            <td>Damage:</td>
-            <td>{monster.Damage}</td>
-          </tr>
-          <tr>
-            <td>Special Abilities:</td>
-            <td>{monster['Special Abilities']}</td>
-          </tr>
-          <tr>
-            <td>Body:</td>
-            <td>{monster.Body}</td>
-          </tr>
-          <tr>
-            <td>Agility:</td>
-            <td>{monster.Agility}</td>
-          </tr>
-          <tr>
-            <td>Focus:</td>
-            <td>{monster.Focus}</td>
-          </tr>
-          <tr>
-            <td>Fate:</td>
-            <td>{monster.Fate}</td>
-          </tr>
-          <tr>
-            <td>Insight:</td>
-            <td>{monster.Insight}</td>
-          </tr>
-        </tbody>
-      </table>
-      <Link to="/monsters">Go back to Monsters</Link>
-      <HomeButton/>
-    </div>
-  );
+    return (
+        <Container
+            sx={{
+                bgcolor: '#121212',
+                color: '#e0e0e0',
+                padding: '20px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                minHeight: '100vh',
+            }}
+        >
+            <Typography variant="h2" gutterBottom>
+                {monster.Name}
+            </Typography>
+            <Paper
+                sx={{
+                    bgcolor: '#1f1f1f',
+                    padding: '20px',
+                    width: '100%',
+                    maxWidth: '800px',
+                    marginBottom: '20px',
+                }}
+            >
+                <Typography variant="body1" paragraph>
+                    {monster.Description}
+                </Typography>
+                <TableContainer
+                    component={Paper}
+                    sx={{
+                        bgcolor: '#1f1f1f',
+                        padding: '10px',
+                    }}
+                >
+                    <Table>
+                        <TableBody>
+                            <TableRow>
+                                <TableCell><strong>Actions:</strong></TableCell>
+                                <TableCell>{monster.Actions}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell><strong>Damage:</strong></TableCell>
+                                <TableCell>{monster.Damage}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell><strong>Special Abilities:</strong></TableCell>
+                                <TableCell>{monster['Special Abilities']}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell><strong>Body:</strong></TableCell>
+                                <TableCell>{monster.Body}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell><strong>Agility:</strong></TableCell>
+                                <TableCell>{monster.Agility}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell><strong>Focus:</strong></TableCell>
+                                <TableCell>{monster.Focus}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell><strong>Fate:</strong></TableCell>
+                                <TableCell>{monster.Fate}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell><strong>Insight:</strong></TableCell>
+                                <TableCell>{monster.Insight}</TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+                <Button
+                    component={Link}
+                    to="/monsters"
+                    variant="contained"
+                    sx={{
+                        mt: 2,
+                        bgcolor: '#333',
+                        color: '#e0e0e0',
+                        '&:hover': {
+                            bgcolor: '#555',
+                        },
+                    }}
+                >
+                    Go back to Monsters
+                </Button>
+            </Paper>
+            <HomeButton />
+        </Container>
+    );
 };
 
 export default MonsterDetail;

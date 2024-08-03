@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route, Outlet } from 'react-router-dom';
-import './App.css';
+import { Box } from '@mui/material';
 import HomePage from './pages/HomePage.js';
 import CharacterCreation from './pages/CharacterCreation.js';
 import Equipment from './pages/Equipment.js';
@@ -16,7 +16,7 @@ import MonsterDetail from './components/MonsterDetail.js';
 
 function App() {
   return (
-    <div>
+    <Box sx={{ backgroundColor: 'background.default', minHeight: '100vh', color: 'text.primary' }}>
       <Routes>
         <Route path="/" element={<Outlet />}>
           <Route path="character-creation" element={<CharacterCreation />} />
@@ -33,7 +33,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
         </Route>
       </Routes>
-    </div>
+    </Box>
   );
 }
 

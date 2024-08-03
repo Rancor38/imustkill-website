@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Container from '../components/Container';
-import Section from '../components/Section';
+import { Container, Typography, Paper, Button, List, ListItem } from '@mui/material';
 import HomeButton from '../components/HomeButton';
 
 const Equipment = () => {
@@ -20,7 +19,6 @@ const Equipment = () => {
 
         fetchEquipment();
     }, []);
-
 
     function pickRandomItems(array) {
         const newArray = [];
@@ -43,37 +41,86 @@ const Equipment = () => {
 
     return (
         <>
-        <Container>
-            <h1>Equipment</h1>
-            <h3>
-            Hunters start with 10 random items...
-            </h3>
-            <Section>
-                <button onClick={() => pickRandomItems(equipment)}>Give me 10 items</button>
-                <ol>
-                {randomEquipment.map((item, index) => (
-                    <li key={index}>
-                        <p><strong>{item.name}.</strong> {item.description}</p>
-                    </li>
-                ))}
-            </ol>
-            </Section>
-            <Section>
-            <h2>Full Item List:</h2>
-            <ul>
-                {equipment.map((item, index) => (
-                    <li key={index}>
-                        <p><strong>{item.name}.</strong> {item.description}</p>
-                    </li>
-                ))}
-            </ul>
-                </Section>
+            <Container
+                sx={{
+                    bgcolor: '#121212',
+                    color: '#e0e0e0',
+                    padding: '20px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    minHeight: '100vh',
+                }}
+            >
+                <Typography variant="h1" gutterBottom>
+                    Equipment
+                </Typography>
+                <Typography variant="h3" gutterBottom>
+                    Hunters start with 10 random items...
+                </Typography>
 
+                <Paper
+                    sx={{
+                        bgcolor: '#1f1f1f',
+                        padding: '20px',
+                        width: '100%',
+                        maxWidth: '800px',
+                        marginBottom: '20px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                    }}
+                >
+                    <Button
+                        variant="contained"
+                        sx={{
+                            bgcolor: '#333',
+                            color: '#e0e0e0',
+                            '&:hover': {
+                                bgcolor: '#444',
+                            },
+                        }}
+                        onClick={() => pickRandomItems(equipment)}
+                    >
+                        Give me 10 items
+                    </Button>
+                    <List>
+                        {randomEquipment.map((item, index) => (
+                            <ListItem key={index}>
+                                <Typography variant="body1">
+                                    <strong>{item.name}.</strong> {item.description}
+                                </Typography>
+                            </ListItem>
+                        ))}
+                    </List>
+                </Paper>
 
+                <Paper
+                    sx={{
+                        bgcolor: '#1f1f1f',
+                        padding: '20px',
+                        width: '100%',
+                        maxWidth: '800px',
+                        marginBottom: '20px',
+                    }}
+                >
+                    <Typography variant="h2" gutterBottom>
+                        Full Item List:
+                    </Typography>
+                    <List>
+                        {equipment.map((item, index) => (
+                            <ListItem key={index}>
+                                <Typography variant="body1">
+                                    <strong>{item.name}.</strong> {item.description}
+                                </Typography>
+                            </ListItem>
+                        ))}
+                    </List>
+                </Paper>
+            </Container>
 
-        </Container>
-        <HomeButton/>
-            </>
+            <HomeButton />
+        </>
     );
 };
 
