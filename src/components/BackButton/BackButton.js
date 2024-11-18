@@ -44,7 +44,7 @@ function BackButton() {
       style={{ opacity }}
       onClick={() => navigate('/')}
     >
-      ← Back
+      ← Return Home
     </button>
   );
 }
