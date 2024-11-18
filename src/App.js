@@ -13,8 +13,8 @@ import CharacterSheet from './pages/CharacterSheet.js';
 import RunningTheGame from './pages/RunningTheGame.js';
 import Monsters from './pages/Monsters.js';
 import MonsterDetail from './components/MonsterDetail.js';
-import Sparks from './components/Sparks';
-import BackButton from './components/BackButton';
+import Sparks from './components/Sparks/Sparks.jsx';
+import BackButton from './components/BackButton/BackButton.js';
 
 function App() {
   return (
