@@ -8,9 +8,9 @@ function BackButton() {
   const [opacity, setOpacity] = useState(0.5);
   const [isVisible, setIsVisible] = useState(false);
 
-  // Check if the screen width is greater than 600px and not on the homepage
+  // Check if the screen width is greater than 1100px and not on the homepage
   const checkVisibility = () => {
-    const isDesktop = window.innerWidth > 600;
+    const isDesktop = window.innerWidth > 1100;
     const isNotHomePage = location.pathname !== '/';
     setIsVisible(isDesktop && isNotHomePage);
   };
@@ -43,6 +43,7 @@ function BackButton() {
       className="back-button"
       style={{ opacity }}
       onClick={() => navigate('/')}
+      disabled={!isVisible} // Disable the button if not visible
     >
       ← Return Home
     </button>
