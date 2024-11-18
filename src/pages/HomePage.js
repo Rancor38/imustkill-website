@@ -9,7 +9,6 @@ const HomePage = () => {
         display: 'flex',
         flexDirection: 'column',
         minHeight: '100vh',
-        bgcolor: '#121212',
         color: '#e0e0e0',
         padding: 0,
       }}

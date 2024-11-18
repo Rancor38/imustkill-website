@@ -1,0 +1,49 @@
+/* sparks.css */
+
+/* Define default CSS variables for sparks */
+:root {
+  --start-x: 0vw;
+  --start-y: 0vh;
+  --end-x: -100vw;
+  --end-y: -100vh;
+  --rotation: 0deg;
+  --size: 1;
+  --duration: 5s; /* Reduced duration for twice the speed */
+  --delay: 0s;
+}
+
+/* Keyframes for the spark animation */
+@keyframes spark {
+  0% {
+    transform: translate(var(--start-x), var(--start-y)) rotate(var(--rotation)) scale(var(--size));
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--end-x), var(--end-y)) rotate(calc(var(--rotation) + 360deg)) scale(calc(var(--size) * 1.5));
+    opacity: 0;
+  }
+}
+
+/* Spark element styling */
+.spark {
+  position: fixed; /* Fixed positioning to stay relative to the viewport */
+  bottom: 0;       /* Start from the bottom */
+  right: 0;        /* Start from the right */
+  width: 5px;      /* Quarter of the original size (20px -> 5px) */
+  height: 5px;     /* Quarter of the original size (20px -> 5px) */
+  background-color: #FFD580; /* Light orange color */
+  opacity: 0.7;
+  animation: spark var(--duration) linear infinite;
+  animation-delay: var(--delay);
+  z-index: -1;     /* Ensure sparks are behind other content */
+  pointer-events: none; /* Allow mouse interactions to pass through */
+}
+
+/* Optional: Add a slight glow or shadow for better visibility */
+.spark::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 2px; /* Slight rounding for visual appeal */
+  box-shadow: 0 0 4px rgba(255, 165, 0, 0.6); /* Orange glow */
+}
