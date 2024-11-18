@@ -1,13 +1,11 @@
 import { Container, Typography, Paper } from '@mui/material';
 import HomeButton from '../components/HomeButton';
-import Section from '../components/Section';
 
 const Spellcasting = () => {
     return (
         <>
             <Container
                 sx={{
-                    bgcolor: '#121212',
                     color: '#e0e0e0',
                     padding: '20px',
                     paddingBottom: '100px', // Adjust this value as needed

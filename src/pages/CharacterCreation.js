@@ -7,7 +7,6 @@ const CharacterCreation = () => {
     <>
       <Container
         sx={{
-          bgcolor: '#121212',
           color: '#e0e0e0',
           padding: '20px',
           display: 'flex',
