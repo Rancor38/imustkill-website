@@ -14,11 +14,13 @@ import RunningTheGame from './pages/RunningTheGame.js';
 import Monsters from './pages/Monsters.js';
 import MonsterDetail from './components/MonsterDetail.js';
 import Sparks from './components/Sparks';
+import BackButton from './components/BackButton';
 
 function App() {
   return (
     <Box sx={{ minHeight: '100vh', color: 'text.primary', position: 'relative', overflow: 'hidden' }}>
       <Sparks />
+      <BackButton />
       <Routes>
         <Route path="/" element={<Outlet />}>
           <Route path="character-creation" element={<CharacterCreation />} />

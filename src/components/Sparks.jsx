@@ -1,7 +1,7 @@
 // Sparks.js
 
 import React from 'react';
-import './sparks.css';
+import './Sparks.css';
 
 const Sparks = () => {
   return (
