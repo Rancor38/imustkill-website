@@ -7,12 +7,15 @@
   background-color: transparent;
   border: none;
   cursor: pointer;
-  color: white;
-  transition: opacity 0.3s ease, color 0.3s ease;
+  color: lightgrey;
+  transition: opacity 0.3s ease, color 0.3s ease, transform 0.3s ease;
   z-index: 1000;
 }
 
 .back-button:hover {
-  opacity: 1;
+  transform: scale(1.1);
+  opacity: 1 !important;
   color: white;
+  text-shadow: 0 0 10px white;
+  background-color: 0 0 10px white;
 }
