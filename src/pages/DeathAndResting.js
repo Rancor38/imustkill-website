@@ -77,7 +77,7 @@ const DeathAndResting = () => {
                         padding: '20px',
                         width: '100%',
                         maxWidth: '800px',
-                        marginBottom: '20px',
+                        marginBottom: '90px',
                     }}
                 >
                     <Typography variant="h2" gutterBottom>

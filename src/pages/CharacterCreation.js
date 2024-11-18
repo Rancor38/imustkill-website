@@ -11,6 +11,7 @@ const CharacterCreation = () => {
           color: '#e0e0e0',
           padding: '20px',
           display: 'flex',
+          paddingBottom: '100px', // Adjust this value as needed
           flexDirection: 'column',
           alignItems: 'center',
           minHeight: '100vh',
@@ -94,7 +95,7 @@ const CharacterCreation = () => {
           }}
         >
           <Typography variant="h3" gutterBottom>
-            Attack Stat:
+            Attack Stat and Hit Points:
           </Typography>
           <List>
             <ListItem>Choose Body, Agility, or Focus as your attack stat.</ListItem>

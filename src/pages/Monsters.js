@@ -29,6 +29,7 @@ const Monsters = () => {
                     color: '#e0e0e0',
                     padding: '20px',
                     display: 'flex',
+                    paddingBottom: '100px', // Adjust this value as needed
                     flexDirection: 'column',
                     alignItems: 'center',
                     minHeight: '100vh',

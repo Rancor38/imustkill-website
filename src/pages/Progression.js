@@ -1,6 +1,5 @@
 import { Container, Typography, Paper, List, ListItem } from '@mui/material';
 import HomeButton from '../components/HomeButton';
-import Section from '../components/Section';
 
 const Progression = () => {
     return (
@@ -10,6 +9,7 @@ const Progression = () => {
                     bgcolor: '#121212',
                     color: '#e0e0e0',
                     padding: '20px',
+                    paddingBottom: '100px', // Adjust this value as needed
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
@@ -43,7 +43,7 @@ const Progression = () => {
                         Or you can:
                     </Typography>
                     <List>
-                        <ListItem>Gain Insight. Insight is a resource you can gather that provides benefits while also subjecting you to higher levels of challenge (see <strong>Insight</strong>).</ListItem>
+                        <ListItem>Gain Insight. Insight is a resource you can gather that provides benefits while also subjecting you to higher levels of challenge (see Insight).</ListItem>
                     </List>
                 </Paper>
 

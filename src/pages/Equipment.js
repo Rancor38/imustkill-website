@@ -47,13 +47,14 @@ const Equipment = () => {
                     color: '#e0e0e0',
                     padding: '20px',
                     display: 'flex',
+                    paddingBottom: '100px', // Adjust this value as needed
                     flexDirection: 'column',
                     alignItems: 'center',
                     minHeight: '100vh',
                 }}
             >
                 <Typography variant="h1" gutterBottom>
-                    Equipment
+                    Equipment Deck
                 </Typography>
                 <Typography variant="h3" gutterBottom>
                     Hunters start with 10 random items...

@@ -118,7 +118,7 @@ const HomePage = () => {
               },
             }}
           >
-            Equipment
+            Equipment Deck
           </Button>
           <Button
             component={Link}
@@ -246,30 +246,33 @@ const HomePage = () => {
             Spells
           </Button>
           <Button
-            component={Link}
-            to="/running-the-game"
-            variant="contained"
-            sx={{
-              width: '100%',
-              maxWidth: '300px',
-              height: '60px',
-              fontSize: '18px',
-              bgcolor: '#ffffff',
-              color: '#000000',
-              border: '2px solid #ffffff',
-              borderRadius: '8px',
-              boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
-              transition: 'all 0.3s ease',
-              marginBottom: '10px', // Padding between buttons
-              '&:hover': {
-                bgcolor: '#e0e0e0',
-                transform: 'scale(1.05) translateX(10px)',
-                boxShadow: '0 8px 16px rgba(0, 0, 0, 0.5)',
-              },
-            }}
-          >
-            Running the Game (GM's Only)
-          </Button>
+  component={Link}
+  to="/running-the-game"
+  variant="contained"
+  sx={{
+    width: '100%',
+    maxWidth: '300px',
+    height: '60px',
+    fontSize: '18px',
+    bgcolor: '#ffffff',
+    color: '#000000',
+    border: '2px solid #ffffff',
+    borderRadius: '8px',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
+    transition: 'all 0.3s ease',
+    marginBottom: '10px', // Padding between buttons
+    textAlign: 'center', // Center the text
+    '&:hover': {
+      bgcolor: '#e0e0e0',
+      transform: 'scale(1.05) translateX(10px)',
+      boxShadow: '0 8px 16px rgba(0, 0, 0, 0.5)',
+    },
+  }}
+>
+  Running the Game
+  <br />
+  (GM's Only)
+</Button>
           <Button
             component={Link}
             to="/monsters"
@@ -293,7 +296,7 @@ const HomePage = () => {
               },
             }}
           >
-            Monsters (GM's Only)
+            Monsters <br /> (GM's Only)
           </Button>
         </FlashyMenu>
       </Box>

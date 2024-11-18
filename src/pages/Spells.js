@@ -36,6 +36,7 @@ const Spells = () => {
                     bgcolor: '#121212',
                     color: '#e0e0e0',
                     padding: '20px',
+                    paddingBottom: '100px', // Adjust this value as needed
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
