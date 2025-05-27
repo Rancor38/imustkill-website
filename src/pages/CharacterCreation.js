@@ -50,16 +50,22 @@ const CharacterCreation = () => {
           }}
         >
           <Typography variant="h3" gutterBottom>
-            Rolling for Stats:
+            Standard Stat Arrays:
+          </Typography>
+          <Typography paragraph>
+            Choose from predefined array.
+          </Typography>
+          <Typography variant="h5" gutterBottom>
+            Arrays:
           </Typography>
           <List>
-            <ListItem>Roll 4d10s for character creation.</ListItem>
-            <ListItem>Assign the values rolled to Body, Agility, Focus, and Fate.</ListItem>
-            <ListItem>Maximum stat value is 10, minimum is a 2.</ListItem>
+            <ListItem>6, 6, 6, 6</ListItem>
+            <ListItem>4, 4, 8, 8</ListItem>
+            <ListItem>3, 4, 8, 9</ListItem>
           </List>
         </Paper>
 
-        <Paper
+         <Paper
           sx={{
             bgcolor: '#1f1f1f',
             padding: '20px',
@@ -69,18 +75,12 @@ const CharacterCreation = () => {
           }}
         >
           <Typography variant="h3" gutterBottom>
-            Arrays (Alternative Option):
-          </Typography>
-          <Typography paragraph>
-            Choose from predefined array or roll for stats.
-          </Typography>
-          <Typography paragraph>
-            Arrays:
+            Rolling Stats (Alternative Option):
           </Typography>
           <List>
-            <ListItem>6, 6, 6, 6</ListItem>
-            <ListItem>4, 4, 8, 8</ListItem>
-            <ListItem>3, 4, 8, 9</ListItem>
+            <ListItem>Roll 4d10s for character creation.</ListItem>
+            <ListItem>Assign the values rolled to Body, Agility, Focus, and Fate.</ListItem>
+            <ListItem>Maximum stat value is 10, minimum is a 2.</ListItem>
           </List>
         </Paper>
 
