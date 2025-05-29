@@ -1,21 +1,74 @@
 .back-button {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  color: lightgrey;
-  transition: opacity 0.3s ease, color 0.3s ease, transform 0.3s ease;
-  z-index: 1000;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: lightgrey; /* Default color for dark mode */
+    transition: opacity 0.3s ease, color 0.3s ease, transform 0.3s ease,
+        text-shadow 0.3s ease;
+    z-index: 1000;
+    font-weight: 500;
+}
+
+/* Mobile responsive positioning and sizing */
+@media (max-width: 768px) {
+    .back-button {
+        top: 15px;
+        left: 15px;
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .back-button {
+        top: 10px;
+        left: 10px;
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 320px) {
+    .back-button {
+        top: 8px;
+        left: 8px;
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+}
+
+/* Style for light theme */
+body.light-theme .back-button {
+    color: #555555; /* Darker gray for better visibility on light backgrounds */
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
 }
 
 .back-button:hover {
-  transform: scale(1.1);
-  opacity: 1 !important;
-  color: white;
-  text-shadow: 0 0 10px white;
-  background-color: 0 0 10px white;
+    transform: scale(1.1);
+    opacity: 1 !important;
+    color: white;
+    text-shadow: 0 0 10px white;
+}
+
+/* Hover style for light theme */
+body.light-theme .back-button:hover {
+    color: #121212; /* Near black for maximum contrast */
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    font-weight: 600; /* Make it slightly bolder for emphasis */
+}
+
+/* Increase visibility - add an accessibility outline when focused */
+.back-button:focus {
+    outline: 2px solid rgba(255, 255, 255, 0.5);
+    outline-offset: 2px;
+}
+
+body.light-theme .back-button:focus {
+    outline: 2px solid rgba(0, 0, 0, 0.3);
+    outline-offset: 2px;
 }

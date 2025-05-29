@@ -1,0 +1,49 @@
+/* Common styles for the Container component */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: var(--background-color);
+    color: var(--primary-text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Mobile responsive padding */
+@media (max-width: 768px) {
+    .container {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 320px) {
+    .container {
+        padding: 0.75rem;
+    }
+}
+
+/* Enhanced light theme styles for better contrast */
+.container.light-theme {
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.05); /* Subtle shadow for depth */
+}
+
+/* Ensure inputs have proper contrast in light mode */
+.container.light-theme input,
+.container.light-theme select,
+.container.light-theme textarea {
+    background-color: #ffffff;
+    color: #121212;
+    border: 1px solid #999;
+}
+
+/* Ensure buttons have proper contrast in light mode */
+.container.light-theme button:not([class*="MuiButton"]) {
+    background-color: #d0d0d0;
+    color: #121212;
+    border: 1px solid #999;
+}

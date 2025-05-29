@@ -1,0 +1,242 @@
+/* Mobile-first responsive utilities */
+
+/* Responsive tables for mobile devices */
+@media (max-width: 768px) {
+    .MuiTableContainer-root {
+        overflow-x: auto !important;
+        max-width: 100% !important;
+    }
+
+    .MuiTable-root {
+        min-width: auto !important;
+    }
+
+    .MuiTableCell-root {
+        padding: 8px 4px !important;
+        font-size: 0.875rem !important;
+        word-break: break-word !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .MuiTableCell-root {
+        padding: 6px 2px !important;
+        font-size: 0.8rem !important;
+    }
+}
+
+/* Responsive Typography adjustments */
+@media (max-width: 768px) {
+    .MuiTypography-h1 {
+        font-size: 2.5rem !important;
+    }
+
+    .MuiTypography-h2 {
+        font-size: 2rem !important;
+    }
+
+    .MuiTypography-h3 {
+        font-size: 1.5rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .MuiTypography-h1 {
+        font-size: 2rem !important;
+    }
+
+    .MuiTypography-h2 {
+        font-size: 1.75rem !important;
+    }
+
+    .MuiTypography-h3 {
+        font-size: 1.25rem !important;
+    }
+
+    .MuiTypography-body1 {
+        font-size: 0.9rem !important;
+    }
+}
+
+@media (max-width: 320px) {
+    .MuiTypography-h1 {
+        font-size: 1.75rem !important;
+    }
+
+    .MuiTypography-h2 {
+        font-size: 1.5rem !important;
+    }
+
+    .MuiTypography-h3 {
+        font-size: 1.1rem !important;
+    }
+
+    .MuiTypography-body1 {
+        font-size: 0.85rem !important;
+    }
+}
+
+/* Responsive Button adjustments */
+@media (max-width: 480px) {
+    .MuiButton-root {
+        font-size: 0.875rem !important;
+        padding: 8px 16px !important;
+    }
+}
+
+@media (max-width: 320px) {
+    .MuiButton-root {
+        font-size: 0.8rem !important;
+        padding: 6px 12px !important;
+    }
+}
+
+/* Responsive Paper/Card spacing */
+@media (max-width: 768px) {
+    .MuiPaper-root {
+        margin: 8px 0 !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .MuiPaper-root {
+        margin: 6px 0 !important;
+    }
+}
+
+/* Responsive List adjustments */
+@media (max-width: 480px) {
+    .MuiListItem-root {
+        padding: 4px 8px !important;
+    }
+
+    .MuiListItemText-root {
+        font-size: 0.9rem !important;
+    }
+}
+
+/* Responsive form elements */
+@media (max-width: 480px) {
+    .MuiTextField-root {
+        font-size: 0.875rem !important;
+    }
+
+    .MuiFormControl-root {
+        margin: 4px 0 !important;
+    }
+}
+
+/* Ensure content doesn't get cut off on very small screens */
+@media (max-width: 320px) {
+    * {
+        box-sizing: border-box !important;
+    }
+
+    .MuiContainer-root {
+        max-width: 100% !important;
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    /* Ensure buttons fit on very narrow screens */
+    .MuiButton-root {
+        min-width: auto !important;
+        word-break: break-word !important;
+        white-space: normal !important;
+        line-height: 1.2 !important;
+    }
+
+    /* Prevent horizontal overflow */
+    body,
+    html {
+        overflow-x: hidden !important;
+    }
+
+    /* Better handling of fixed positioned elements */
+    [style*="position: fixed"] {
+        max-width: calc(100vw - 16px) !important;
+    }
+}
+
+/* Additional responsive fixes for 300px width */
+@media (max-width: 300px) {
+    .MuiContainer-root {
+        padding-left: 4px !important;
+        padding-right: 4px !important;
+    }
+
+    .MuiPaper-root {
+        padding: 8px !important;
+        margin: 4px 0 !important;
+    }
+
+    .MuiButton-root {
+        padding: 4px 8px !important;
+        font-size: 0.75rem !important;
+        min-height: 32px !important;
+    }
+
+    .MuiTypography-h1 {
+        font-size: 1.5rem !important;
+        line-height: 1.1 !important;
+    }
+
+    .MuiTypography-h2 {
+        font-size: 1.25rem !important;
+        line-height: 1.1 !important;
+    }
+
+    .MuiTypography-h3 {
+        font-size: 1rem !important;
+        line-height: 1.2 !important;
+    }
+}
+
+/* Responsive image handling */
+@media (max-width: 768px) {
+    img {
+        max-width: 100% !important;
+        height: auto !important;
+    }
+}
+
+/* Better accordion handling on mobile */
+@media (max-width: 480px) {
+    .MuiAccordion-root {
+        margin: 4px 0 !important;
+    }
+
+    .MuiAccordionSummary-root {
+        padding: 8px 12px !important;
+    }
+
+    .MuiAccordionDetails-root {
+        padding: 8px 12px !important;
+    }
+}
+
+/* Material-UI Button overrides for light mode */
+body.light-theme .MuiButton-contained {
+    background-color: #d0d0d0 !important;
+    color: #333333 !important;
+    border: 2px solid #d0d0d0 !important;
+}
+
+body.light-theme .MuiButton-contained:hover {
+    background-color: #bbb !important;
+    color: #333333 !important;
+    border: 2px solid #bbb !important;
+}
+
+/* Dark mode button overrides */
+body:not(.light-theme) .MuiButton-contained {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border: 2px solid #ffffff !important;
+}
+
+body:not(.light-theme) .MuiButton-contained:hover {
+    background-color: #e0e0e0 !important;
+    color: #000000 !important;
+    border: 2px solid #e0e0e0 !important;
+}

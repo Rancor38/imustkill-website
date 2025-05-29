@@ -1,0 +1,68 @@
+/* Styles for the Section component */
+.section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    border-radius: 8px;
+    background-color: var(--secondary-bg-color);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--box-shadow);
+    transition: background-color 0.3s ease, border-color 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+/* Additional theme-specific styles */
+.section h1,
+.section h2,
+.section h3 {
+    color: var(--primary-text-color);
+}
+
+.section p,
+.section li {
+    color: var(--secondary-text-color);
+}
+
+/* Add specific styling for light mode to ensure better readability */
+body.light-theme .section p,
+body.light-theme .section li {
+    color: var(--secondary-text-color); /* Uses our improved variable */
+}
+
+.section a {
+    color: var(--link-color);
+    text-decoration: none;
+    font-weight: 500; /* Slightly bolder for better visibility */
+}
+
+.section a:hover {
+    color: var(--link-hover-color);
+    text-decoration: underline;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+    .section {
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .section {
+        margin-bottom: 1rem;
+        padding: 0.75rem;
+    }
+
+    .section h1,
+    .section h2,
+    .section h3 {
+        word-wrap: break-word;
+        hyphens: auto;
+    }
+}
+
+@media (max-width: 320px) {
+    .section {
+        padding: 0.5rem;
+    }
+}

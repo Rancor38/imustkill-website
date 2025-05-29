@@ -1,9 +1,12 @@
 // Sparks.js
 
-import React from 'react';
+import React, { useContext } from 'react';
+import { ThemeContext } from '../../context/ThemeContext';
 import './Sparks.css';
 
 const Sparks = () => {
+  const { isDarkTheme } = useContext(ThemeContext);
+
   return (
     <>
       {Array.from({ length: 60 }).map((_, index) => {
@@ -30,7 +33,7 @@ const Sparks = () => {
         return (
           <div
             key={index}
-            className="spark"
+            className={`spark ${!isDarkTheme ? 'light-spark' : ''}`}
             style={{
               '--start-x': `${startX}`,
               '--start-y': `${startY}`,

@@ -13,22 +13,39 @@ const CombatMechanics = () => {
         <>
             <Container
                 sx={{
-                    color: "#e0e0e0",
+                    color: (theme) =>
+                        theme.palette.mode === "dark" ? "#e0e0e0" : "#121212",
                     padding: "20px",
                     display: "flex",
-                    paddingBottom: "100px", // Adjust this value as needed
+                    paddingBottom: "100px",
                     flexDirection: "column",
                     alignItems: "center",
                     minHeight: "100vh",
                 }}
             >
-                <Typography variant='h1' gutterBottom>
+                <Typography
+                    variant='h1'
+                    gutterBottom
+                    sx={{
+                        color: (theme) =>
+                            theme.palette.mode === "dark"
+                                ? "#e0e0e0"
+                                : "#121212",
+                    }}
+                >
                     Combat Mechanics
                 </Typography>
 
                 <Paper
                     sx={{
-                        bgcolor: "#1f1f1f",
+                        bgcolor: (theme) =>
+                            theme.palette.mode === "dark"
+                                ? "#1f1f1f"
+                                : "#f5f5f5",
+                        border: (theme) =>
+                            theme.palette.mode === "dark"
+                                ? "none"
+                                : "1px solid #ccc",
                         padding: "20px",
                         width: "100%",
                         maxWidth: "800px",
@@ -300,6 +317,22 @@ const CombatMechanics = () => {
                     Statuses
                 </Typography>
 
+                <Paper
+                    sx={{
+                        bgcolor: "#1f1f1f",
+                        padding: "20px",
+                        width: "100%",
+                        maxWidth: "800px",
+                        marginBottom: "20px",
+                    }}
+                >
+                    <Typography variant='h3' gutterBottom>
+                        Frightened
+                    </Typography>
+                    <Typography paragraph>
+                        A creature that is Frightened cannot attack on their turn or willingly move towards the source of their fear if there's another route of escape.
+                    </Typography>
+                </Paper>
                 <Paper
                     sx={{
                         bgcolor: "#1f1f1f",

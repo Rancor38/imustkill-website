@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useContext } from "react"
+import { ThemeContext } from "../context/ThemeContext"
+import "./Container.css"
 
 function Container({ children }) {
-  return (
-    <div className="container">
-      {children}
-    </div>
-  );
+    const { isDarkTheme } = useContext(ThemeContext)
+    return (
+        <div className={`container ${!isDarkTheme ? "light-theme" : ""}`}>
+            {children}
+        </div>
+    )
 }
 
-export default Container;
+export default Container

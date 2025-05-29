@@ -1,0 +1,285 @@
+/* 
+ * Light Mode Contrast Enhancements
+ * This file contains specific overrides to improve contrast and readability in light mode
+ */
+
+/* MUI Component Overrides */
+body.light-theme .MuiPaper-root {
+    color: #121212 !important;
+    background-color: #f0f0f0 !important;
+}
+
+body.light-theme .MuiTypography-root {
+    color: #121212 !important;
+}
+
+body.light-theme .MuiTypography-secondary {
+    color: #2c2c2c !important;
+}
+
+body.light-theme .MuiTableCell-root {
+    color: #121212 !important;
+}
+
+/* Improve contrast for MUI buttons */
+body.light-theme .MuiButton-root {
+    color: #121212 !important;
+}
+
+body.light-theme .MuiButton-contained {
+    color: var(--button-text) !important;
+    background-color: var(--button-bg) !important;
+}
+
+body.light-theme .MuiButton-outlined {
+    color: #0056b3 !important;
+    border-color: #0056b3 !important;
+}
+
+/* Card elements in light mode need better contrast */
+body.light-theme [class*="MuiCard"],
+body.light-theme [class*="MuiPaper"] {
+    background-color: #f0f0f0 !important;
+    color: #121212 !important;
+    border: 1px solid #bbbbbb !important;
+}
+
+/* Override any hardcoded light gray text in light mode */
+body.light-theme [style*="color: #e0e0e0"],
+body.light-theme [style*="color:#e0e0e0"] {
+    color: #333333 !important;
+}
+
+/* Fix explicit light color text that becomes unreadable in light mode */
+body.light-theme [style*="color: lightgrey"],
+body.light-theme [style*="color:lightgrey"],
+body.light-theme [style*="color: #e0e0e0"],
+body.light-theme [style*="color:#e0e0e0"],
+body.light-theme [style*="color: white"],
+body.light-theme [style*="color:white"],
+body.light-theme [style*="color: '#e0e0e0'"],
+body.light-theme [style*="color:'#e0e0e0'"],
+body.light-theme [style*="color: '#ffffff'"],
+body.light-theme [style*="color:'#ffffff'"] {
+    color: #121212 !important;
+}
+
+/* Make sure headers are always readable */
+body.light-theme h1,
+body.light-theme h2,
+body.light-theme h3,
+body.light-theme h4,
+body.light-theme h5,
+body.light-theme h6,
+body.light-theme .MuiTypography-h1,
+body.light-theme .MuiTypography-h2,
+body.light-theme .MuiTypography-h3,
+body.light-theme .MuiTypography-h4,
+body.light-theme .MuiTypography-h5,
+body.light-theme .MuiTypography-h6 {
+    color: #121212 !important;
+}
+
+/* Fix dark backgrounds in light mode */
+body.light-theme [style*="bgcolor: '#1f1f1f'"],
+body.light-theme [style*="bgcolor:'#1f1f1f'"],
+body.light-theme [style*="backgroundColor: '#1f1f1f'"],
+body.light-theme [style*="backgroundColor:'#1f1f1f'"],
+body.light-theme [style*="background-color: '#1f1f1f'"],
+body.light-theme [style*="background-color:'#1f1f1f'"],
+body.light-theme [style*="bgcolor: #1f1f1f"],
+body.light-theme [style*="bgcolor:#1f1f1f"],
+body.light-theme [style*="backgroundColor: #1f1f1f"],
+body.light-theme [style*="backgroundColor:#1f1f1f"],
+body.light-theme [style*="background-color: #1f1f1f"],
+body.light-theme [style*="background-color:#1f1f1f"] {
+    background-color: #f5f5f5 !important;
+    border: 1px solid #ccc !important;
+}
+
+/* Fix hover states for items in light mode */
+body.light-theme [style*="e.target.style.backgroundColor = '#333'"] {
+    background-color: #ccc !important;
+}
+
+body.light-theme [style*="e.target.style.color = '#fff'"] {
+    color: #121212 !important;
+}
+
+/* For all hardcoded elements on hover in light mode */
+body.light-theme .hover-item:hover {
+    background-color: #d0d0d0 !important;
+    color: #121212 !important;
+}
+
+/* Improve table contrast */
+body.light-theme table {
+    border-collapse: collapse;
+    border: 1px solid #bbbbbb;
+}
+
+body.light-theme th,
+body.light-theme td {
+    border: 1px solid #bbbbbb;
+}
+
+body.light-theme th {
+    background-color: #d0d0d0;
+}
+
+/* Fix form fields */
+body.light-theme input,
+body.light-theme select,
+body.light-theme textarea {
+    background-color: #ffffff;
+    color: #121212;
+    border: 1px solid #999999;
+}
+
+/* Ensure placeholder text is visible */
+body.light-theme input::placeholder,
+body.light-theme textarea::placeholder {
+    color: #666666;
+}
+
+/* Page-specific improvements */
+
+/* HomePage improvements */
+body.light-theme [style*="color: '#e0e0e0'"],
+body.light-theme [style*="color: #e0e0e0"] {
+    color: #121212 !important;
+}
+
+/* Improve Monster page */
+body.light-theme .MuiCard-root {
+    background-color: #f0f0f0 !important;
+    border: 1px solid #bbbbbb !important;
+}
+
+/* Enhance CombatMechanics page with lots of sections */
+body.light-theme [style*="bgcolor: '#1f1f1f'"] {
+    background-color: #eaeaea !important;
+}
+
+body.light-theme [style*="bgcolor: '#1f1f1f'"] .MuiTypography-root {
+    color: #121212 !important;
+}
+
+/* Enhance CharacterSheet */
+body.light-theme .MuiGrid-item .MuiPaper-root {
+    background-color: #f0f0f0 !important;
+    border: 1px solid #bbbbbb !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Fix Spells page special elements */
+body.light-theme [style*="backgroundColor: '#1f1f1f'"] {
+    background-color: #eaeaea !important;
+}
+
+body.light-theme [style*="borderBottom: '1px solid #333'"] {
+    border-bottom: 1px solid #999 !important;
+}
+
+/* Fix tables for better contrast */
+body.light-theme table,
+body.light-theme .MuiTable-root {
+    background-color: #f5f5f5 !important;
+    border: 1px solid #bbbbbb !important;
+}
+
+body.light-theme th,
+body.light-theme td,
+body.light-theme .MuiTableCell-root {
+    border: 1px solid #bbbbbb !important;
+    color: #121212 !important;
+}
+
+body.light-theme th,
+body.light-theme .MuiTableCell-head {
+    background-color: #d0d0d0 !important;
+    font-weight: 600 !important;
+}
+
+/* Improve link contrast */
+body.light-theme a:not(.MuiButtonBase-root) {
+    color: #0056b3 !important;
+    text-decoration-color: #0056b3 !important;
+}
+
+body.light-theme a:not(.MuiButtonBase-root):hover {
+    color: #003b7a !important;
+    text-decoration: underline !important;
+    text-decoration-color: #003b7a !important;
+}
+
+/* Fix back button in light mode */
+body.light-theme .back-button {
+    color: #333333 !important;
+    font-weight: 600 !important;
+}
+
+/* Fix hover states for back button */
+body.light-theme .back-button:hover {
+    color: #000000 !important;
+    text-shadow: none !important;
+}
+
+/* Comprehensive fixes for pages with hardcoded dark styles */
+
+/* Fix CombatMechanics, CharacterCreation, and similar pages */
+body.light-theme .MuiContainer-root[style*="color: #e0e0e0"],
+body.light-theme .MuiContainer-root[style*="color:#e0e0e0"] {
+    color: #121212 !important;
+}
+
+/* Fix all Paper components with dark backgrounds */
+body.light-theme .MuiPaper-root[style*="bgcolor: #1f1f1f"],
+body.light-theme .MuiPaper-root[style*="bgcolor:#1f1f1f"],
+body.light-theme .MuiPaper-root[style*="backgroundColor: #1f1f1f"],
+body.light-theme .MuiPaper-root[style*="backgroundColor:#1f1f1f"] {
+    background-color: #f5f5f5 !important;
+    border: 1px solid #ccc !important;
+    color: #121212 !important;
+}
+
+/* Fix Typography components that might inherit wrong colors */
+body.light-theme .MuiPaper-root .MuiTypography-root,
+body.light-theme [style*="bgcolor: #1f1f1f"] .MuiTypography-root,
+body.light-theme [style*="backgroundColor: #1f1f1f"] .MuiTypography-root {
+    color: #121212 !important;
+}
+
+/* Fix List items in light mode */
+body.light-theme .MuiListItem-root {
+    color: #121212 !important;
+}
+
+/* Fix any remaining dark containers */
+body.light-theme [style*="color: #e0e0e0"] {
+    color: #121212 !important;
+}
+
+/* Ensure text in light themed containers is readable */
+body.light-theme .MuiContainer-root {
+    color: #121212 !important;
+}
+
+/* Monster page link fixes */
+.monster-link {
+    color: #e0e0e0 !important; /* Default dark mode */
+}
+
+body.light-theme .monster-link {
+    color: #121212 !important;
+}
+
+.monster-link:hover {
+    background-color: #333 !important;
+    color: #fff !important;
+}
+
+body.light-theme .monster-link:hover {
+    background-color: #e0e0e0 !important;
+    color: #000 !important;
+}
