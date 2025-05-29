@@ -363,11 +363,13 @@ const Spells = () => {
                                                 ml: 1,
                                                 fontSize: "0.75rem",
                                                 bgcolor: (theme) =>
-                                                    theme.palette.mode === "dark"
+                                                    theme.palette.mode ===
+                                                    "dark"
                                                         ? "#333"
                                                         : "#666",
                                                 color: (theme) =>
-                                                    theme.palette.mode === "dark"
+                                                    theme.palette.mode ===
+                                                    "dark"
                                                         ? "#e0e0e0"
                                                         : "#ffffff",
                                                 py: 0.5,
@@ -501,11 +503,13 @@ const Spells = () => {
                                                 ml: 1,
                                                 fontSize: "0.75rem",
                                                 bgcolor: (theme) =>
-                                                    theme.palette.mode === "dark"
+                                                    theme.palette.mode ===
+                                                    "dark"
                                                         ? "#333"
                                                         : "#666",
                                                 color: (theme) =>
-                                                    theme.palette.mode === "dark"
+                                                    theme.palette.mode ===
+                                                    "dark"
                                                         ? "#e0e0e0"
                                                         : "#ffffff",
                                                 py: 0.5,

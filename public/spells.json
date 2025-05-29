@@ -202,7 +202,7 @@
             "name": "The Drifter's Shadow",
             "rarity": "rare",
             "deck": "Wild West",
-            "description": "For the next minute in combat, you leave behind ghostly afterimages, making you appear to flicker between locations. Attacks against you are made at disadvantage. Discard this card."
+            "description": "For the next minute in combat, you leave behind ghostly afterimages, making you appear to flicker between locations. Attacks against you are made rolling an additional d10 and choosing the higher result. Discard this card."
         },
         {
             "name": "Hangman's Curse",

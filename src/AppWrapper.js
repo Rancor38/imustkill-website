@@ -58,7 +58,9 @@ const ThemedApp = () => {
                             ? "2px solid #ffffff"
                             : "2px solid var(--button-bg)",
                         "&:hover": {
-                            backgroundColor: isDarkTheme ? "#e0e0e0" : "#e9e9e9",
+                            backgroundColor: isDarkTheme
+                                ? "#e0e0e0"
+                                : "#e9e9e9",
                             color: isDarkTheme ? "#000000" : "#333333",
                         },
                     },
