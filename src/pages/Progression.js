@@ -141,35 +141,32 @@ const Progression = () => {
                         administered fairly within the wisher's intentions,
                         avoiding monkey’s paws and verbal gotchas:
                     </Typography>
+                    <Typography variant='h4' gutterBottom>
+                        Limmitations
+                    </Typography>
                     <List>
-                        <ListItem>
-                            <strong>Time Manipulation:</strong> Wishes cannot
-                            alter the flow of time, as this could have
-                            catastrophic consequences on the fabric of reality.
+                        <ListItem sx={{ padding: "4px 0" }}>
+                            Wishes cannot alter the flow of time.
                         </ListItem>
-                        <ListItem>
-                            <strong>Limited Scope:</strong> Wishes cannot alter
-                            certain fundamental aspects of reality, such as the
-                            laws of physics or the nature of existence.
+                        <ListItem sx={{ padding: "4px 0" }}>
+                            Wishes cannot alter certain fundamental aspects of
+                            reality, such as the laws of physics or the nature
+                            of existence.
                         </ListItem>
-                        <ListItem>
-                            <strong>No Interference with Free Will:</strong>{" "}
+                        <ListItem sx={{ padding: "4px 0" }}>
                             Wishes cannot be used to directly control or
-                            manipulate the actions of others, ensuring that
-                            individuals retain their autonomy.
+                            manipulate the actions of others.
                         </ListItem>
-                        <ListItem>
-                            <strong>No Unlimited Power:</strong> Wishes cannot
-                            grant the wisher unlimited power or omnipotence.
+                        <ListItem sx={{ padding: "4px 0" }}>
+                            Wishes cannot grant the wisher unlimited power or
+                            omnipotence.
                         </ListItem>
-                        <ListItem>
-                            <strong>Limited Knowledge:</strong> Characters may
-                            not fully understand the consequences of their
-                            wishes or the true nature of the wish-granting
-                            entity, leading to unforeseen complications.
+                        <ListItem sx={{ padding: "4px 0" }}>
+                            Characters may not fully understand the consequences
+                            of their wishes or the true nature of the
+                            wish-granting entity.
                         </ListItem>
-                        <ListItem>
-                            <strong>Consequences for Selfish Wishes:</strong>{" "}
+                        <ListItem sx={{ padding: "4px 0" }}>
                             Selfish or malicious wishes may come with unintended
                             consequences or backlash.
                         </ListItem>
