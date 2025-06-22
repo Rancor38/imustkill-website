@@ -13,6 +13,7 @@ import CharacterSheet from "./pages/CharacterSheet.js"
 import RunningTheGame from "./pages/RunningTheGame.js"
 import Monsters from "./pages/Monsters.js"
 import MonsterDetail from "./components/MonsterDetail.js"
+import DarkwatchGame from "./pages/DarkwatchGame.js"
 import Sparks from "./components/Sparks/Sparks.jsx"
 import BackButton from "./components/BackButton/BackButton.js"
 import ThemeToggle from "./components/ThemeToggle/ThemeToggle.js"
@@ -58,6 +59,7 @@ function App() {
                     />
                     <Route path='monsters' element={<Monsters />} />
                     <Route path='monsters/:name' element={<MonsterDetail />} />
+                    <Route path='darkwatch' element={<DarkwatchGame />} />
                     <Route path='/' element={<HomePage />} />
                 </Route>
             </Routes>
