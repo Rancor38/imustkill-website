@@ -66,7 +66,7 @@ const CombatMechanics = () => {
                             next potential attack).
                         </ListItem>
                         <ListItem>
-                            GM rolls for the monster's action(s).
+                            GM rolls for the monsters' action(s).
                         </ListItem>
                     </List>
                 </Paper>
@@ -132,6 +132,9 @@ const CombatMechanics = () => {
                             If the roll is lower, immune to dodgeable attacks
                             until next turn.
                         </ListItem>
+                        <ListItem>
+                            If you roll a 10 and the monster successfully attacks you on this turn, the GM checks the Crit fail collumn on the Monster Stats.
+                        </ListItem>
                     </List>
                 </Paper>
 
@@ -153,6 +156,9 @@ const CombatMechanics = () => {
                             If the roll is lower and you have a weapon, armor,
                             or shield, you are immune to braceable attacks until
                             next turn.
+                        </ListItem>
+                        <ListItem>
+                            If you roll a 10 and the monster successfully attacks you on this turn, the GM checks the Crit fail collumn on the Monster Stats.
                         </ListItem>
                     </List>
                 </Paper>
