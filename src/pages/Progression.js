@@ -93,6 +93,9 @@ const Progression = () => {
                         Insight
                     </Typography>
                     <Typography variant='body1' paragraph>
+                        All hunters start with 1 Insight, but if you are starting out as a character not established as a hunter, you may start with 0 Insight.
+                    </Typography>
+                    <Typography variant='body1' paragraph>
                         A character with Insight gains the ability to reroll any
                         tests they make during a given day a number of times
                         equal to their quantity of Insight. A character may also choose another player they can see to use this resource. These rerolls are
