@@ -133,7 +133,7 @@ const CombatMechanics = () => {
                             until next turn.
                         </ListItem>
                         <ListItem>
-                            If you roll a 10 and the monster successfully attacks you on this turn, the GM checks the Crit fail collumn on the Monster Stats.
+                            If you roll a 10 and the monster successfully attacks you on this turn, the GM checks the Crit Fail collumn on the Monster Stats.
                         </ListItem>
                     </List>
                 </Paper>
@@ -158,7 +158,7 @@ const CombatMechanics = () => {
                             next turn.
                         </ListItem>
                         <ListItem>
-                            If you roll a 10 and the monster successfully attacks you on this turn, the GM checks the Crit fail collumn on the Monster Stats.
+                            If you roll a 10 and the monster successfully attacks you on this turn, the GM checks the Crit Fail collumn on the Monster Stats.
                         </ListItem>
                     </List>
                 </Paper>
