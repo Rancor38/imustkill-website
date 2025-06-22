@@ -95,7 +95,7 @@ const Progression = () => {
                     <Typography variant='body1' paragraph>
                         A character with Insight gains the ability to reroll any
                         tests they make during a given day a number of times
-                        equal to their quantity of Insight. These rerolls are
+                        equal to their quantity of Insight. A character may also choose another player they can see to use this resource. These rerolls are
                         available again after a Night’s Rest.
                     </Typography>
                     <Typography variant='body1' paragraph>
