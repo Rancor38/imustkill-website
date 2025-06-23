@@ -1,5 +1,6 @@
 import { Container, Typography, List, ListItem, Paper } from "@mui/material"
 import HomeButton from "../components/HomeButton"
+import KeywordLinker from "../components/RulesSearch/KeywordLinker"
 
 const CombatMechanics = () => {
     return (
@@ -77,12 +78,24 @@ const CombatMechanics = () => {
                         Actions (In Combat):
                     </Typography>
                     <List>
-                        <ListItem>Attack</ListItem>
-                        <ListItem>Dodge</ListItem>
-                        <ListItem>Brace</ListItem>
-                        <ListItem>Gather a Spell</ListItem>
-                        <ListItem>Flee</ListItem>
-                        <ListItem>Negotiate</ListItem>
+                        <ListItem>
+                            <KeywordLinker>Attack</KeywordLinker>
+                        </ListItem>
+                        <ListItem>
+                            <KeywordLinker>Dodge</KeywordLinker>
+                        </ListItem>
+                        <ListItem>
+                            <KeywordLinker>Brace</KeywordLinker>
+                        </ListItem>
+                        <ListItem>
+                            <KeywordLinker>Gather a Spell</KeywordLinker>
+                        </ListItem>
+                        <ListItem>
+                            <KeywordLinker>Flee</KeywordLinker>
+                        </ListItem>
+                        <ListItem>
+                            <KeywordLinker>Negotiate</KeywordLinker>
+                        </ListItem>
                     </List>
                 </Paper>
 
@@ -104,6 +117,12 @@ const CombatMechanics = () => {
                             If the roll is lower, deal 1 damage (2 for a natural
                             1, aka a crit).
                         </ListItem>
+                        <ListItem>
+                            <KeywordLinker>
+                                If your Insight is too low to perceive a monster
+                                as it is, they take -1 damage from your attacks.
+                            </KeywordLinker>
+                        </ListItem>
                     </List>
                 </Paper>
 
@@ -123,7 +142,7 @@ const CombatMechanics = () => {
                         <ListItem>Roll 1d10 against Agility.</ListItem>
                         <ListItem>
                             If the roll is lower, immune to dodgeable attacks
-                            until next turn.
+                            until next turn and regain 1 HP.
                         </ListItem>
                         <ListItem>
                             If you roll a 10 and the monster successfully
@@ -150,7 +169,7 @@ const CombatMechanics = () => {
                         <ListItem>
                             If the roll is lower and you have a weapon, armor,
                             or shield, you are immune to braceable attacks until
-                            next turn.
+                            next turn and regain 1 HP.
                         </ListItem>
                         <ListItem>
                             If you roll a 10 and the monster successfully
@@ -252,12 +271,16 @@ const CombatMechanics = () => {
                         Weapons
                     </Typography>
                     <Typography paragraph>
-                        Weapons do not have extensive effects on combat.
+                        <KeywordLinker>
+                            Weapons do not have extensive effects on combat.
+                        </KeywordLinker>
                     </Typography>
                     <Typography paragraph>
-                        Two-weapons, polearms, and ranged weapons, or special
-                        weapons let you roll 2d10s when attacking, and choose
-                        the lower.
+                        <KeywordLinker>
+                            Two-weapons, polearms, and ranged weapons, or
+                            special weapons let you roll 2d10s when attacking,
+                            and choose the lower.
+                        </KeywordLinker>
                     </Typography>
                 </Paper>
 
@@ -278,11 +301,13 @@ const CombatMechanics = () => {
                         Physical Damage
                     </Typography>
                     <Typography paragraph>
-                        Standard damage from conventional weapons such as
-                        swords, guns, clubs, and other mundane armaments. Most
-                        creatures can be harmed by physical damage, though some
-                        may have resistance or immunity to certain types of
-                        physical attacks.
+                        <KeywordLinker>
+                            Standard damage from conventional weapons such as
+                            swords, guns, clubs, and other mundane armaments.
+                            Most creatures can be harmed by physical damage,
+                            though some may have resistance or immunity to
+                            certain types of physical attacks.
+                        </KeywordLinker>
                     </Typography>
                     <Typography paragraph>
                         <strong>Examples:</strong> Swords, firearms, clubs,
@@ -303,15 +328,19 @@ const CombatMechanics = () => {
                         Spiritual Damage
                     </Typography>
                     <Typography paragraph>
-                        Damage that affects the soul or essence of a creature.
-                        Particularly effective against undead, demons, and other
-                        supernatural entities. Some creatures may be vulnerable
-                        to spiritual damage while being resistant to physical
-                        attacks.
+                        <KeywordLinker>
+                            Damage that affects the soul or essence of a
+                            creature. Particularly effective against undead,
+                            demons, and other supernatural entities. Some
+                            creatures may be vulnerable to spiritual damage
+                            while being resistant to physical attacks.
+                        </KeywordLinker>
                     </Typography>
                     <Typography paragraph>
-                        <strong>Examples:</strong> Prayers, holy water,
-                        consecrated rituals, divine magic, exorcism, curses
+                        <KeywordLinker>
+                            <strong>Examples:</strong> Prayers, holy water,
+                            consecrated rituals, divine magic, exorcism, curses
+                        </KeywordLinker>
                     </Typography>
                 </Paper>
 
@@ -328,15 +357,19 @@ const CombatMechanics = () => {
                         Hybrid Damage
                     </Typography>
                     <Typography paragraph>
-                        Damage that combines both physical and spiritual
-                        elements, making it effective against a wider range of
-                        creatures. These weapons and attacks can harm both
-                        corporeal and incorporeal beings.
+                        <KeywordLinker>
+                            Damage that combines both physical and spiritual
+                            elements, making it effective against a wider range
+                            of creatures. These weapons and attacks can harm
+                            both corporeal and incorporeal beings.
+                        </KeywordLinker>
                     </Typography>
                     <Typography paragraph>
-                        <strong>Examples:</strong> Silver weapons, fire,
-                        elemental attacks, enchanted weapons, alchemical
-                        compounds
+                        <KeywordLinker>
+                            <strong>Examples:</strong> Silver weapons, fire,
+                            elemental attacks, enchanted weapons, alchemical
+                            compounds
+                        </KeywordLinker>
                     </Typography>
                 </Paper>
 
@@ -412,9 +445,11 @@ const CombatMechanics = () => {
                         Frightened
                     </Typography>
                     <Typography paragraph>
-                        A creature that is Frightened cannot attack on their
-                        turn or willingly move towards the source of their fear
-                        if there's another route of escape.
+                        <KeywordLinker>
+                            A creature that is Frightened cannot attack on their
+                            turn or willingly move towards the source of their
+                            fear if there's another route of escape.
+                        </KeywordLinker>
                     </Typography>
                 </Paper>
                 <Paper
@@ -430,11 +465,13 @@ const CombatMechanics = () => {
                         Unconscious
                     </Typography>
                     <Typography paragraph>
-                        A creature cannot defend against an attack, or make
-                        attacks, or move. Attacks against an unconscious
-                        creature automatically succeed. Creatures that survive
-                        an attack while unconscious may awaken at the start of
-                        their next turn.
+                        <KeywordLinker>
+                            A creature cannot defend against an attack, or make
+                            attacks, or move. Attacks against an unconscious
+                            creature automatically succeed. Creatures that
+                            survive an attack while unconscious may awaken at
+                            the start of their next turn.
+                        </KeywordLinker>
                     </Typography>
                 </Paper>
             </Container>
