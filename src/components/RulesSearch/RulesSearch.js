@@ -88,6 +88,21 @@ const RulesSearch = () => {
                             "Two-weapons polearms ranged weapons special weapons roll 2d10s when attacking choose lower",
                     },
                     {
+                        title: "Physical Damage",
+                        content:
+                            "Standard damage conventional weapons swords guns clubs mundane armaments creatures harmed physical damage resistance immunity examples swords firearms clubs arrows claws fangs",
+                    },
+                    {
+                        title: "Spiritual Damage",
+                        content:
+                            "Damage affects soul essence creature effective undead demons supernatural entities vulnerable spiritual damage resistant physical attacks examples prayers holy water consecrated rituals divine magic exorcism curses",
+                    },
+                    {
+                        title: "Hybrid Damage",
+                        content:
+                            "Damage combines physical spiritual elements effective wider range creatures weapons attacks harm corporeal incorporeal beings examples silver weapons fire elemental attacks enchanted weapons alchemical compounds",
+                    },
+                    {
                         title: "Shield",
                         content:
                             "Roll additional d10 when bracing choose lower",

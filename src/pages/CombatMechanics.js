@@ -1,11 +1,4 @@
-import {
-    Container,
-    Box,
-    Typography,
-    List,
-    ListItem,
-    Paper,
-} from "@mui/material"
+import { Container, Typography, List, ListItem, Paper } from "@mui/material"
 import HomeButton from "../components/HomeButton"
 
 const CombatMechanics = () => {
@@ -133,7 +126,9 @@ const CombatMechanics = () => {
                             until next turn.
                         </ListItem>
                         <ListItem>
-                            If you roll a 10 and the monster successfully attacks you on this turn, the GM checks the Crit Fail collumn on the Monster Stats.
+                            If you roll a 10 and the monster successfully
+                            attacks you on this turn, the GM checks the Crit
+                            Fail collumn on the Monster Stats.
                         </ListItem>
                     </List>
                 </Paper>
@@ -158,7 +153,9 @@ const CombatMechanics = () => {
                             next turn.
                         </ListItem>
                         <ListItem>
-                            If you roll a 10 and the monster successfully attacks you on this turn, the GM checks the Crit Fail collumn on the Monster Stats.
+                            If you roll a 10 and the monster successfully
+                            attacks you on this turn, the GM checks the Crit
+                            Fail collumn on the Monster Stats.
                         </ListItem>
                     </List>
                 </Paper>
@@ -265,6 +262,85 @@ const CombatMechanics = () => {
                 </Paper>
 
                 <Typography variant='h2' gutterBottom>
+                    Damage Types
+                </Typography>
+
+                <Paper
+                    sx={{
+                        bgcolor: "#1f1f1f",
+                        padding: "20px",
+                        width: "100%",
+                        maxWidth: "800px",
+                        marginBottom: "20px",
+                    }}
+                >
+                    <Typography variant='h3' gutterBottom>
+                        Physical Damage
+                    </Typography>
+                    <Typography paragraph>
+                        Standard damage from conventional weapons such as
+                        swords, guns, clubs, and other mundane armaments. Most
+                        creatures can be harmed by physical damage, though some
+                        may have resistance or immunity to certain types of
+                        physical attacks.
+                    </Typography>
+                    <Typography paragraph>
+                        <strong>Examples:</strong> Swords, firearms, clubs,
+                        arrows, claws, fangs
+                    </Typography>
+                </Paper>
+
+                <Paper
+                    sx={{
+                        bgcolor: "#1f1f1f",
+                        padding: "20px",
+                        width: "100%",
+                        maxWidth: "800px",
+                        marginBottom: "20px",
+                    }}
+                >
+                    <Typography variant='h3' gutterBottom>
+                        Spiritual Damage
+                    </Typography>
+                    <Typography paragraph>
+                        Damage that affects the soul or essence of a creature.
+                        Particularly effective against undead, demons, and other
+                        supernatural entities. Some creatures may be vulnerable
+                        to spiritual damage while being resistant to physical
+                        attacks.
+                    </Typography>
+                    <Typography paragraph>
+                        <strong>Examples:</strong> Prayers, holy water,
+                        consecrated rituals, divine magic, exorcism, curses
+                    </Typography>
+                </Paper>
+
+                <Paper
+                    sx={{
+                        bgcolor: "#1f1f1f",
+                        padding: "20px",
+                        width: "100%",
+                        maxWidth: "800px",
+                        marginBottom: "20px",
+                    }}
+                >
+                    <Typography variant='h3' gutterBottom>
+                        Hybrid Damage
+                    </Typography>
+                    <Typography paragraph>
+                        Damage that combines both physical and spiritual
+                        elements, making it effective against a wider range of
+                        creatures. These weapons and attacks can harm both
+                        corporeal and incorporeal beings.
+                    </Typography>
+                    <Typography paragraph>
+                        <strong>Examples:</strong> Silver weapons, fire,
+                        elemental attacks, enchanted weapons, alchemical
+                        compounds
+                    </Typography>
+                </Paper>
+
+                <Typography variant='h2' gutterBottom>
                     Shields & Armor
                 </Typography>
 
@@ -336,7 +412,9 @@ const CombatMechanics = () => {
                         Frightened
                     </Typography>
                     <Typography paragraph>
-                        A creature that is Frightened cannot attack on their turn or willingly move towards the source of their fear if there's another route of escape.
+                        A creature that is Frightened cannot attack on their
+                        turn or willingly move towards the source of their fear
+                        if there's another route of escape.
                     </Typography>
                 </Paper>
                 <Paper
