@@ -1,6 +1,8 @@
+import React from "react"
 import { Link } from "react-router-dom"
 import { Container, Box, Typography, Button } from "@mui/material"
 import FlashyMenu from "../components/FlashyMenu"
+import RulesSearch from "../components/RulesSearch/RulesSearch.js"
 
 // Helper function for consistent button styling
 const getButtonStyles = () => ({
@@ -86,6 +88,9 @@ const HomePage = () => {
                     The hunt awaits you...
                 </Typography>
             </header>
+
+            {/* Rules Search Component */}
+            <RulesSearch />
 
             <Box
                 sx={{
