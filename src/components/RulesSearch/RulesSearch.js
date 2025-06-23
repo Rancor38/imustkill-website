@@ -151,7 +151,7 @@ const RulesSearch = () => {
                     {
                         title: "Leveling Up",
                         content:
-                            "Level up after survive Fight and rest roll 1d10 against 1 chosen stat if roll is lower increase stat by 1 max 10 or gain Insight",
+                            "Level up after survive Fight and rest roll 1d10 against 1 chosen stat if roll is lower increase stat by 1 max 9 or gain Insight",
                     },
                     {
                         title: "Insight",
