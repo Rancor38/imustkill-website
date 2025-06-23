@@ -58,7 +58,7 @@ const Progression = () => {
                         <ListItem>Roll 1d10 against 1 chosen stat.</ListItem>
                         <ListItem>
                             If the roll is lower, increase the stat by 1 (max
-                            10).
+                            9).
                         </ListItem>
                     </List>
                     <Typography variant='body1' paragraph>
