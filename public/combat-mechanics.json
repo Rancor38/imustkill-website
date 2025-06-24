@@ -1,0 +1,253 @@
+{
+    "combatMechanics": {
+        "title": "Combat Mechanics",
+        "sections": [
+            {
+                "id": "turns",
+                "title": "Turns",
+                "rules": [
+                    "Players act simultaneously, followed by monsters and NPCs",
+                    "The GM will inform players if their character is in danger (such as a monster targeting you with its next potential attack)",
+                    "GM rolls for the monsters' action(s)"
+                ],
+                "keywords": ["turns", "simultaneous", "danger", "targeting"]
+            },
+            {
+                "id": "actions",
+                "title": "Actions (In Combat)",
+                "actions": [
+                    {
+                        "name": "Attack",
+                        "description": "Roll 1d10 against @AttackStat. If the roll is lower, deal 1 damage (2 for a natural 1, aka a crit). If your @Insight is too low to perceive a monster as it is, they take -1 damage from your attacks.",
+                        "keywords": [
+                            "attack",
+                            "1d10",
+                            "damage",
+                            "crit",
+                            "insight",
+                            "perception"
+                        ]
+                    },
+                    {
+                        "name": "Dodge",
+                        "description": "Roll 1d10 against @Agility. If the roll is lower, immune to dodgeable attacks until next turn and regain 1 HP. If you roll a 10 and the monster successfully attacks you on this turn, the GM checks the Crit Fail column on the Monster Stats.",
+                        "keywords": [
+                            "dodge",
+                            "agility",
+                            "immune",
+                            "dodgeable",
+                            "crit fail"
+                        ]
+                    },
+                    {
+                        "name": "Brace",
+                        "description": "Roll 1d10 against @Body. If the roll is lower and you have a weapon, armor, or shield, you are immune to braceable attacks until next turn and regain 1 HP. If you roll a 10 and the monster successfully attacks you on this turn, the GM checks the Crit Fail column on the Monster Stats.",
+                        "keywords": [
+                            "brace",
+                            "body",
+                            "weapon",
+                            "armor",
+                            "shield",
+                            "braceable",
+                            "crit fail"
+                        ]
+                    },
+                    {
+                        "name": "Gather a Spell",
+                        "description": "Roll 1d10 against Focus. If the roll is lower, draw 1 spell from your spell deck. If you roll a 10 you lose 1 hit point, and discard all held spell cards.",
+                        "keywords": [
+                            "gather spell",
+                            "focus",
+                            "spell deck",
+                            "discard"
+                        ]
+                    },
+                    {
+                        "name": "Flee",
+                        "description": "Roll 1d10 against Agility. If the roll is lower, you can successfully exit the combat and cannot be in danger for the next round. If the roll fails, you remain in combat.",
+                        "keywords": ["flee", "agility", "exit combat", "escape"]
+                    },
+                    {
+                        "name": "Negotiate",
+                        "description": "Roll 1d10 against @Focus. If the roll is lower, combat will end momentarily to present the opportunity to negotiate with a monster that can understand you. If combat resumes after negotiations fail, the monster(s) go first.",
+                        "keywords": [
+                            "negotiate",
+                            "focus",
+                            "monster",
+                            "understand",
+                            "diplomacy"
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "weapons",
+                "title": "Weapons",
+                "description": "Weapons do not have extensive effects on combat. Two-weapons, polearms, and ranged weapons, or special weapons let you roll with @Advantage when attacking.",
+                "keywords": [
+                    "weapons",
+                    "two-weapons",
+                    "polearms",
+                    "ranged",
+                    "special",
+                    "advantage"
+                ]
+            },
+            {
+                "id": "advantage-disadvantage",
+                "title": "Advantage and Disadvantage",
+                "rules": [
+                    "When you have @Advantage, roll 2d10 and choose the lower result for your roll",
+                    "When you have @Disadvantage, roll 2d10 and choose the higher result for your roll",
+                    "@Advantage and @Disadvantage cancel each other out - if you have both, roll normally with 1d10"
+                ],
+                "situations": [
+                    {
+                        "type": "Advantage",
+                        "examples": [
+                            "Using specialized weapons (two-weapons, polearms, ranged weapons)",
+                            "Fighting without armor while dodging",
+                            "Attacking from a position of superiority (flanking, high ground)",
+                            "Using equipment or spells that grant benefits",
+                            "Favorable environmental conditions"
+                        ]
+                    },
+                    {
+                        "type": "Disadvantage",
+                        "examples": [
+                            "Fighting in poor conditions (darkness, difficult terrain)",
+                            "Being wounded or exhausted",
+                            "Using unfamiliar equipment",
+                            "Environmental hazards affecting your performance",
+                            "Supernatural curses or debuffs"
+                        ]
+                    }
+                ],
+                "keywords": [
+                    "advantage",
+                    "disadvantage",
+                    "2d10",
+                    "choose lower",
+                    "choose higher",
+                    "cancel out"
+                ]
+            },
+            {
+                "id": "damage-types",
+                "title": "Damage Types",
+                "types": [
+                    {
+                        "name": "Physical Damage",
+                        "description": "Standard damage from conventional weapons such as swords, guns, clubs, and other mundane armaments. Most creatures can be harmed by physical damage, though some may have resistance or immunity to certain types of physical attacks.",
+                        "examples": [
+                            "swords",
+                            "firearms",
+                            "clubs",
+                            "arrows",
+                            "claws",
+                            "fangs"
+                        ],
+                        "keywords": [
+                            "physical",
+                            "conventional",
+                            "mundane",
+                            "swords",
+                            "guns",
+                            "clubs"
+                        ]
+                    },
+                    {
+                        "name": "Spiritual Damage",
+                        "description": "Damage that affects the soul or essence of a creature. Particularly effective against undead, demons, and other supernatural entities. Some creatures may be vulnerable to spiritual damage while being resistant to physical attacks.",
+                        "examples": [
+                            "prayers",
+                            "holy water",
+                            "consecrated rituals",
+                            "divine magic",
+                            "exorcism",
+                            "curses"
+                        ],
+                        "keywords": [
+                            "spiritual",
+                            "soul",
+                            "essence",
+                            "undead",
+                            "demons",
+                            "supernatural",
+                            "holy",
+                            "divine"
+                        ]
+                    },
+                    {
+                        "name": "Hybrid Damage",
+                        "description": "Damage that combines both physical and spiritual elements, making it effective against a wider range of creatures. These weapons and attacks can harm both corporeal and incorporeal beings.",
+                        "examples": [
+                            "silver weapons",
+                            "fire",
+                            "elemental attacks",
+                            "enchanted weapons",
+                            "alchemical compounds"
+                        ],
+                        "keywords": [
+                            "hybrid",
+                            "silver",
+                            "fire",
+                            "elemental",
+                            "enchanted",
+                            "alchemical",
+                            "corporeal",
+                            "incorporeal"
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "shields-armor",
+                "title": "Shields & Armor",
+                "equipment": [
+                    {
+                        "name": "Shield",
+                        "effect": "Roll an additional d10 when bracing, choose the lower.",
+                        "keywords": ["shield", "brace", "additional d10"]
+                    },
+                    {
+                        "name": "Armor",
+                        "effect": "Roll an additional d10 when bracing, choose the lower.",
+                        "keywords": ["armor", "brace", "additional d10"]
+                    },
+                    {
+                        "name": "No Armor",
+                        "effect": "Roll with Advantage when dodging.",
+                        "keywords": ["no armor", "dodge", "advantage"]
+                    }
+                ]
+            },
+            {
+                "id": "statuses",
+                "title": "Statuses",
+                "conditions": [
+                    {
+                        "name": "Frightened",
+                        "description": "A creature that is Frightened cannot attack on their turn or willingly move towards the source of their fear if there's another route of escape.",
+                        "keywords": [
+                            "frightened",
+                            "fear",
+                            "cannot attack",
+                            "escape"
+                        ]
+                    },
+                    {
+                        "name": "Unconscious",
+                        "description": "A creature cannot defend against an attack, or make attacks, or move. Attacks against an unconscious creature automatically succeed. Creatures that survive an attack while unconscious may awaken at the start of their next turn.",
+                        "keywords": [
+                            "unconscious",
+                            "cannot defend",
+                            "automatically succeed",
+                            "awaken"
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

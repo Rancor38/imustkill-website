@@ -1,15 +1,62 @@
 import {
     Container,
-    Box,
     Typography,
     List,
     ListItem,
     Paper,
+    CircularProgress,
+    Alert,
 } from "@mui/material"
-import { Link } from "react-router-dom"
+import { useState, useEffect } from "react"
 import HomeButton from "../components/HomeButton"
+import useRulesEngine from "../hooks/useRulesEngine"
+import KeywordLinker from "../components/RulesSearch/EnhancedKeywordLinker"
 
 const CharacterCreation = () => {
+    const { getCategoryRules, loading, error } = useRulesEngine()
+    const [characterCreationData, setCharacterCreationData] = useState(null)
+
+    useEffect(() => {
+        if (!loading && !error) {
+            const data = getCategoryRules("character-creation")
+            setCharacterCreationData(data)
+        }
+    }, [loading, error, getCategoryRules])
+
+    if (loading) {
+        return (
+            <Container
+                sx={{ display: "flex", justifyContent: "center", py: 4 }}
+            >
+                <CircularProgress />
+            </Container>
+        )
+    }
+
+    if (error) {
+        return (
+            <Container sx={{ py: 4 }}>
+                <Alert severity='error'>
+                    Error loading character creation rules: {error}
+                </Alert>
+            </Container>
+        )
+    }
+
+    if (!characterCreationData) {
+        return (
+            <Container sx={{ py: 4 }}>
+                <Alert severity='warning'>
+                    No character creation data found
+                </Alert>
+            </Container>
+        )
+    }
+
+    const statsSection = characterCreationData.sections.find(
+        (section) => section.id === "stats"
+    )
+
     return (
         <>
             <Container
@@ -18,7 +65,7 @@ const CharacterCreation = () => {
                         theme.palette.mode === "dark" ? "#e0e0e0" : "#121212",
                     padding: { xs: "15px", sm: "20px" },
                     display: "flex",
-                    paddingBottom: { xs: "80px", sm: "100px" }, // Adjust this value as needed
+                    paddingBottom: { xs: "80px", sm: "100px" },
                     flexDirection: "column",
                     alignItems: "center",
                     minHeight: "100vh",
@@ -40,7 +87,7 @@ const CharacterCreation = () => {
                         textAlign: "center",
                     }}
                 >
-                    Character Creation
+                    {characterCreationData.title}
                 </Typography>
 
                 <Paper
@@ -64,200 +111,96 @@ const CharacterCreation = () => {
                     }}
                 >
                     <Typography variant='h3' gutterBottom>
-                        Stats:
+                        {statsSection?.title}:
                     </Typography>
                     <List>
-                        <ListItem>
-                            Body (Lift, push, climb, drag, grapple, jump, swim)
-                        </ListItem>
-                        <ListItem>
-                            Agility (Catch, squeeze, pick lock, escape manacles)
-                        </ListItem>
-                        <ListItem>
-                            Focus (Perceive, listen, conjure magic, track prey,
-                            control will, resist enchantment)
-                        </ListItem>
-                        <ListItem>
-                            Fate (Luck, life force, fortune, death)
-                        </ListItem>
+                        {statsSection?.content.map((stat, index) => (
+                            <ListItem key={index}>
+                                <KeywordLinker>
+                                    <strong>{stat.name}</strong> (
+                                    {stat.description})
+                                </KeywordLinker>
+                            </ListItem>
+                        ))}
                     </List>
                 </Paper>
 
-                <Paper
-                    sx={{
-                        bgcolor: (theme) =>
-                            theme.palette.mode === "dark"
-                                ? "#1f1f1f"
-                                : "#f5f5f5",
-                        color: (theme) =>
-                            theme.palette.mode === "dark"
-                                ? "#e0e0e0"
-                                : "#121212",
-                        padding: "20px",
-                        width: "100%",
-                        maxWidth: "800px",
-                        marginBottom: "20px",
-                    }}
-                >
-                    <Typography variant='h3' gutterBottom>
-                        Standard Stat Arrays:
-                    </Typography>
-                    <Typography paragraph>
-                        Choose from predefined array.
-                    </Typography>
-                    <Typography variant='h5' gutterBottom>
-                        Arrays:
-                    </Typography>
-                    <List>
-                        <ListItem>6, 6, 6, 6</ListItem>
-                        <ListItem>4, 4, 8, 8</ListItem>
-                        <ListItem>3, 4, 8, 9</ListItem>
-                    </List>
-                </Paper>
+                {/* Render all other sections dynamically */}
+                {characterCreationData.sections
+                    .filter((section) => section.id !== "stats")
+                    .map((section) => (
+                        <Paper
+                            key={section.id}
+                            sx={{
+                                bgcolor: (theme) =>
+                                    theme.palette.mode === "dark"
+                                        ? "#1f1f1f"
+                                        : "#f5f5f5",
+                                color: (theme) =>
+                                    theme.palette.mode === "dark"
+                                        ? "#e0e0e0"
+                                        : "#121212",
+                                padding: "20px",
+                                width: "100%",
+                                maxWidth: "800px",
+                                marginBottom: "20px",
+                            }}
+                        >
+                            <Typography variant='h3' gutterBottom>
+                                {section.title}
+                            </Typography>
 
-                <Paper
-                    sx={{
-                        bgcolor: (theme) =>
-                            theme.palette.mode === "dark"
-                                ? "#1f1f1f"
-                                : "#f5f5f5",
-                        color: (theme) =>
-                            theme.palette.mode === "dark"
-                                ? "#e0e0e0"
-                                : "#121212",
-                        padding: "20px",
-                        width: "100%",
-                        maxWidth: "800px",
-                        marginBottom: "20px",
-                    }}
-                >
-                    <Typography variant='h3' gutterBottom>
-                        Rolling Stats (Alternative Option):
-                    </Typography>
-                    <List>
-                        <ListItem>Roll 4d10s for character creation.</ListItem>
-                        <ListItem>
-                            Assign the values rolled to Body, Agility, Focus,
-                            and Fate.
-                        </ListItem>
-                        <ListItem>
-                            Maximum stat value is 10, minimum is a 2.
-                        </ListItem>
-                    </List>
-                </Paper>
+                            {section.description && (
+                                <Typography variant='body1' paragraph>
+                                    <KeywordLinker>
+                                        {section.description}
+                                    </KeywordLinker>
+                                </Typography>
+                            )}
 
-                <Paper
-                    sx={{
-                        bgcolor: (theme) =>
-                            theme.palette.mode === "dark"
-                                ? "#1f1f1f"
-                                : "#f5f5f5",
-                        color: (theme) =>
-                            theme.palette.mode === "dark"
-                                ? "#e0e0e0"
-                                : "#121212",
-                        padding: "20px",
-                        width: "100%",
-                        maxWidth: "800px",
-                        marginBottom: "20px",
-                    }}
-                >
-                    <Typography variant='h3' gutterBottom>
-                        Attack Stat and Hit Points:
-                    </Typography>
-                    <List>
-                        <ListItem>
-                            Choose Body, Agility, or Focus as your attack stat.
-                        </ListItem>
-                        <ListItem>
-                            Half of Fate (rounded up) is your hit points.
-                        </ListItem>
-                    </List>
-                </Paper>
+                            {section.subsections && (
+                                <>
+                                    {section.subsections.map((subsection) => (
+                                        <div
+                                            key={subsection.id}
+                                            style={{ marginBottom: "20px" }}
+                                        >
+                                            <Typography
+                                                variant='h4'
+                                                gutterBottom
+                                            >
+                                                {subsection.title}
+                                            </Typography>
+                                            <Typography
+                                                variant='body1'
+                                                paragraph
+                                            >
+                                                <KeywordLinker>
+                                                    {subsection.description}
+                                                </KeywordLinker>
+                                            </Typography>
 
-                <Typography variant='h2' gutterBottom>
-                    Equipment
-                </Typography>
-
-                <Paper
-                    sx={{
-                        bgcolor: (theme) =>
-                            theme.palette.mode === "dark"
-                                ? "#1f1f1f"
-                                : "#f5f5f5",
-                        color: (theme) =>
-                            theme.palette.mode === "dark"
-                                ? "#e0e0e0"
-                                : "#121212",
-                        padding: "20px",
-                        width: "100%",
-                        maxWidth: "800px",
-                        marginBottom: "20px",
-                    }}
-                >
-                    <Typography variant='h3' gutterBottom>
-                        Random Start
-                    </Typography>
-                    <Typography paragraph>
-                        Draw 10 equipment cards from the Starter Deck per player
-                        at the table, and each player can choose up to 10 from
-                        the whole lot.
-                    </Typography>
-                    <Typography variant='h3' gutterBottom>
-                        Fixed Start
-                    </Typography>
-                    <Typography paragraph>
-                        Choose 10 cards from your character deck to outfit your
-                        hunter.
-                    </Typography>
-                </Paper>
-
-                <Typography variant='h2' gutterBottom>
-                    Adventuring Assumptions
-                </Typography>
-
-                <Paper
-                    sx={{
-                        bgcolor: (theme) =>
-                            theme.palette.mode === "dark"
-                                ? "#1f1f1f"
-                                : "#f5f5f5",
-                        color: (theme) =>
-                            theme.palette.mode === "dark"
-                                ? "#e0e0e0"
-                                : "#121212",
-                        padding: "20px",
-                        width: "100%",
-                        maxWidth: "800px",
-                        marginBottom: "20px",
-                    }}
-                >
-                    <Typography paragraph>
-                        Your character is competent, and capable of taking care
-                        of themselves under normal circumstances. Does your
-                        character have bandages to bind small wounds? This can
-                        be assumed. Do you have water at your camp? Probably. Do
-                        you have food? Most likely. Unless the GM tells you of
-                        some extenuating circumstances that might prevent your
-                        character from having their basic needs met they are
-                        assumed to be met.
-                    </Typography>
-                    <Typography paragraph>
-                        Equipment gained from equipment packs are not assumed to
-                        be an exhaustive list of all of the equipment on your
-                        person but are a few key items. Items beyond these can
-                        be discussed and requested from the GM to their
-                        discretion in line with what is reasonable.
-                    </Typography>
-                    <Typography paragraph>
-                        Likewise, money is to be kept in general terms. You
-                        either have enough money, or you do not. High pay is
-                        enough to pick up a few things of value or take some
-                        weeks (or months) off work before the next hunt. You
-                        otherwise have enough money for yourselves with little
-                        generosity.
-                    </Typography>
-                </Paper>
+                                            {subsection.options && (
+                                                <List>
+                                                    {subsection.options.map(
+                                                        (option, optIndex) => (
+                                                            <ListItem
+                                                                key={optIndex}
+                                                            >
+                                                                <KeywordLinker>
+                                                                    {option}
+                                                                </KeywordLinker>
+                                                            </ListItem>
+                                                        )
+                                                    )}
+                                                </List>
+                                            )}
+                                        </div>
+                                    ))}
+                                </>
+                            )}
+                        </Paper>
+                    ))}
             </Container>
 
             <HomeButton />

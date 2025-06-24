@@ -30,7 +30,7 @@ const weaponsData = [
         name: "Carson Range Rifle & Axebutt",
         image: carsonRangeRifleImage,
         quote: '"One shot. One kill."',
-        ranged: "Roll 2d10, take the lowest result.\n\nSpecial: If 2 d10s crit on the creature, one of its heads are blown off.",
+        ranged: "Roll 4d10, take the lowest result.\n\nSpecial: If 2 d10s crit on the creature, one of its heads are blown off.",
         melee: "Crit: Big cut dealing 3 damage.",
     },
     {

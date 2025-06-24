@@ -2,7 +2,7 @@ import React from "react"
 import { Link } from "react-router-dom"
 import { Container, Box, Typography, Button } from "@mui/material"
 import FlashyMenu from "../components/FlashyMenu"
-import RulesSearch from "../components/RulesSearch/RulesSearch.js"
+import EnhancedRulesSearch from "../components/RulesSearch/EnhancedRulesSearch.js"
 
 // Helper function for consistent button styling
 const getButtonStyles = () => ({
@@ -90,7 +90,23 @@ const HomePage = () => {
             </header>
 
             {/* Rules Search Component */}
-            <RulesSearch />
+            <Box
+                sx={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    marginBottom: { xs: "20px", sm: "30px" }, // Add spacing below search
+                }}
+            >
+                <Box
+                    sx={{
+                        width: "100%",
+                        maxWidth: { xs: "280px", sm: "300px" }, // Match button width
+                    }}
+                >
+                    <EnhancedRulesSearch />
+                </Box>
+            </Box>
 
             <Box
                 sx={{

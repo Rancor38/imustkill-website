@@ -1,0 +1,364 @@
+{
+    "rulesDatabase": {
+        "version": "1.0",
+        "lastUpdated": "2025-01-21",
+        "referenceIds": {
+            "@Body": {
+                "title": "Body Stat",
+                "category": "character-creation",
+                "section": "stats",
+                "description": "Physical strength and endurance stat"
+            },
+            "@Agility": {
+                "title": "Agility Stat",
+                "category": "character-creation",
+                "section": "stats",
+                "description": "Speed and dexterity stat"
+            },
+            "@Focus": {
+                "title": "Focus Stat",
+                "category": "character-creation",
+                "section": "stats",
+                "description": "Mental concentration and magical ability stat"
+            },
+            "@Fate": {
+                "title": "Fate Stat",
+                "category": "character-creation",
+                "section": "stats",
+                "description": "Luck and life force stat that determines hit points"
+            },
+            "@Advantage": {
+                "title": "Advantage",
+                "category": "combat-mechanics",
+                "section": "advantage-disadvantage",
+                "description": "Roll 2d10, choose lower result"
+            },
+            "@Disadvantage": {
+                "title": "Disadvantage",
+                "category": "combat-mechanics",
+                "section": "advantage-disadvantage",
+                "description": "Roll 2d10, choose higher result"
+            },
+            "@Attack": {
+                "title": "Attack Action",
+                "category": "combat-mechanics",
+                "section": "actions",
+                "description": "Combat action to deal damage to enemies"
+            },
+            "@Dodge": {
+                "title": "Dodge Action",
+                "category": "combat-mechanics",
+                "section": "actions",
+                "description": "Agility-based defense action"
+            },
+            "@Brace": {
+                "title": "Brace Action",
+                "category": "combat-mechanics",
+                "section": "actions",
+                "description": "Body-based defense action requiring equipment"
+            },
+            "@WindUp": {
+                "title": "Wind Up",
+                "category": "combat-mechanics",
+                "section": "damage",
+                "description": "Monster mechanic that doubles next attack damage"
+            },
+            "@Insight": {
+                "title": "Insight",
+                "category": "progression",
+                "section": "insight",
+                "description": "Perception stat for seeing hidden creatures and rerolling tests"
+            },
+            "@GatherSpells": {
+                "title": "Gathering Spells",
+                "category": "spellcasting",
+                "section": "gathering-spells",
+                "description": "Focus test to draw spells from deck"
+            },
+            "@CastSpells": {
+                "title": "Casting Spells",
+                "category": "spellcasting",
+                "section": "casting-spells",
+                "description": "Playing spell cards to trigger effects"
+            },
+            "@Death": {
+                "title": "Death Mechanics",
+                "category": "death-and-resting",
+                "section": "death",
+                "description": "What happens when reaching 0 hit points"
+            },
+            "@GritTeeth": {
+                "title": "Grit Teeth",
+                "category": "death-and-resting",
+                "section": "grit-teeth",
+                "description": "Recover 1 HP during combat respite"
+            },
+            "@NightsRest": {
+                "title": "Night's Rest",
+                "category": "death-and-resting",
+                "section": "nights-rest",
+                "description": "Full recovery after 8 hours rest"
+            },
+            "@LevelingUp": {
+                "title": "Leveling Up",
+                "category": "progression",
+                "section": "leveling-up",
+                "description": "Character advancement after surviving fights"
+            },
+            "@PhysicalDamage": {
+                "title": "Physical Damage",
+                "category": "combat-mechanics",
+                "section": "damage-types",
+                "description": "Conventional weapon damage type"
+            },
+            "@SpiritualDamage": {
+                "title": "Spiritual Damage",
+                "category": "combat-mechanics",
+                "section": "damage-types",
+                "description": "Divine/holy damage effective against supernatural entities"
+            },
+            "@HybridDamage": {
+                "title": "Hybrid Damage",
+                "category": "combat-mechanics",
+                "section": "damage-types",
+                "description": "Damage effective against both corporeal and incorporeal beings"
+            },
+            "@AttackStat": {
+                "title": "Attack Stat",
+                "category": "character-creation",
+                "section": "attack-stat-hp",
+                "description": "Chosen stat (Body, Agility, or Focus) used for combat rolls"
+            },
+            "@HitPoints": {
+                "title": "Hit Points",
+                "category": "character-creation",
+                "section": "attack-stat-hp",
+                "description": "Health equal to half Fate score (rounded up)"
+            }
+        },
+        "categories": {
+            "character-creation": {
+                "title": "Character Creation",
+                "description": "Rules for creating hunter characters",
+                "file": "character-creation.json",
+                "keywords": [
+                    "character",
+                    "creation",
+                    "stats",
+                    "body",
+                    "agility",
+                    "focus",
+                    "fate",
+                    "equipment"
+                ]
+            },
+            "combat-mechanics": {
+                "title": "Combat Mechanics",
+                "description": "Combat rules, actions, and damage types",
+                "file": "combat-mechanics.json",
+                "keywords": [
+                    "combat",
+                    "attack",
+                    "dodge",
+                    "brace",
+                    "weapons",
+                    "damage",
+                    "spiritual",
+                    "physical",
+                    "hybrid"
+                ]
+            },
+            "death-and-resting": {
+                "title": "Death and Resting",
+                "description": "Death mechanics and recovery rules",
+                "file": "death-and-resting.json",
+                "keywords": [
+                    "death",
+                    "resting",
+                    "grit teeth",
+                    "recovery",
+                    "hit points"
+                ]
+            },
+            "spellcasting": {
+                "title": "Spellcasting",
+                "description": "Magic system and spell mechanics",
+                "file": "spellcasting.json",
+                "keywords": [
+                    "spellcasting",
+                    "magic",
+                    "focus",
+                    "spell deck",
+                    "gathering",
+                    "casting"
+                ]
+            },
+            "progression": {
+                "title": "Progression",
+                "description": "Character advancement and insight system",
+                "file": "progression.json",
+                "keywords": [
+                    "progression",
+                    "leveling up",
+                    "insight",
+                    "advancement",
+                    "ascendant"
+                ]
+            },
+            "running-the-game": {
+                "title": "Running the Game",
+                "description": "Game Master resources and monster guidelines",
+                "file": "running-the-game.json",
+                "keywords": [
+                    "gm",
+                    "game master",
+                    "monsters",
+                    "hunt",
+                    "rumors",
+                    "research"
+                ]
+            },
+            "spells": {
+                "title": "Spells",
+                "description": "Spell database with all available spells",
+                "file": "spells.json",
+                "keywords": [
+                    "spells",
+                    "magic",
+                    "ancient spells",
+                    "common",
+                    "uncommon",
+                    "rare"
+                ]
+            },
+            "equipment": {
+                "title": "Equipment",
+                "description": "Equipment and gear database",
+                "file": "equipment.json",
+                "keywords": ["equipment", "gear", "tools", "weapons", "armor"]
+            },
+            "monsters": {
+                "title": "Monsters",
+                "description": "Monster bestiary and statistics",
+                "file": "monsters.json",
+                "keywords": [
+                    "monsters",
+                    "bestiary",
+                    "creatures",
+                    "enemies",
+                    "supernatural"
+                ]
+            }
+        },
+        "quickReference": {
+            "core-mechanics": [
+                {
+                    "term": "Roll to Succeed",
+                    "description": "Roll 1d10. If the result is equal to or less than your stat, you succeed.",
+                    "keywords": ["roll", "1d10", "succeed", "stat"]
+                },
+                {
+                    "term": "Attack Rolls",
+                    "description": "Roll 1d10 against your Attack Stat. Success deals 1 damage (2 on natural 1).",
+                    "keywords": ["attack", "damage", "crit", "natural 1"]
+                },
+                {
+                    "term": "Defense Actions",
+                    "description": "Dodge (Agility) or Brace (Body) to avoid or reduce damage.",
+                    "keywords": ["dodge", "brace", "agility", "body", "defense"]
+                },
+                {
+                    "term": "Advantage",
+                    "description": "Roll 2d10 and choose the lower result. Used when circumstances favor you.",
+                    "keywords": [
+                        "advantage",
+                        "2d10",
+                        "choose lower",
+                        "favorable"
+                    ]
+                },
+                {
+                    "term": "Disadvantage",
+                    "description": "Roll 2d10 and choose the higher result. Used when circumstances hinder you.",
+                    "keywords": [
+                        "disadvantage",
+                        "2d10",
+                        "choose higher",
+                        "hindered"
+                    ]
+                }
+            ],
+            "character-stats": [
+                {
+                    "stat": "Body",
+                    "uses": [
+                        "Attack Stat option",
+                        "Brace action",
+                        "Physical activities"
+                    ],
+                    "keywords": ["body", "strength", "physical", "brace"]
+                },
+                {
+                    "stat": "Agility",
+                    "uses": [
+                        "Attack Stat option",
+                        "Dodge action",
+                        "Dexterous activities"
+                    ],
+                    "keywords": ["agility", "speed", "dodge", "dexterity"]
+                },
+                {
+                    "stat": "Focus",
+                    "uses": [
+                        "Attack Stat option",
+                        "Gather Spells",
+                        "Negotiate",
+                        "Mental activities"
+                    ],
+                    "keywords": ["focus", "mental", "spells", "negotiate"]
+                },
+                {
+                    "stat": "Fate",
+                    "uses": [
+                        "Determines Hit Points",
+                        "Death saves",
+                        "Luck-based activities"
+                    ],
+                    "keywords": ["fate", "hit points", "death", "luck"]
+                }
+            ],
+            "damage-types": [
+                {
+                    "type": "Physical",
+                    "effective_against": "Most corporeal creatures",
+                    "examples": ["Swords", "Guns", "Clubs"],
+                    "keywords": ["physical", "corporeal", "mundane", "weapons"]
+                },
+                {
+                    "type": "Spiritual",
+                    "effective_against": "Undead, demons, supernatural entities",
+                    "examples": ["Holy water", "Prayers", "Exorcism"],
+                    "keywords": [
+                        "spiritual",
+                        "undead",
+                        "demons",
+                        "holy",
+                        "supernatural"
+                    ]
+                },
+                {
+                    "type": "Hybrid",
+                    "effective_against": "Both corporeal and incorporeal beings",
+                    "examples": ["Silver weapons", "Fire", "Enchanted weapons"],
+                    "keywords": [
+                        "hybrid",
+                        "silver",
+                        "fire",
+                        "enchanted",
+                        "incorporeal"
+                    ]
+                }
+            ]
+        }
+    }
+}

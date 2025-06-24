@@ -1,0 +1,227 @@
+{
+    "runningTheGame": {
+        "title": "Running the Game",
+        "sections": [
+            {
+                "id": "hunt-outline",
+                "title": "Hunt Outline",
+                "phases": [
+                    {
+                        "name": "The Hook",
+                        "description": "Introduce the scenario and the monster threat to the hunters."
+                    },
+                    {
+                        "name": "Negotiate Pay",
+                        "description": "Test Focus. You bargain for high pay, otherwise you agree to low pay. High pay is enough to have spending money later, low pay is enough only for subsistence."
+                    },
+                    {
+                        "name": "The Rumor Phase",
+                        "description": "Meet someone who can tell you information about the monster. They present rumors for the monster (curated by the GM with true and misleading information). The GM chooses which of these rumors is true in this given scenario."
+                    },
+                    {
+                        "name": "The Research Phase",
+                        "description": "An old journal, a tale from long ago, an old friend. You reach out to learn information about the monster, and test Fate to learn its weakness (draw a weakness from the Weaknesses deck)."
+                    },
+                    {
+                        "name": "Prepare",
+                        "description": "Use the information you've learned to procure what you need for the hunt (if reasonably available)."
+                    },
+                    {
+                        "name": "Tracking the Monster",
+                        "description": "Find the monster in its home (test Fate) or it ambushes you."
+                    },
+                    {
+                        "name": "The Fight",
+                        "description": "Battle the monster, win or die."
+                    },
+                    {
+                        "name": "Denouement",
+                        "description": "Collect the bounty. Replenish equipment up to 10, and if high pay, everyone can purchase new equipment. Rest and level up."
+                    }
+                ],
+                "keywords": [
+                    "hunt outline",
+                    "hook",
+                    "negotiate pay",
+                    "rumor phase",
+                    "research phase",
+                    "prepare",
+                    "tracking",
+                    "fight",
+                    "denouement"
+                ]
+            },
+            {
+                "id": "creatures-of-false-eden",
+                "title": "Creatures of False-Eden",
+                "subsections": [
+                    {
+                        "id": "hidden-creatures",
+                        "title": "Explanation of Hidden Creatures",
+                        "rules": [
+                            "Monsters have a rating of @Insight required before a hunter can see them as they are. These creatures are metaphysical threats that challenge perception of the physical realm.",
+                            "All monsters that lie beyond a human's @Insight appear as beasts rationalized by the context the human has. They might perceive a werewolf as a large bear, or a changeling as a deformed man."
+                        ],
+                        "keywords": [
+                            "hidden creatures",
+                            "insight required",
+                            "metaphysical threats",
+                            "perception",
+                            "rationalized",
+                            "werewolf",
+                            "changeling"
+                        ]
+                    },
+                    {
+                        "id": "downsides-of-insight",
+                        "title": "The Downsides of Insight",
+                        "description": "Having higher @Insight enables hunters to perceive entities that others cannot. However, exceeding your fellow hunters' @Insight scores may pose risks. If only your hunter has the required @Insight to see a creature, then only your hunter can attack it effectively, but this also draws the creature's attention who will target your hunter viciously. Fellow hunters, lacking the required @Insight, would struggle to assist effectively.",
+                        "keywords": [
+                            "downsides of insight",
+                            "perceive entities",
+                            "pose risks",
+                            "target viciously",
+                            "struggle to assist"
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "monsters",
+                "title": "Monsters",
+                "subsections": [
+                    {
+                        "id": "reading-monster-tables",
+                        "title": "Reading Monster Tables",
+                        "description": "Monster actions are determined by rolling a d10 and comparing to the Attack value.",
+                        "mechanics": "Roll 1d10. If the result is equal to or less than the monster's Attack value, the monster attacks. If higher, the monster '@WindUp' for a more deadly following attack.",
+                        "example_actions": [
+                            "Attack: Roll ≤ Attack value to successfully attack",
+                            "@WindUp: Failed attack roll means next attack deals double damage",
+                            "Special Ability: Some monsters have unique powers",
+                            "Multi-attack: Some monsters can target multiple creatures"
+                        ],
+                        "keywords": [
+                            "monster tables",
+                            "d10",
+                            "attack value",
+                            "wind up",
+                            "double damage",
+                            "multi-attack"
+                        ]
+                    },
+                    {
+                        "id": "monster-stats-explained",
+                        "title": "Monster Stats Explained",
+                        "description": "Understanding how to read and use monster statistics during play.",
+                        "stat_explanations": [
+                            {
+                                "stat": "Attack Value",
+                                "description": "The number or lower that must be rolled on a d10 for the monster to attack. Higher rolls result in 'Wind Up'."
+                            },
+                            {
+                                "stat": "Damage Value",
+                                "description": "How much damage the monster deals when it successfully attacks. This number is doubled if the monster 'Wound Up' the previous turn."
+                            },
+                            {
+                                "stat": "Hit Points Multiplier",
+                                "description": "Read as (number of players × multiplier) + addition. Example: '0+1' = (players × 0) + 1 = 1 HP. '5' with 3 players = 15 HP."
+                            },
+                            {
+                                "stat": "Bloodied",
+                                "description": "Multiply this number by the number of players. When the monster's HP falls below this threshold, it will attempt to flee or negotiate to save its life."
+                            },
+                            {
+                                "stat": "Buffs",
+                                "description": "Special modifiers that make the monster more resilient or dangerous."
+                            },
+                            {
+                                "stat": "Crit",
+                                "description": "What happens when the monster's attack roll is a natural 1. Follow these instructions instead of applying normal damage."
+                            },
+                            {
+                                "stat": "Immunities",
+                                "description": "Damage types the monster is immune to (if any)."
+                            },
+                            {
+                                "stat": "Body/Agility/Focus/Fate",
+                                "description": "Stat values rolled when the monster needs to make ability checks."
+                            },
+                            {
+                                "stat": "Insight",
+                                "description": "The insight level required to see the monster as it truly is, rather than as some sort of guise."
+                            },
+                            {
+                                "stat": "Guise",
+                                "description": "What people see when they have an insight score below the monster's Insight value. Monsters with Insight 0 have no guise and appear as they truly are."
+                            },
+                            {
+                                "stat": "Special Weaknesses",
+                                "description": "Unique vulnerabilities that can be discovered during the research phase of a hunt."
+                            }
+                        ],
+                        "keywords": [
+                            "monster stats",
+                            "attack value",
+                            "damage value",
+                            "hit points multiplier",
+                            "bloodied",
+                            "buffs",
+                            "crit",
+                            "immunities",
+                            "insight",
+                            "guise",
+                            "special weaknesses"
+                        ]
+                    },
+                    {
+                        "id": "damage",
+                        "title": "Damage and Wind Up",
+                        "description": "Monsters deal their damage value when they successfully attack. The 'Wind Up' mechanic makes failed attacks more dangerous.",
+                        "mechanics": "When a monster fails to attack (rolls higher than Attack value), it 'Winds Up'. The next successful attack deals double the normal damage value.",
+                        "keywords": [
+                            "monster damage",
+                            "wind up",
+                            "double damage",
+                            "failed attack"
+                        ]
+                    },
+                    {
+                        "id": "special-abilities",
+                        "title": "Examples of Special Abilities",
+                        "examples": [
+                            "Some attacks may negate dodging or bracing",
+                            "Dragons breath deals damage equal to the monster's hit points",
+                            "Special abilities triggered on a 1 (maybe a breath weapon, something that does 3 damage)",
+                            "Other unique abilities specific to each monster"
+                        ],
+                        "keywords": [
+                            "special abilities",
+                            "negate dodging",
+                            "dragons breath",
+                            "breath weapon",
+                            "unique abilities"
+                        ]
+                    },
+                    {
+                        "id": "explaining-monster-stats",
+                        "title": "Hit Points and Bloodied Calculation",
+                        "description": "Monster hit points are calculated based on the number of players, and bloodied thresholds determine when monsters become desperate.",
+                        "examples": [
+                            "HP '0+1' with 4 players: (4 × 0) + 1 = 1 hit point",
+                            "HP '5' with 3 players: 3 × 5 = 15 hit points",
+                            "HP '2+3' with 2 players: (2 × 2) + 3 = 7 hit points",
+                            "Bloodied '2' with 3 players: Monster flee or negotiate when below 6 HP"
+                        ],
+                        "keywords": [
+                            "hit points calculation",
+                            "number of players",
+                            "bloodied threshold",
+                            "monster flees or negotiates"
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

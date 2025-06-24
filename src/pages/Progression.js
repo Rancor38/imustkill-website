@@ -1,7 +1,53 @@
-import { Container, Typography, Paper, List, ListItem } from "@mui/material"
+import {
+    Container,
+    Typography,
+    Paper,
+    CircularProgress,
+    Alert,
+} from "@mui/material"
+import { useState, useEffect } from "react"
 import HomeButton from "../components/HomeButton"
+import useRulesEngine from "../hooks/useRulesEngine"
+import EnhancedKeywordLinker from "../components/RulesSearch/EnhancedKeywordLinker"
 
 const Progression = () => {
+    const { getCategoryRules, loading, error } = useRulesEngine()
+    const [progressionData, setProgressionData] = useState(null)
+
+    useEffect(() => {
+        if (!loading && !error) {
+            const data = getCategoryRules("progression")
+            setProgressionData(data)
+        }
+    }, [loading, error, getCategoryRules])
+
+    if (loading) {
+        return (
+            <Container
+                sx={{ display: "flex", justifyContent: "center", py: 4 }}
+            >
+                <CircularProgress />
+            </Container>
+        )
+    }
+
+    if (error) {
+        return (
+            <Container sx={{ py: 4 }}>
+                <Alert severity='error'>
+                    Error loading progression rules: {error}
+                </Alert>
+            </Container>
+        )
+    }
+
+    if (!progressionData) {
+        return (
+            <Container sx={{ py: 4 }}>
+                <Alert severity='warning'>No progression data found</Alert>
+            </Container>
+        )
+    }
     return (
         <>
             <Container
@@ -26,155 +72,92 @@ const Progression = () => {
                                 : "#121212",
                     }}
                 >
-                    Progression
+                    {progressionData.title}
                 </Typography>
 
-                <Paper
-                    sx={{
-                        bgcolor: (theme) =>
-                            theme.palette.mode === "dark"
-                                ? "#1f1f1f"
-                                : "#f5f5f5",
-                        color: (theme) =>
-                            theme.palette.mode === "dark"
-                                ? "#e0e0e0"
-                                : "#121212",
-                        padding: "20px",
-                        width: "100%",
-                        maxWidth: "800px",
-                        marginBottom: "20px",
-                    }}
-                >
-                    <Typography variant='h2' gutterBottom>
-                        Leveling Up
-                    </Typography>
-                    <Typography variant='body1' paragraph>
-                        <strong>
-                            You level up after you survive a Fight and rest, you
-                            can then:
-                        </strong>
-                    </Typography>
-                    <List>
-                        <ListItem>Roll 1d10 against 1 chosen stat.</ListItem>
-                        <ListItem>
-                            If the roll is lower, increase the stat by 1 (max
-                            9).
-                        </ListItem>
-                    </List>
-                    <Typography variant='body1' paragraph>
-                        Or you can:
-                    </Typography>
-                    <List>
-                        <ListItem>
-                            Gain Insight. Insight is a resource you can gather
-                            that provides benefits while also subjecting you to
-                            higher levels of challenge (see Insight).
-                        </ListItem>
-                    </List>
-                </Paper>
+                {/* Render all sections dynamically */}
+                {progressionData.sections.map((section) => (
+                    <Paper
+                        key={section.id}
+                        sx={{
+                            bgcolor: (theme) =>
+                                theme.palette.mode === "dark"
+                                    ? "#1f1f1f"
+                                    : "#f5f5f5",
+                            border: (theme) =>
+                                theme.palette.mode === "dark"
+                                    ? "none"
+                                    : "1px solid #ccc",
+                            padding: "20px",
+                            width: "100%",
+                            maxWidth: "800px",
+                            marginBottom: "20px",
+                        }}
+                    >
+                        <Typography variant='h3' gutterBottom>
+                            {section.title}
+                        </Typography>
 
-                <Paper
-                    sx={{
-                        bgcolor: (theme) =>
-                            theme.palette.mode === "dark"
-                                ? "#1f1f1f"
-                                : "#f5f5f5",
-                        color: (theme) =>
-                            theme.palette.mode === "dark"
-                                ? "#e0e0e0"
-                                : "#121212",
-                        padding: "20px",
-                        width: "100%",
-                        maxWidth: "800px",
-                        marginBottom: "20px",
-                    }}
-                >
-                    <Typography variant='h2' gutterBottom>
-                        Insight
-                    </Typography>
-                    <Typography variant='body1' paragraph>
-                        All hunters start with 1 Insight, but if you are starting out as a character not established as a hunter, you may start with 0 Insight.
-                    </Typography>
-                    <Typography variant='body1' paragraph>
-                        A character with Insight gains the ability to reroll any
-                        tests they make during a given day a number of times
-                        equal to their quantity of Insight. A character may also choose another player they can see to use this resource. These rerolls are
-                        available again after a Night’s Rest.
-                    </Typography>
-                    <Typography variant='body1' paragraph>
-                        Insight allows a hunter to see hidden creatures, lights,
-                        and objects, learn more about the nature of the cosmos,
-                        and see threats to mankind that would otherwise remain
-                        hidden.
-                    </Typography>
-                    <Typography variant='body1' paragraph>
-                        Insight is capped at 10, at this point your hunter is
-                        considered <strong>ascendant</strong>.
-                    </Typography>
-                </Paper>
+                        {/* Section description */}
+                        {section.description && (
+                            <Typography variant='body1' paragraph>
+                                <EnhancedKeywordLinker>
+                                    {section.description}
+                                </EnhancedKeywordLinker>
+                            </Typography>
+                        )}
 
-                <Paper
-                    sx={{
-                        bgcolor: (theme) =>
-                            theme.palette.mode === "dark"
-                                ? "#1f1f1f"
-                                : "#f5f5f5",
-                        color: (theme) =>
-                            theme.palette.mode === "dark"
-                                ? "#e0e0e0"
-                                : "#121212",
-                        padding: "20px",
-                        width: "100%",
-                        maxWidth: "800px",
-                        marginBottom: "20px",
-                    }}
-                >
-                    <Typography variant='h2' gutterBottom>
-                        Ascendant
-                    </Typography>
-                    <Typography variant='body1' paragraph>
-                        When you reach the point of Hunter Ascendant, you are
-                        granted an audience with the Old Man or Ancient
-                        Mistress, and may make a wish for a price of all 10
-                        insight points.
-                    </Typography>
-                    <Typography variant='body1' paragraph>
-                        A wish can be for anything that complies with the
-                        following limitations, but otherwise will be
-                        administered fairly within the wisher's intentions,
-                        avoiding monkey’s paws and verbal gotchas:
-                    </Typography>
-                    <Typography variant='h4' gutterBottom>
-                        Limmitations
-                    </Typography>
-                    <List>
-                        <ListItem sx={{ padding: "4px 0" }}>
-                            Wishes cannot alter the flow of time.
-                        </ListItem>
-                        <ListItem sx={{ padding: "4px 0" }}>
-                            Wishes cannot alter certain fundamental aspects of
-                            reality, such as the laws of physics or the nature
-                            of existence.
-                        </ListItem>
-                        <ListItem sx={{ padding: "4px 0" }}>
-                            Wishes cannot be used to directly control or
-                            manipulate the actions of others.
-                        </ListItem>
-                        <ListItem sx={{ padding: "4px 0" }}>
-                            Wishes cannot grant the wisher unlimited power or
-                            omnipotence.
-                        </ListItem>
-                        <ListItem sx={{ padding: "4px 0" }}>
-                            Characters may not fully understand the consequences
-                            of their wishes or the true nature of the
-                            wish-granting entity.
-                        </ListItem>
-                        <ListItem sx={{ padding: "4px 0" }}>
-                            Selfish or malicious wishes may come with unintended
-                            consequences or backlash.
-                        </ListItem>
-                    </List>
-                </Paper>
+                        {/* Section mechanics */}
+                        {section.mechanics && (
+                            <Typography variant='body1' paragraph>
+                                <strong>Mechanics:</strong>{" "}
+                                <EnhancedKeywordLinker>
+                                    {section.mechanics}
+                                </EnhancedKeywordLinker>
+                            </Typography>
+                        )}
+
+                        {/* Section limits */}
+                        {section.limits && (
+                            <Typography variant='body1' paragraph>
+                                <strong>Limits:</strong>{" "}
+                                <EnhancedKeywordLinker>
+                                    {section.limits}
+                                </EnhancedKeywordLinker>
+                            </Typography>
+                        )}
+
+                        {/* Section perception */}
+                        {section.perception && (
+                            <Typography variant='body1' paragraph>
+                                <strong>Perception:</strong>{" "}
+                                <EnhancedKeywordLinker>
+                                    {section.perception}
+                                </EnhancedKeywordLinker>
+                            </Typography>
+                        )}
+
+                        {/* Section maximum */}
+                        {section.maximum && (
+                            <Typography variant='body1' paragraph>
+                                <strong>Maximum:</strong>{" "}
+                                <EnhancedKeywordLinker>
+                                    {section.maximum}
+                                </EnhancedKeywordLinker>
+                            </Typography>
+                        )}
+
+                        {/* Section ascendant */}
+                        {section.ascendant && (
+                            <Typography variant='body1' paragraph>
+                                <strong>Ascendant:</strong>{" "}
+                                <EnhancedKeywordLinker>
+                                    {section.ascendant}
+                                </EnhancedKeywordLinker>
+                            </Typography>
+                        )}
+                    </Paper>
+                ))}
             </Container>
 
             <HomeButton />

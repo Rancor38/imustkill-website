@@ -1,0 +1,169 @@
+{
+    "characterCreation": {
+        "title": "Character Creation",
+        "sections": [
+            {
+                "id": "stats",
+                "title": "Stats",
+                "content": [
+                    {
+                        "name": "Body",
+                        "description": "Physical strength and endurance. Use @Body for actions like lifting, pushing, climbing, dragging, grappling, jumping, and swimming.",
+                        "keywords": [
+                            "strength",
+                            "physical",
+                            "athletics",
+                            "lifting",
+                            "climbing",
+                            "swimming"
+                        ]
+                    },
+                    {
+                        "name": "Agility",
+                        "description": "Speed and dexterity. Use @Agility for actions like catching, squeezing through spaces, picking locks, escaping manacles, and @Dodge actions in combat.",
+                        "keywords": [
+                            "dexterity",
+                            "speed",
+                            "reflexes",
+                            "lockpicking",
+                            "escape"
+                        ]
+                    },
+                    {
+                        "name": "Focus",
+                        "description": "Mental concentration and magical ability. Use @Focus for perceiving, listening, conjuring magic with @GatherSpells, tracking prey, controlling will, and resisting enchantment.",
+                        "keywords": [
+                            "perception",
+                            "magic",
+                            "willpower",
+                            "concentration",
+                            "tracking",
+                            "mental"
+                        ]
+                    },
+                    {
+                        "name": "Fate",
+                        "description": "Luck, life force, and destiny. @Fate determines your @HitPoints and influences survival during @Death situations.",
+                        "keywords": [
+                            "luck",
+                            "fortune",
+                            "death",
+                            "life force",
+                            "destiny"
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "stat-creation",
+                "title": "Creating Your Stats",
+                "subsections": [
+                    {
+                        "id": "standard-arrays",
+                        "title": "Standard Stat Arrays",
+                        "description": "Choose from predefined arrays",
+                        "options": [
+                            "6, 6, 6, 6 (Balanced)",
+                            "4, 4, 8, 8 (Specialized)",
+                            "3, 4, 8, 9 (Expert)"
+                        ],
+                        "keywords": [
+                            "arrays",
+                            "balanced",
+                            "specialized",
+                            "expert"
+                        ]
+                    },
+                    {
+                        "id": "rolling-stats",
+                        "title": "Rolling Stats",
+                        "description": "Roll 4d10s for character creation and assign values to @Body, @Agility, @Focus, @Fate. Maximum stat value is 10, minimum is 2.",
+                        "keywords": ["random", "dice", "roll", "4d10"]
+                    }
+                ]
+            },
+            {
+                "id": "basic-mechanics",
+                "title": "Basic Dice Mechanics",
+                "description": "Understanding how dice rolls work in I Must Kill",
+                "subsections": [
+                    {
+                        "id": "standard-rolls",
+                        "title": "Standard Rolls",
+                        "description": "Roll 1d10. If the result is equal to or less than your relevant stat, you succeed.",
+                        "keywords": ["1d10", "succeed", "stat", "basic roll"]
+                    },
+                    {
+                        "id": "advantage-rolls",
+                        "title": "Advantage",
+                        "description": "When you have @Advantage, roll 2d10 and choose the lower result. This represents favorable circumstances, specialized equipment, or tactical superiority.",
+                        "keywords": [
+                            "advantage",
+                            "2d10",
+                            "choose lower",
+                            "favorable"
+                        ]
+                    },
+                    {
+                        "id": "disadvantage-rolls",
+                        "title": "Disadvantage",
+                        "description": "When you have @Disadvantage, roll 2d10 and choose the higher result. This represents poor conditions, being hindered, or unfavorable circumstances.",
+                        "keywords": [
+                            "disadvantage",
+                            "2d10",
+                            "choose higher",
+                            "hindered",
+                            "unfavorable"
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "attack-stat-hp",
+                "title": "Attack Stat and Hit Points",
+                "description": "Choose @Body, @Agility, or @Focus as your @AttackStat for combat rolls. Your @HitPoints equal half of your @Fate score (rounded up).",
+                "keywords": [
+                    "attack stat",
+                    "hit points",
+                    "combat",
+                    "hp",
+                    "health"
+                ]
+            },
+            {
+                "id": "equipment-start",
+                "title": "Starting Equipment",
+                "subsections": [
+                    {
+                        "id": "random-start",
+                        "title": "Random Start",
+                        "description": "Draw 10 equipment cards from the Starter Deck per player at the table, and each player can choose up to 10 from the whole lot.",
+                        "keywords": [
+                            "random",
+                            "starter deck",
+                            "equipment cards"
+                        ]
+                    },
+                    {
+                        "id": "fixed-start",
+                        "title": "Fixed Start",
+                        "description": "Choose 10 cards from your character deck to outfit your hunter.",
+                        "keywords": ["fixed", "choose", "character deck"]
+                    }
+                ]
+            },
+            {
+                "id": "adventuring-assumptions",
+                "title": "Adventuring Assumptions",
+                "description": "Your character is competent, and capable of taking care of themselves under normal circumstances. Basic needs like bandages, water, and food are assumed to be met unless the GM specifies otherwise. Equipment from packs are key items, not exhaustive lists. Money is kept in general terms - you either have enough or you don't.",
+                "keywords": [
+                    "assumptions",
+                    "competent",
+                    "basic needs",
+                    "money",
+                    "general terms"
+                ]
+            }
+        ]
+    }
+}

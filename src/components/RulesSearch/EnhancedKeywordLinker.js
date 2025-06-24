@@ -1,0 +1,280 @@
+import React, { useState, useEffect, useMemo } from "react"
+import { Link } from "react-router-dom"
+import { Tooltip, Box } from "@mui/material"
+import useRulesEngine from "../../hooks/useRulesEngine"
+
+const EnhancedKeywordLinker = ({ children, disabled = false }) => {
+    const [allContent, setAllContent] = useState({
+        spells: [],
+        equipment: [],
+        monsters: [],
+    })
+
+    const { searchableContent, rulesData } = useRulesEngine()
+
+    // Load dynamic content for spell/equipment/monster references
+    useEffect(() => {
+        const loadDynamicContent = async () => {
+            try {
+                const [spellsResponse, equipmentResponse, monstersResponse] =
+                    await Promise.all([
+                        fetch("/spells.json"),
+                        fetch("/equipment.json"),
+                        fetch("/monsters.json"),
+                    ])
+
+                const spellsData = await spellsResponse.json()
+                const equipmentData = await equipmentResponse.json()
+                const monstersData = await monstersResponse.json()
+
+                setAllContent({
+                    spells: spellsData.spells || [],
+                    equipment: equipmentData.equipment || [],
+                    monsters: monstersData || [],
+                })
+            } catch (error) {
+                console.error("Error loading dynamic content:", error)
+            }
+        }
+
+        loadDynamicContent()
+    }, [])
+
+    // Create enhanced keyword mappings with dynamic content
+    const enhancedKeywordMappings = useMemo(() => {
+        const mappings = new Map()
+
+        // Add rules content from searchableContent
+        searchableContent.forEach((item) => {
+            // Add main title
+            mappings.set(item.title.toLowerCase(), {
+                page: item.category,
+                path: item.path,
+                section: item.section,
+                description: item.description,
+                type: item.type,
+            })
+
+            // Add keywords
+            item.keywords.forEach((keyword) => {
+                mappings.set(keyword.toLowerCase(), {
+                    page: item.category,
+                    path: item.path,
+                    section: item.section,
+                    description: item.description,
+                    type: item.type,
+                })
+            })
+        })
+
+        // Add spell names
+        allContent.spells?.forEach((spell) => {
+            mappings.set(spell.name.toLowerCase(), {
+                page: "Spells",
+                path: "/spells",
+                section: spell.name,
+                description: `${spell.deck} spell - ${spell.description}`,
+                type: "spell",
+            })
+        })
+
+        // Add equipment names
+        allContent.equipment?.forEach((item) => {
+            mappings.set(item.name.toLowerCase(), {
+                page: "Equipment",
+                path: "/equipment",
+                section: item.name,
+                description: item.description,
+                type: "equipment",
+            })
+        })
+
+        // Add monster names
+        allContent.monsters?.forEach((monster) => {
+            mappings.set(monster.Name.toLowerCase(), {
+                page: "Monsters",
+                path: `/monsters/${monster.Name}`,
+                section: monster.Name,
+                description: monster.Description,
+                type: "monster",
+            })
+        })
+
+        // Add reference IDs from rules database
+        if (rulesData?.database?.referenceIds) {
+            Object.entries(rulesData.database.referenceIds).forEach(
+                ([refId, refData]) => {
+                    mappings.set(refId.toLowerCase(), {
+                        page: refData.category,
+                        path: `/${refData.category}`,
+                        section: refData.section,
+                        description: refData.description,
+                        type: "reference",
+                        title: refData.title,
+                    })
+                }
+            )
+        }
+
+        return mappings
+    }, [searchableContent, allContent, rulesData])
+
+    // Function to process text and add keyword links
+    const processText = (text) => {
+        if (disabled || typeof text !== "string") {
+            return text
+        }
+
+        // First handle reference IDs (like @Body, @Focus, etc.)
+        const processedText = text.replace(/@(\w+)/g, (match, refId) => {
+            const fullRefId = `@${refId}`
+            const mapping = enhancedKeywordMappings.get(fullRefId.toLowerCase())
+            if (mapping) {
+                return `<REFERENCE_LINK>${fullRefId}</REFERENCE_LINK>`
+            }
+            return match
+        })
+
+        // Split text while preserving spaces, punctuation, and our special reference tags
+        const parts = processedText.split(
+            /(\s+|[.,!?;:()[\]{}'""-]|<REFERENCE_LINK>.*?<\/REFERENCE_LINK>)/g
+        )
+
+        return parts.map((part, index) => {
+            // Handle reference links
+            const refMatch = part.match(
+                /<REFERENCE_LINK>(.*?)<\/REFERENCE_LINK>/
+            )
+            if (refMatch) {
+                const refId = refMatch[1]
+                const mapping = enhancedKeywordMappings.get(refId.toLowerCase())
+
+                return (
+                    <Tooltip
+                        key={index}
+                        title={
+                            <Box sx={{ p: 1 }}>
+                                <Box sx={{ fontWeight: "bold", mb: 0.5 }}>
+                                    {mapping.title}
+                                </Box>
+                                <Box sx={{ fontSize: "0.875rem" }}>
+                                    {mapping.description}
+                                </Box>
+                                <Box
+                                    sx={{
+                                        fontSize: "0.75rem",
+                                        mt: 0.5,
+                                        opacity: 0.8,
+                                    }}
+                                >
+                                    From: {mapping.page}
+                                </Box>
+                            </Box>
+                        }
+                        arrow
+                        placement='top'
+                    >
+                        <Link
+                            to={mapping.path}
+                            style={{
+                                color: "#1976d2",
+                                textDecoration: "underline",
+                                textDecorationColor: "rgba(25, 118, 210, 0.6)",
+                                textUnderlineOffset: "2px",
+                                cursor: "pointer",
+                                fontWeight: "500",
+                            }}
+                            onMouseEnter={(e) => {
+                                e.target.style.textDecorationColor = "#1976d2"
+                                e.target.style.backgroundColor =
+                                    "rgba(25, 118, 210, 0.08)"
+                            }}
+                            onMouseLeave={(e) => {
+                                e.target.style.textDecorationColor =
+                                    "rgba(25, 118, 210, 0.6)"
+                                e.target.style.backgroundColor = "transparent"
+                            }}
+                        >
+                            {refId}
+                        </Link>
+                    </Tooltip>
+                )
+            }
+
+            // Handle regular keyword matching
+            const cleanWord = part
+                .toLowerCase()
+                .replace(/[.,!?;:()[\]{}'""-]/g, "")
+
+            if (cleanWord && enhancedKeywordMappings.has(cleanWord)) {
+                const mapping = enhancedKeywordMappings.get(cleanWord)
+
+                // Don't link reference IDs that are already processed
+                if (mapping.type === "reference") {
+                    return <span key={index}>{part}</span>
+                }
+
+                return (
+                    <Tooltip
+                        key={index}
+                        title={
+                            <Box sx={{ p: 1 }}>
+                                <Box sx={{ fontWeight: "bold", mb: 0.5 }}>
+                                    {mapping.section}
+                                </Box>
+                                <Box sx={{ fontSize: "0.875rem" }}>
+                                    {mapping.description}
+                                </Box>
+                                <Box
+                                    sx={{
+                                        fontSize: "0.75rem",
+                                        mt: 0.5,
+                                        opacity: 0.8,
+                                    }}
+                                >
+                                    From: {mapping.page}
+                                </Box>
+                            </Box>
+                        }
+                        arrow
+                        placement='top'
+                    >
+                        <Link
+                            to={mapping.path}
+                            style={{
+                                color: "inherit",
+                                textDecoration: "underline",
+                                textDecorationColor: "rgba(25, 118, 210, 0.4)",
+                                textUnderlineOffset: "2px",
+                                cursor: "pointer",
+                            }}
+                            onMouseEnter={(e) => {
+                                e.target.style.textDecorationColor =
+                                    "rgba(25, 118, 210, 0.8)"
+                            }}
+                            onMouseLeave={(e) => {
+                                e.target.style.textDecorationColor =
+                                    "rgba(25, 118, 210, 0.4)"
+                            }}
+                        >
+                            {part}
+                        </Link>
+                    </Tooltip>
+                )
+            }
+
+            return <span key={index}>{part}</span>
+        })
+    }
+
+    if (React.isValidElement(children)) {
+        // If children is a React element, clone it with processed text content
+        return React.cloneElement(children, {
+            children: processText(children.props.children),
+        })
+    }
+
+    return <span>{processText(children)}</span>
+}
+
+export default EnhancedKeywordLinker

@@ -1,0 +1,71 @@
+{
+    "deathAndResting": {
+        "title": "Death and Resting",
+        "sections": [
+            {
+                "id": "death",
+                "title": "Death",
+                "description": "When you reach 0 @HitPoints, test @Fate. On success, you live with 1 hit point. On failure, you die.",
+                "mechanics": "Roll 1d10 against @Fate. If the roll is equal to or less than your @Fate score, you survive with 1 hit point.",
+                "keywords": [
+                    "death",
+                    "0 hit points",
+                    "test fate",
+                    "survive",
+                    "die"
+                ]
+            },
+            {
+                "id": "grit-teeth",
+                "title": "Grit Teeth",
+                "description": "Once per @NightsRest, you can regain 1 hit point during a 1-minute respite from combat.",
+                "limitations": "Can only be used once between each @NightsRest",
+                "keywords": [
+                    "grit teeth",
+                    "regain hit point",
+                    "respite",
+                    "combat",
+                    "once per rest"
+                ]
+            },
+            {
+                "id": "nights-rest",
+                "title": "Night's Rest",
+                "description": "A comfortable place to sleep (like an inn or farmer's barn) provides full recovery.",
+                "benefits": [
+                    "Restore all @HitPoints",
+                    "Regain all gathered spells",
+                    "Recharge all abilities",
+                    "Gain @Insight rerolls equal to your @Insight score"
+                ],
+                "keywords": [
+                    "night's rest",
+                    "comfortable",
+                    "full recovery",
+                    "restore hit points",
+                    "regain spells",
+                    "insight rerolls"
+                ]
+            },
+            {
+                "id": "death-mechanics",
+                "title": "Death Mechanics",
+                "description": "Once dead, you can choose to strike a feature from your character's sheet at any time and add value to a living player character of your choice. These abilities last until the start of the selected character's next turn.",
+                "examples": [
+                    "Strike off your late character's Body score, and replace a living character's tests with their Body score with a 1 until the start of their next turn",
+                    "Give up each insight token and provide a living character a reroll on any test, before discarding the token"
+                ],
+                "available_stats": ["Body", "Agility", "Focus", "Fate"],
+                "timing": "You can do these things at any time, even in response to dice rolls",
+                "keywords": [
+                    "death mechanics",
+                    "strike feature",
+                    "living character",
+                    "body score",
+                    "insight token",
+                    "reroll"
+                ]
+            }
+        ]
+    }
+}

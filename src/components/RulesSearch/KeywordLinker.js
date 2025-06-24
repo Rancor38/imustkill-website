@@ -120,12 +120,19 @@ const KeywordLinker = ({ children, disabled = false }) => {
                 description:
                     "Rolling a natural 1 on attack deals 2 damage instead of 1",
             },
-            "crit fail": {
+            advantage: {
                 page: "Combat Mechanics",
                 path: "/combat-mechanics",
-                section: "Dodge",
+                section: "Advantage and Disadvantage",
                 description:
-                    "Rolling a 10 triggers monster's critical failure effect when successfully attacked",
+                    "Roll 2d10 and choose the lower result when circumstances favor you",
+            },
+            disadvantage: {
+                page: "Combat Mechanics",
+                path: "/combat-mechanics",
+                section: "Advantage and Disadvantage",
+                description:
+                    "Roll 2d10 and choose the higher result when circumstances hinder you",
             },
 
             // Damage Types
