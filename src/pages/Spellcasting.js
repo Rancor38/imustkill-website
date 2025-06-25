@@ -6,13 +6,16 @@ import {
     Alert,
 } from "@mui/material"
 import { useState, useEffect } from "react"
+import { useLocation } from "react-router-dom"
 import HomeButton from "../components/HomeButton"
 import useRulesEngine from "../hooks/useRulesEngine"
 import EnhancedKeywordLinker from "../components/RulesSearch/EnhancedKeywordLinker"
+import { scrollToAnchor } from "../utils/scrollToAnchor"
 
 const Spellcasting = () => {
     const { getCategoryRules, loading, error } = useRulesEngine()
     const [spellcastingData, setSpellcastingData] = useState(null)
+    const location = useLocation()
 
     useEffect(() => {
         if (!loading && !error) {
@@ -20,6 +23,18 @@ const Spellcasting = () => {
             setSpellcastingData(data)
         }
     }, [loading, error, getCategoryRules])
+
+    // Handle scrolling to anchor sections
+    useEffect(() => {
+        if (spellcastingData && location.hash) {
+            const timer = setTimeout(() => {
+                const elementId = location.hash.substring(1)
+                scrollToAnchor(elementId)
+            }, 100)
+
+            return () => clearTimeout(timer)
+        }
+    }, [spellcastingData, location.hash])
 
     if (loading) {
         return (
@@ -79,6 +94,7 @@ const Spellcasting = () => {
                 {spellcastingData.sections.map((section) => (
                     <Paper
                         key={section.id}
+                        id={section.id} // anchor link id
                         sx={{
                             bgcolor: (theme) =>
                                 theme.palette.mode === "dark"

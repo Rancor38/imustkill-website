@@ -15,10 +15,18 @@
             {
                 "id": "actions",
                 "title": "Actions (In Combat)",
+                "%Source": [
+                    "@Attack",
+                    "@Dodge",
+                    "@Brace",
+                    "@Gather",
+                    "@Flee",
+                    "@Negotiate"
+                ],
                 "actions": [
                     {
                         "name": "Attack",
-                        "description": "Roll 1d10 against @AttackStat. If the roll is lower, deal 1 damage (2 for a natural 1, aka a crit). If your @Insight is too low to perceive a monster as it is, they take -1 damage from your attacks.",
+                        "description": "Roll 1d10 against @AttackStat. If the roll is lower, deal 1 @PhysicalDamage (2 for a natural 1, aka a crit). If your @Insight is too low to perceive a monster as it is, they take -1 damage from your attacks.",
                         "keywords": [
                             "attack",
                             "1d10",
@@ -30,7 +38,7 @@
                     },
                     {
                         "name": "Dodge",
-                        "description": "Roll 1d10 against @Agility. If the roll is lower, immune to dodgeable attacks until next turn and regain 1 HP. If you roll a 10 and the monster successfully attacks you on this turn, the GM checks the Crit Fail column on the Monster Stats.",
+                        "description": "Roll 1d10 against @Agility. If the roll is lower, immune to dodgeable attacks until next turn and regain 1 @HitPoints. If you roll a 10 and the monster successfully attacks you on this turn, the GM checks the Crit Fail column on the Monster Stats.",
                         "keywords": [
                             "dodge",
                             "agility",
@@ -41,7 +49,7 @@
                     },
                     {
                         "name": "Brace",
-                        "description": "Roll 1d10 against @Body. If the roll is lower and you have a weapon, armor, or shield, you are immune to braceable attacks until next turn and regain 1 HP. If you roll a 10 and the monster successfully attacks you on this turn, the GM checks the Crit Fail column on the Monster Stats.",
+                        "description": "Roll 1d10 against @Body. If the roll is lower and you have a weapon, armor, or shield, you are immune to braceable attacks until next turn and regain 1 @HitPoints. If you roll a 10 and the monster successfully attacks you on this turn, the GM checks the Crit Fail column on the Monster Stats.",
                         "keywords": [
                             "brace",
                             "body",
@@ -54,7 +62,7 @@
                     },
                     {
                         "name": "Gather a Spell",
-                        "description": "Roll 1d10 against Focus. If the roll is lower, draw 1 spell from your spell deck. If you roll a 10 you lose 1 hit point, and discard all held spell cards.",
+                        "description": "Roll 1d10 against @Focus. If the roll is lower, draw 1 @Spell from your @Spell deck. If you roll a 10 you lose 1 @HitPoints, and discard all held @Spell cards.",
                         "keywords": [
                             "gather spell",
                             "focus",
@@ -64,7 +72,7 @@
                     },
                     {
                         "name": "Flee",
-                        "description": "Roll 1d10 against Agility. If the roll is lower, you can successfully exit the combat and cannot be in danger for the next round. If the roll fails, you remain in combat.",
+                        "description": "Roll 1d10 against @Agility. If the roll is lower, you can successfully exit the combat and cannot be in danger for the next round. If the roll fails, you remain in combat.",
                         "keywords": ["flee", "agility", "exit combat", "escape"]
                     },
                     {
@@ -135,10 +143,15 @@
             {
                 "id": "damage-types",
                 "title": "Damage Types",
+                "%Source": [
+                    "@PhysicalDamage",
+                    "@SpiritualDamage",
+                    "@HybridDamage"
+                ],
                 "types": [
                     {
                         "name": "Physical Damage",
-                        "description": "Standard damage from conventional weapons such as swords, guns, clubs, and other mundane armaments. Most creatures can be harmed by physical damage, though some may have resistance or immunity to certain types of physical attacks.",
+                        "description": "Standard @Damage from conventional weapons such as swords, guns, clubs, and other mundane armaments. Most creatures can be harmed by @PhysicalDamage, though some may have resistance or immunity to certain types of physical attacks.",
                         "examples": [
                             "swords",
                             "firearms",
@@ -158,7 +171,7 @@
                     },
                     {
                         "name": "Spiritual Damage",
-                        "description": "Damage that affects the soul or essence of a creature. Particularly effective against undead, demons, and other supernatural entities. Some creatures may be vulnerable to spiritual damage while being resistant to physical attacks.",
+                        "description": "@Damage that affects the soul or essence of a creature. Particularly effective against undead, demons, and other supernatural entities. Some creatures may be vulnerable to @SpiritualDamage while being resistant to @PhysicalDamage attacks.",
                         "examples": [
                             "prayers",
                             "holy water",
@@ -180,7 +193,7 @@
                     },
                     {
                         "name": "Hybrid Damage",
-                        "description": "Damage that combines both physical and spiritual elements, making it effective against a wider range of creatures. These weapons and attacks can harm both corporeal and incorporeal beings.",
+                        "description": "@Damage that combines both @PhysicalDamage and @SpiritualDamage elements, making it effective against a wider range of creatures. These weapons and attacks can harm both corporeal and incorporeal beings.",
                         "examples": [
                             "silver weapons",
                             "fire",
@@ -225,10 +238,11 @@
             {
                 "id": "statuses",
                 "title": "Statuses",
+                "%Source": ["@Frightened", "@Unconscious", "@Diseased"],
                 "conditions": [
                     {
                         "name": "Frightened",
-                        "description": "A creature that is Frightened cannot attack on their turn or willingly move towards the source of their fear if there's another route of escape.",
+                        "description": "A creature that is @Frightened cannot @Attack on their turn or willingly move towards the source of their fear if there's another route of escape.",
                         "keywords": [
                             "frightened",
                             "fear",
@@ -238,12 +252,24 @@
                     },
                     {
                         "name": "Unconscious",
-                        "description": "A creature cannot defend against an attack, or make attacks, or move. Attacks against an unconscious creature automatically succeed. Creatures that survive an attack while unconscious may awaken at the start of their next turn.",
+                        "description": "A creature cannot defend against an @Attack, or make @Attack actions, or move. @Attack actions against an @Unconscious creature automatically succeed. Creatures that survive an @Attack while @Unconscious may awaken at the start of their next turn.",
                         "keywords": [
                             "unconscious",
                             "cannot defend",
                             "automatically succeed",
                             "awaken"
+                        ]
+                    },
+                    {
+                        "name": "Diseased",
+                        "description": "When diseased, characters make all tests with @Disadvantage. This represents illness, poison, or other debilitating conditions that weaken the character's performance.",
+                        "keywords": [
+                            "diseased",
+                            "disadvantage",
+                            "illness",
+                            "poison",
+                            "debilitating",
+                            "weakened"
                         ]
                     }
                 ]

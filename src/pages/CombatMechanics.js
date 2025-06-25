@@ -8,13 +8,16 @@ import {
     Alert,
 } from "@mui/material"
 import { useState, useEffect } from "react"
+import { useLocation } from "react-router-dom"
 import HomeButton from "../components/HomeButton"
 import useRulesEngine from "../hooks/useRulesEngine"
 import KeywordLinker from "../components/RulesSearch/EnhancedKeywordLinker"
+import { scrollToAnchor } from "../utils/scrollToAnchor"
 
 const CombatMechanics = () => {
     const { getCategoryRules, loading, error } = useRulesEngine()
     const [combatData, setCombatData] = useState(null)
+    const location = useLocation()
 
     useEffect(() => {
         if (!loading && !error) {
@@ -22,6 +25,18 @@ const CombatMechanics = () => {
             setCombatData(data)
         }
     }, [loading, error, getCategoryRules])
+
+    // Handle scrolling to anchor sections
+    useEffect(() => {
+        if (combatData && location.hash) {
+            const timer = setTimeout(() => {
+                const elementId = location.hash.substring(1)
+                scrollToAnchor(elementId)
+            }, 100)
+
+            return () => clearTimeout(timer)
+        }
+    }, [combatData, location.hash])
 
     if (loading) {
         return (
@@ -82,6 +97,7 @@ const CombatMechanics = () => {
                 {combatData.sections.map((section) => (
                     <Paper
                         key={section.id}
+                        id={section.id} // Add this ID for anchor links
                         sx={{
                             bgcolor: (theme) =>
                                 theme.palette.mode === "dark"

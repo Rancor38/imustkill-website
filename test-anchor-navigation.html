@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Anchor Navigation Test</title>
+    </head>
+    <body>
+        <h1>Anchor Navigation Test for I Must Kill Website</h1>
+
+        <h2>Test Links</h2>
+        <p>Click these links to test anchor navigation:</p>
+
+        <ul>
+            <li>
+                <a
+                    href="http://localhost:3000/character-creation#stats"
+                    target="_blank"
+                    >@Body, @Agility, @Focus, @Fate → Character Creation
+                    Stats</a
+                >
+            </li>
+            <li>
+                <a
+                    href="http://localhost:3000/character-creation#basic-mechanics"
+                    target="_blank"
+                    >@Advantage, @Disadvantage → Character Creation Basic
+                    Mechanics</a
+                >
+            </li>
+            <li>
+                <a
+                    href="http://localhost:3000/character-creation#attack-stat-hp"
+                    target="_blank"
+                    >@AttackStat, @HitPoints → Character Creation Attack Stat
+                    and HP</a
+                >
+            </li>
+            <li>
+                <a
+                    href="http://localhost:3000/combat-mechanics#actions"
+                    target="_blank"
+                    >@Attack, @Dodge, @Brace → Combat Mechanics Actions</a
+                >
+            </li>
+            <li>
+                <a
+                    href="http://localhost:3000/combat-mechanics#damage-types"
+                    target="_blank"
+                    >@PhysicalDamage, @SpiritualDamage, @HybridDamage → Combat
+                    Mechanics Damage Types</a
+                >
+            </li>
+            <li>
+                <a
+                    href="http://localhost:3000/combat-mechanics#statuses"
+                    target="_blank"
+                    >@Frightened, @Unconscious, @Diseased → Combat Mechanics
+                    Statuses</a
+                >
+            </li>
+            <li>
+                <a
+                    href="http://localhost:3000/death-and-resting#death"
+                    target="_blank"
+                    >@Death → Death and Resting</a
+                >
+            </li>
+            <li>
+                <a
+                    href="http://localhost:3000/death-and-resting#grit-teeth"
+                    target="_blank"
+                    >@GritTeeth → Death and Resting Grit Teeth</a
+                >
+            </li>
+            <li>
+                <a
+                    href="http://localhost:3000/spellcasting#gathering-spells"
+                    target="_blank"
+                    >@GatherSpells → Spellcasting Gathering Spells</a
+                >
+            </li>
+            <li>
+                <a
+                    href="http://localhost:3000/progression#leveling-up"
+                    target="_blank"
+                    >@LevelingUp → Progression Leveling Up</a
+                >
+            </li>
+            <li>
+                <a
+                    href="http://localhost:3000/running-the-game#hidden-creatures"
+                    target="_blank"
+                    >@HiddenCreatures → Running the Game Hidden Creatures</a
+                >
+            </li>
+        </ul>
+
+        <h2>Expected Behavior</h2>
+        <p>Each link should:</p>
+        <ol>
+            <li>Navigate to the correct page</li>
+            <li>
+                Automatically scroll to the specific section with smooth
+                scrolling
+            </li>
+            <li>Account for the page header offset (80px)</li>
+            <li>Work even when navigating from a different page</li>
+        </ol>
+
+        <h2>Testing @RuleName Links</h2>
+        <p>You can also test by:</p>
+        <ol>
+            <li>
+                Going to the
+                <a href="http://localhost:3000/source-registry" target="_blank"
+                    >Source Registry</a
+                >
+            </li>
+            <li>Clicking on any @RuleName link in the "Sources" column</li>
+            <li>Verifying it scrolls to the correct section</li>
+        </ol>
+    </body>
+</html>

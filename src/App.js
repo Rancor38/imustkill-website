@@ -15,6 +15,8 @@ import Monsters from "./pages/Monsters.js"
 import MonsterDetail from "./components/MonsterDetail.js"
 import DarkwatchGame from "./pages/DarkwatchGame.js"
 import QuickReference from "./pages/QuickReference.js"
+import SourceRegistry from "./components/RulesSearch/SourceRegistry.js"
+import RuleCategorizer from "./components/RulesSearch/RuleCategorizer.js"
 import Sparks from "./components/Sparks/Sparks.jsx"
 import BackButton from "./components/BackButton/BackButton.js"
 import ThemeToggle from "./components/ThemeToggle/ThemeToggle.js"
@@ -64,6 +66,14 @@ function App() {
                     <Route
                         path='quick-reference'
                         element={<QuickReference />}
+                    />
+                    <Route
+                        path='source-registry'
+                        element={<SourceRegistry />}
+                    />
+                    <Route
+                        path='rule-categorizer'
+                        element={<RuleCategorizer />}
                     />
                     <Route path='/' element={<HomePage />} />
                 </Route>

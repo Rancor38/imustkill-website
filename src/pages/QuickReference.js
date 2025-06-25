@@ -80,7 +80,7 @@ const QuickReference = () => {
 
                 <Grid container spacing={3}>
                     {Object.entries(quickReference).map(([category, items]) => (
-                        <Grid item xs={12} md={6} lg={4} key={category}>
+                        <Grid item key={category} id={category}>
                             <Paper
                                 sx={{
                                     bgcolor: (theme) =>

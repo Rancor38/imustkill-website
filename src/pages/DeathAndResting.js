@@ -8,20 +8,33 @@ import {
     Alert,
 } from "@mui/material"
 import { useState, useEffect } from "react"
+import { useLocation } from "react-router-dom"
 import HomeButton from "../components/HomeButton"
 import useRulesEngine from "../hooks/useRulesEngine"
 import EnhancedKeywordLinker from "../components/RulesSearch/EnhancedKeywordLinker"
+import { scrollToAnchor } from "../utils/scrollToAnchor"
 
 const DeathAndResting = () => {
     const { getCategoryRules, loading, error } = useRulesEngine()
     const [deathRestingData, setDeathRestingData] = useState(null)
+    const location = useLocation()
 
     useEffect(() => {
         if (!loading && !error) {
             const data = getCategoryRules("death-and-resting")
             setDeathRestingData(data)
         }
-    }, [loading, error, getCategoryRules])
+    }, [loading, error, getCategoryRules]) // Handle scrolling to anchor sections
+    useEffect(() => {
+        if (deathRestingData && location.hash) {
+            const timer = setTimeout(() => {
+                const elementId = location.hash.substring(1)
+                scrollToAnchor(elementId)
+            }, 100)
+
+            return () => clearTimeout(timer)
+        }
+    }, [deathRestingData, location.hash])
 
     if (loading) {
         return (
@@ -84,6 +97,7 @@ const DeathAndResting = () => {
                 {deathRestingData.sections.map((section) => (
                     <Paper
                         key={section.id}
+                        id={section.id} // add anchor id
                         sx={{
                             bgcolor: (theme) =>
                                 theme.palette.mode === "dark"

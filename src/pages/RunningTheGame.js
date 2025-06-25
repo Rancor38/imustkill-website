@@ -8,13 +8,16 @@ import {
     Alert,
 } from "@mui/material"
 import { useState, useEffect } from "react"
+import { useLocation } from "react-router-dom"
 import HomeButton from "../components/HomeButton"
 import useRulesEngine from "../hooks/useRulesEngine"
 import EnhancedKeywordLinker from "../components/RulesSearch/EnhancedKeywordLinker"
+import { scrollToAnchor } from "../utils/scrollToAnchor"
 
 const RunningTheGame = () => {
     const { getCategoryRules, loading, error } = useRulesEngine()
     const [runningGameData, setRunningGameData] = useState(null)
+    const location = useLocation()
 
     useEffect(() => {
         if (!loading && !error) {
@@ -22,6 +25,18 @@ const RunningTheGame = () => {
             setRunningGameData(data)
         }
     }, [loading, error, getCategoryRules])
+
+    // Handle scrolling to anchor sections
+    useEffect(() => {
+        if (runningGameData && location.hash) {
+            const timer = setTimeout(() => {
+                const elementId = location.hash.substring(1)
+                scrollToAnchor(elementId)
+            }, 100)
+
+            return () => clearTimeout(timer)
+        }
+    }, [runningGameData, location.hash])
 
     if (loading) {
         return (
@@ -81,6 +96,7 @@ const RunningTheGame = () => {
                 {runningGameData.sections.map((section) => (
                     <Paper
                         key={section.id}
+                        id={section.id} // anchor link id
                         sx={{
                             bgcolor: (theme) =>
                                 theme.palette.mode === "dark"
@@ -138,6 +154,7 @@ const RunningTheGame = () => {
                                 {section.subsections.map((subsection) => (
                                     <Paper
                                         key={subsection.id}
+                                        id={subsection.id}
                                         sx={{
                                             bgcolor: (theme) =>
                                                 theme.palette.mode === "dark"

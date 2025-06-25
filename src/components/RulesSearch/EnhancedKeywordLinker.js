@@ -104,9 +104,28 @@ const EnhancedKeywordLinker = ({ children, disabled = false }) => {
         if (rulesData?.database?.referenceIds) {
             Object.entries(rulesData.database.referenceIds).forEach(
                 ([refId, refData]) => {
+                    // Map category to the correct route path
+                    let routePath = `/${refData.category}`
+                    if (refData.category === "character-creation") {
+                        routePath = "/character-creation"
+                    } else if (refData.category === "combat-mechanics") {
+                        routePath = "/combat-mechanics"
+                    } else if (refData.category === "death-and-resting") {
+                        routePath = "/death-and-resting"
+                    } else if (refData.category === "running-the-game") {
+                        routePath = "/running-the-game"
+                    } else if (refData.category === "quick-reference") {
+                        routePath = "/quick-reference"
+                    }
+
+                    // Add section anchor if available
+                    if (refData.section) {
+                        routePath += `#${refData.section}`
+                    }
+
                     mappings.set(refId.toLowerCase(), {
                         page: refData.category,
-                        path: `/${refData.category}`,
+                        path: routePath,
                         section: refData.section,
                         description: refData.description,
                         type: "reference",
@@ -149,6 +168,11 @@ const EnhancedKeywordLinker = ({ children, disabled = false }) => {
                 const refId = refMatch[1]
                 const mapping = enhancedKeywordMappings.get(refId.toLowerCase())
 
+                // Remove the @ symbol for display
+                const displayText = refId.startsWith("@")
+                    ? refId.substring(1)
+                    : refId
+
                 return (
                     <Tooltip
                         key={index}
@@ -167,7 +191,7 @@ const EnhancedKeywordLinker = ({ children, disabled = false }) => {
                                         opacity: 0.8,
                                     }}
                                 >
-                                    From: {mapping.page}
+                                    Click to view: {mapping.page}
                                 </Box>
                             </Box>
                         }
@@ -178,24 +202,34 @@ const EnhancedKeywordLinker = ({ children, disabled = false }) => {
                             to={mapping.path}
                             style={{
                                 color: "#1976d2",
-                                textDecoration: "underline",
-                                textDecorationColor: "rgba(25, 118, 210, 0.6)",
-                                textUnderlineOffset: "2px",
+                                textDecoration: "none",
                                 cursor: "pointer",
-                                fontWeight: "500",
+                                fontWeight: "bold",
+                                fontFamily:
+                                    "'Roboto Mono', 'Courier New', monospace",
+                                fontSize: "0.95em",
+                                padding: "1px 4px",
+                                borderRadius: "3px",
+                                backgroundColor: "rgba(25, 118, 210, 0.08)",
+                                border: "1px solid rgba(25, 118, 210, 0.2)",
+                                transition: "all 0.2s ease",
                             }}
                             onMouseEnter={(e) => {
-                                e.target.style.textDecorationColor = "#1976d2"
                                 e.target.style.backgroundColor =
-                                    "rgba(25, 118, 210, 0.08)"
+                                    "rgba(25, 118, 210, 0.15)"
+                                e.target.style.borderColor =
+                                    "rgba(25, 118, 210, 0.4)"
+                                e.target.style.transform = "translateY(-1px)"
                             }}
                             onMouseLeave={(e) => {
-                                e.target.style.textDecorationColor =
-                                    "rgba(25, 118, 210, 0.6)"
-                                e.target.style.backgroundColor = "transparent"
+                                e.target.style.backgroundColor =
+                                    "rgba(25, 118, 210, 0.08)"
+                                e.target.style.borderColor =
+                                    "rgba(25, 118, 210, 0.2)"
+                                e.target.style.transform = "translateY(0)"
                             }}
                         >
-                            {refId}
+                            {displayText}
                         </Link>
                     </Tooltip>
                 )

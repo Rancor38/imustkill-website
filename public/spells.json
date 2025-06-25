@@ -34,7 +34,7 @@
             "name": "Sleep",
             "rarity": "uncommon",
             "deck": "Ancient Spells",
-            "description": "One target must succeed a Focus test or fall unconscious. Discard this card."
+            "description": "One target must succeed a @Focus test or fall @Unconscious. Discard this card."
         },
         {
             "name": "Detect Magic",
@@ -316,7 +316,7 @@
             "name": "Dread Gaze",
             "rarity": "common",
             "deck": "Vampire",
-            "description": "You bare your fangs and snarl. One mortal creature you choose within 15' must pass a Focus test or be frightened for 1 turn. Discard this card."
+            "description": "You bare your fangs and snarl. One mortal creature you choose within 15' must pass a @Focus test or be @Frightened for 1 turn. Discard this card."
         },
         {
             "name": "Withering Touch",
@@ -376,7 +376,7 @@
             "name": "Howl of Damnation",
             "rarity": "uncommon",
             "deck": "Vampire",
-            "description": "You release an unholy scream. All enemies within 30' must pass a Focus test or be deafened and frightened for 1 turn. Discard this card."
+            "description": "You release an unholy scream. All enemies within 30' must pass a @Focus test or be deafened and @Frightened for 1 turn. Discard this card."
         }
     ]
 }

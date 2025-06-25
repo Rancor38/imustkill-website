@@ -94,6 +94,7 @@ const Equipment = () => {
                         flexDirection: "column",
                         alignItems: "center",
                     }}
+                    id='equipment'
                 >
                     <Button
                         variant='contained'
@@ -128,6 +129,7 @@ const Equipment = () => {
                         maxWidth: "800px",
                         marginBottom: "20px",
                     }}
+                    id='full-item-list'
                 >
                     <Typography variant='h2' gutterBottom>
                         Full Item List:

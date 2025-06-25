@@ -233,6 +233,32 @@ const HomePage = () => {
                     </Button>
                     <Button
                         component={Link}
+                        to='/source-registry'
+                        variant='contained'
+                        sx={{
+                            ...getButtonStyles(),
+                            textAlign: "center",
+                        }}
+                    >
+                        Source Registry
+                        <br />
+                        (Development)
+                    </Button>
+                    <Button
+                        component={Link}
+                        to='/rule-categorizer'
+                        variant='contained'
+                        sx={{
+                            ...getButtonStyles(),
+                            textAlign: "center",
+                        }}
+                    >
+                        Rule Categorizer
+                        <br />
+                        (Development)
+                    </Button>
+                    <Button
+                        component={Link}
                         to='/monsters'
                         variant='contained'
                         sx={getButtonStyles()}

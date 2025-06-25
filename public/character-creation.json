@@ -5,10 +5,11 @@
             {
                 "id": "stats",
                 "title": "Stats",
+                "%Source": ["@Body", "@Agility", "@Focus", "@Fate"],
                 "content": [
                     {
                         "name": "Body",
-                        "description": "Physical strength and endurance. Use @Body for actions like lifting, pushing, climbing, dragging, grappling, jumping, and swimming.",
+                        "description": "Physical strength and endurance. Use Body for actions like lifting, pushing, climbing, dragging, grappling, jumping, and swimming.",
                         "keywords": [
                             "strength",
                             "physical",
@@ -20,7 +21,7 @@
                     },
                     {
                         "name": "Agility",
-                        "description": "Speed and dexterity. Use @Agility for actions like catching, squeezing through spaces, picking locks, escaping manacles, and @Dodge actions in combat.",
+                        "description": "Speed and dexterity. Use Agility for actions like catching, squeezing through spaces, picking locks, escaping manacles, and @Dodge actions in combat.",
                         "keywords": [
                             "dexterity",
                             "speed",
@@ -31,7 +32,7 @@
                     },
                     {
                         "name": "Focus",
-                        "description": "Mental concentration and magical ability. Use @Focus for perceiving, listening, conjuring magic with @GatherSpells, tracking prey, controlling will, and resisting enchantment.",
+                        "description": "Mental concentration and magical ability. Use Focus for perceiving, listening, conjuring magic with @GatherSpells, tracking prey, controlling will, and resisting enchantment.",
                         "keywords": [
                             "perception",
                             "magic",
@@ -43,7 +44,7 @@
                     },
                     {
                         "name": "Fate",
-                        "description": "Luck, life force, and destiny. @Fate determines your @HitPoints and influences survival during @Death situations.",
+                        "description": "Luck, life force, and destiny. Fate determines your @HitPoints and influences survival during @Death situations.",
                         "keywords": [
                             "luck",
                             "fortune",
@@ -67,12 +68,7 @@
                             "4, 4, 8, 8 (Specialized)",
                             "3, 4, 8, 9 (Expert)"
                         ],
-                        "keywords": [
-                            "arrays",
-                            "balanced",
-                            "specialized",
-                            "expert"
-                        ]
+                        "keywords": ["arrays", "balanced", "expert"]
                     },
                     {
                         "id": "rolling-stats",
@@ -86,6 +82,7 @@
                 "id": "basic-mechanics",
                 "title": "Basic Dice Mechanics",
                 "description": "Understanding how dice rolls work in I Must Kill",
+                "%Source": ["@Advantage", "@Disadvantage"],
                 "subsections": [
                     {
                         "id": "standard-rolls",
@@ -121,6 +118,7 @@
             {
                 "id": "attack-stat-hp",
                 "title": "Attack Stat and Hit Points",
+                "%Source": ["@AttackStat", "@HitPoints"],
                 "description": "Choose @Body, @Agility, or @Focus as your @AttackStat for combat rolls. Your @HitPoints equal half of your @Fate score (rounded up).",
                 "keywords": [
                     "attack stat",

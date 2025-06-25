@@ -8,13 +8,16 @@ import {
     Alert,
 } from "@mui/material"
 import { useState, useEffect } from "react"
+import { useLocation } from "react-router-dom"
 import HomeButton from "../components/HomeButton"
 import useRulesEngine from "../hooks/useRulesEngine"
 import KeywordLinker from "../components/RulesSearch/EnhancedKeywordLinker"
+import { scrollToAnchor } from "../utils/scrollToAnchor"
 
 const CharacterCreation = () => {
     const { getCategoryRules, loading, error } = useRulesEngine()
     const [characterCreationData, setCharacterCreationData] = useState(null)
+    const location = useLocation()
 
     useEffect(() => {
         if (!loading && !error) {
@@ -22,6 +25,18 @@ const CharacterCreation = () => {
             setCharacterCreationData(data)
         }
     }, [loading, error, getCategoryRules])
+
+    // Handle scrolling to anchor sections
+    useEffect(() => {
+        if (characterCreationData && location.hash) {
+            const timer = setTimeout(() => {
+                const elementId = location.hash.substring(1)
+                scrollToAnchor(elementId)
+            }, 100)
+
+            return () => clearTimeout(timer)
+        }
+    }, [characterCreationData, location.hash])
 
     if (loading) {
         return (
@@ -91,6 +106,7 @@ const CharacterCreation = () => {
                 </Typography>
 
                 <Paper
+                    id='stats'
                     sx={{
                         bgcolor: (theme) =>
                             theme.palette.mode === "dark"
@@ -116,10 +132,12 @@ const CharacterCreation = () => {
                     <List>
                         {statsSection?.content.map((stat, index) => (
                             <ListItem key={index}>
+                                <strong>{stat.name}</strong>
+                                {" ("}
                                 <KeywordLinker>
-                                    <strong>{stat.name}</strong> (
-                                    {stat.description})
+                                    {stat.description}
                                 </KeywordLinker>
+                                {")"}
                             </ListItem>
                         ))}
                     </List>
@@ -131,6 +149,7 @@ const CharacterCreation = () => {
                     .map((section) => (
                         <Paper
                             key={section.id}
+                            id={section.id}
                             sx={{
                                 bgcolor: (theme) =>
                                     theme.palette.mode === "dark"
@@ -163,6 +182,7 @@ const CharacterCreation = () => {
                                     {section.subsections.map((subsection) => (
                                         <div
                                             key={subsection.id}
+                                            id={subsection.id}
                                             style={{ marginBottom: "20px" }}
                                         >
                                             <Typography

@@ -131,9 +131,75 @@
             },
             "@HitPoints": {
                 "title": "Hit Points",
-                "category": "character-creation",
-                "section": "attack-stat-hp",
-                "description": "Health equal to half Fate score (rounded up)"
+                "category": "death-and-resting",
+                "section": "hit-points",
+                "description": "Hit points are a measure of superficial harm and your character's poise and ability to avoid death."
+            },
+            "@Diseased": {
+                "title": "Diseased Status",
+                "category": "combat-mechanics",
+                "section": "statuses",
+                "description": "Afflicted creatures make all tests with disadvantage"
+            },
+            "@Frightened": {
+                "title": "Frightened Status",
+                "category": "combat-mechanics",
+                "section": "statuses",
+                "description": "Cannot attack or willingly move towards source of fear"
+            },
+            "@Unconscious": {
+                "title": "Unconscious Status",
+                "category": "combat-mechanics",
+                "section": "statuses",
+                "description": "Cannot defend, attack, or move. Attacks automatically succeed"
+            },
+            "@Gather": {
+                "title": "Gather Action",
+                "category": "combat-mechanics",
+                "section": "actions",
+                "description": "Combat action to gather spells using Focus"
+            },
+            "@Flee": {
+                "title": "Flee Action",
+                "category": "combat-mechanics",
+                "section": "actions",
+                "description": "Combat action to escape from battle"
+            },
+            "@Negotiate": {
+                "title": "Negotiate Action",
+                "category": "combat-mechanics",
+                "section": "actions",
+                "description": "Combat action to attempt diplomacy"
+            },
+            "@MonsterTables": {
+                "title": "Monster Tables",
+                "category": "running-the-game",
+                "section": "reading-monster-tables",
+                "description": "System for determining monster actions using d10 rolls"
+            },
+            "@HiddenCreatures": {
+                "title": "Hidden Creatures",
+                "category": "running-the-game",
+                "section": "hidden-creatures",
+                "description": "Creatures that require Insight to perceive properly"
+            },
+            "@Damage": {
+                "title": "Damage",
+                "category": "combat-mechanics",
+                "section": "damage-types",
+                "description": "Harm dealt to creatures, can be Physical, Spiritual, or Hybrid"
+            },
+            "@Spell": {
+                "title": "Spell",
+                "category": "spellcasting",
+                "section": "gathering-spells",
+                "description": "Magical effects that can be gathered and cast"
+            },
+            "@Rest": {
+                "title": "Rest",
+                "category": "death-and-resting",
+                "section": "nights-rest",
+                "description": "Recovery mechanisms including Night's Rest"
             }
         },
         "categories": {

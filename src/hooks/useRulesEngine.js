@@ -295,15 +295,78 @@ export const useRulesEngine = () => {
         return Array.from(suggestions).slice(0, 10)
     }
 
+    // Get source information for rules
+    const getSourceMap = () => {
+        if (!rulesData.database) return new Map()
+
+        const sourceMap = new Map()
+
+        Object.keys(rulesData.database.categories || {}).forEach(
+            (categoryKey) => {
+                const categoryData = rulesData[categoryKey]
+                if (!categoryData) return
+
+                const mainData = Object.values(categoryData)[0]
+                if (!mainData?.sections) return
+
+                const scanSections = (sections) => {
+                    sections.forEach((section) => {
+                        if (section["%Source"]) {
+                            section["%Source"].forEach((ruleName) => {
+                                if (!sourceMap.has(ruleName)) {
+                                    sourceMap.set(ruleName, [])
+                                }
+                                sourceMap.get(ruleName).push({
+                                    category: categoryKey,
+                                    categoryTitle:
+                                        rulesData.database.categories[
+                                            categoryKey
+                                        ]?.title,
+                                    sectionId: section.id,
+                                    sectionTitle: section.title,
+                                    description: section.description || "",
+                                    path: `/${categoryKey}#${section.id}`,
+                                })
+                            })
+                        }
+
+                        // Recursively scan subsections
+                        if (section.subsections) {
+                            scanSections(section.subsections)
+                        }
+                    })
+                }
+
+                scanSections(mainData.sections)
+            }
+        )
+
+        return sourceMap
+    }
+
+    // Get uncategorized rules (exist in referenceIds but no %Source)
+    const getUncategorizedRules = () => {
+        if (!rulesData.database) return []
+
+        const sourceMap = getSourceMap()
+        const allReferenceIds = Object.keys(
+            rulesData.database.referenceIds || {}
+        )
+        const sourcedRules = new Set(sourceMap.keys())
+
+        return allReferenceIds.filter((refId) => !sourcedRules.has(refId))
+    }
+
     return {
-        rulesData,
-        loading,
-        error,
+        searchableContent,
         search,
         getRule,
         getCategoryRules,
-        getKeywordSuggestions,
-        searchableContent,
+        getSourceMap,
+        getUncategorizedRules,
+        rulesData,
+        loading,
+        error,
     }
 }
 

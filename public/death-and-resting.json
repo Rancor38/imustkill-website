@@ -3,8 +3,15 @@
         "title": "Death and Resting",
         "sections": [
             {
+                "id": "hit-points",
+                "title": "Hit Points",
+                "description": "@HitPoints are a measure of superficial harm and your character's poise and ability to avoid @Death.",
+                "keywords": ["hit points", "hp", "poise", "harm"]
+            },
+            {
                 "id": "death",
                 "title": "Death",
+                "%Source": ["@Death"],
                 "description": "When you reach 0 @HitPoints, test @Fate. On success, you live with 1 hit point. On failure, you die.",
                 "mechanics": "Roll 1d10 against @Fate. If the roll is equal to or less than your @Fate score, you survive with 1 hit point.",
                 "keywords": [
@@ -18,6 +25,7 @@
             {
                 "id": "grit-teeth",
                 "title": "Grit Teeth",
+                "%Source": ["@GritTeeth"],
                 "description": "Once per @NightsRest, you can regain 1 hit point during a 1-minute respite from combat.",
                 "limitations": "Can only be used once between each @NightsRest",
                 "keywords": [
@@ -31,6 +39,7 @@
             {
                 "id": "nights-rest",
                 "title": "Night's Rest",
+                "%Source": ["@NightsRest"],
                 "description": "A comfortable place to sleep (like an inn or farmer's barn) provides full recovery.",
                 "benefits": [
                     "Restore all @HitPoints",

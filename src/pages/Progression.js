@@ -6,13 +6,16 @@ import {
     Alert,
 } from "@mui/material"
 import { useState, useEffect } from "react"
+import { useLocation } from "react-router-dom"
 import HomeButton from "../components/HomeButton"
 import useRulesEngine from "../hooks/useRulesEngine"
 import EnhancedKeywordLinker from "../components/RulesSearch/EnhancedKeywordLinker"
+import { scrollToAnchor } from "../utils/scrollToAnchor"
 
 const Progression = () => {
     const { getCategoryRules, loading, error } = useRulesEngine()
     const [progressionData, setProgressionData] = useState(null)
+    const location = useLocation()
 
     useEffect(() => {
         if (!loading && !error) {
@@ -20,6 +23,18 @@ const Progression = () => {
             setProgressionData(data)
         }
     }, [loading, error, getCategoryRules])
+
+    // Handle scrolling to anchor sections
+    useEffect(() => {
+        if (progressionData && location.hash) {
+            const timer = setTimeout(() => {
+                const elementId = location.hash.substring(1)
+                scrollToAnchor(elementId)
+            }, 100)
+
+            return () => clearTimeout(timer)
+        }
+    }, [progressionData, location.hash])
 
     if (loading) {
         return (
@@ -79,6 +94,7 @@ const Progression = () => {
                 {progressionData.sections.map((section) => (
                     <Paper
                         key={section.id}
+                        id={section.id} // add anchor id
                         sx={{
                             bgcolor: (theme) =>
                                 theme.palette.mode === "dark"
