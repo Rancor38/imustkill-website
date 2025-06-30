@@ -23,10 +23,9 @@
                 "id": "insight",
                 "title": "Insight",
                 "%Source": ["@Insight"],
-                "description": "All hunters start with 1 @Insight. You can reroll any tests a number of times equal to your @Insight quantity per day. @Insight resets after a @NightsRest.",
-                "perception": "@Insight allows you to see hidden creatures, lights, and objects that others cannot perceive. Higher @Insight reveals more about the cosmos and threats to mankind.",
-                "maximum": "@Insight is capped at 10.",
-                "ascendant": "A hunter with 10 @Insight can seek an audience with the Old Man or Ancient Mistress and make a wish, but this costs all 10 @Insight points. The wish cannot alter the flow of time.",
+                "description": "All hunters start with 1 Insight. You can reroll any tests a number of times equal to your Insight quantity per day. Insight resets after a @NightsRest.",
+                "perception": "Insight allows you to see hidden creatures, lights, and objects that others cannot perceive. Higher Insight reveals more about the cosmos and threats to mankind.",
+                "maximum": "Insight is capped at 10.",
                 "keywords": [
                     "insight",
                     "reroll",

@@ -172,11 +172,11 @@ const HomePage = () => {
                     </Button>
                     <Button
                         component={Link}
-                        to='/equipment'
+                        to='/digital-tools'
                         variant='contained'
                         sx={getButtonStyles()}
                     >
-                        Equipment Deck
+                        Digital Tools
                     </Button>
                     <Button
                         component={Link}
@@ -230,32 +230,6 @@ const HomePage = () => {
                         Running the Game
                         <br />
                         (GM's Only)
-                    </Button>
-                    <Button
-                        component={Link}
-                        to='/source-registry'
-                        variant='contained'
-                        sx={{
-                            ...getButtonStyles(),
-                            textAlign: "center",
-                        }}
-                    >
-                        Source Registry
-                        <br />
-                        (Development)
-                    </Button>
-                    <Button
-                        component={Link}
-                        to='/rule-categorizer'
-                        variant='contained'
-                        sx={{
-                            ...getButtonStyles(),
-                            textAlign: "center",
-                        }}
-                    >
-                        Rule Categorizer
-                        <br />
-                        (Development)
                     </Button>
                     <Button
                         component={Link}

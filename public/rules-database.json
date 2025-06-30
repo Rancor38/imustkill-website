@@ -67,7 +67,7 @@
                 "title": "Insight",
                 "category": "progression",
                 "section": "insight",
-                "description": "Perception stat for seeing hidden creatures and rerolling tests"
+                "description": "A token gathered to see hidden things and reroll tests"
             },
             "@GatherSpells": {
                 "title": "Gathering Spells",
@@ -176,6 +176,24 @@
                 "category": "running-the-game",
                 "section": "reading-monster-tables",
                 "description": "System for determining monster actions using d10 rolls"
+            },
+            "@CoreMechanics": {
+                "title": "Core Mechanics",
+                "category": "quick-reference",
+                "section": "core-mechanics",
+                "description": "Essential game mechanics at a glance"
+            },
+            "@CharacterStats": {
+                "title": "Character Stats Reference",
+                "category": "quick-reference",
+                "section": "character-stats",
+                "description": "Quick reference for all character statistics"
+            },
+            "@DamageTypes": {
+                "title": "Damage Types Reference",
+                "category": "quick-reference",
+                "section": "damage-types",
+                "description": "All damage types and their effectiveness"
             },
             "@HiddenCreatures": {
                 "title": "Hidden Creatures",
@@ -320,22 +338,22 @@
             "core-mechanics": [
                 {
                     "term": "Roll to Succeed",
-                    "description": "Roll 1d10. If the result is equal to or less than your stat, you succeed.",
+                    "description": "Roll 1d10. If the result is equal to or less than your stat, you succeed. See @Body, @Agility, @Focus, and @Fate for details.",
                     "keywords": ["roll", "1d10", "succeed", "stat"]
                 },
                 {
                     "term": "Attack Rolls",
-                    "description": "Roll 1d10 against your Attack Stat. Success deals 1 damage (2 on natural 1).",
+                    "description": "Roll 1d10 against your @AttackStat. Success deals 1 @Damage (2 on natural 1). See @Attack for full rules.",
                     "keywords": ["attack", "damage", "crit", "natural 1"]
                 },
                 {
                     "term": "Defense Actions",
-                    "description": "Dodge (Agility) or Brace (Body) to avoid or reduce damage.",
+                    "description": "@Dodge (@Agility) or @Brace (@Body) to avoid or reduce damage.",
                     "keywords": ["dodge", "brace", "agility", "body", "defense"]
                 },
                 {
                     "term": "Advantage",
-                    "description": "Roll 2d10 and choose the lower result. Used when circumstances favor you.",
+                    "description": "Roll 2d10 and choose the lower result. Used when circumstances favor you. See @Advantage for details.",
                     "keywords": [
                         "advantage",
                         "2d10",
@@ -345,7 +363,7 @@
                 },
                 {
                     "term": "Disadvantage",
-                    "description": "Roll 2d10 and choose the higher result. Used when circumstances hinder you.",
+                    "description": "Roll 2d10 and choose the higher result. Used when circumstances hinder you. See @Disadvantage for details.",
                     "keywords": [
                         "disadvantage",
                         "2d10",
@@ -357,37 +375,41 @@
             "character-stats": [
                 {
                     "stat": "Body",
+                    "description": "Physical strength, lifting, and endurance. See @Body for full details.",
                     "uses": [
-                        "Attack Stat option",
-                        "Brace action",
+                        "@AttackStat option",
+                        "@Brace action",
                         "Physical activities"
                     ],
                     "keywords": ["body", "strength", "physical", "brace"]
                 },
                 {
                     "stat": "Agility",
+                    "description": "Speed, dexterity, and reaction time. See @Agility for full details.",
                     "uses": [
-                        "Attack Stat option",
-                        "Dodge action",
+                        "@AttackStat option",
+                        "@Dodge action",
                         "Dexterous activities"
                     ],
                     "keywords": ["agility", "speed", "dodge", "dexterity"]
                 },
                 {
                     "stat": "Focus",
+                    "description": "Mental concentration and magical ability. See @Focus for full details.",
                     "uses": [
-                        "Attack Stat option",
-                        "Gather Spells",
-                        "Negotiate",
+                        "@AttackStat option",
+                        "@GatherSpells",
+                        "@Negotiate",
                         "Mental activities"
                     ],
                     "keywords": ["focus", "mental", "spells", "negotiate"]
                 },
                 {
                     "stat": "Fate",
+                    "description": "Luck and life force that determines survival. See @Fate for full details.",
                     "uses": [
-                        "Determines Hit Points",
-                        "Death saves",
+                        "Determines @HitPoints",
+                        "@Death saves",
                         "Luck-based activities"
                     ],
                     "keywords": ["fate", "hit points", "death", "luck"]
@@ -398,7 +420,8 @@
                     "type": "Physical",
                     "effective_against": "Most corporeal creatures",
                     "examples": ["Swords", "Guns", "Clubs"],
-                    "keywords": ["physical", "corporeal", "mundane", "weapons"]
+                    "keywords": ["physical", "corporeal", "mundane", "weapons"],
+                    "description": "Conventional @PhysicalDamage from weapons and attacks."
                 },
                 {
                     "type": "Spiritual",
@@ -410,7 +433,8 @@
                         "demons",
                         "holy",
                         "supernatural"
-                    ]
+                    ],
+                    "description": "@SpiritualDamage effective against supernatural beings."
                 },
                 {
                     "type": "Hybrid",
@@ -422,7 +446,8 @@
                         "fire",
                         "enchanted",
                         "incorporeal"
-                    ]
+                    ],
+                    "description": "@HybridDamage works on all creature types."
                 }
             ]
         }

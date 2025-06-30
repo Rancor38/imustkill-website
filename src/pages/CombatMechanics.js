@@ -6,12 +6,14 @@ import {
     Paper,
     CircularProgress,
     Alert,
+    Box,
+    Chip,
 } from "@mui/material"
 import { useState, useEffect } from "react"
 import { useLocation } from "react-router-dom"
 import HomeButton from "../components/HomeButton"
 import useRulesEngine from "../hooks/useRulesEngine"
-import KeywordLinker from "../components/RulesSearch/EnhancedKeywordLinker"
+import EnhancedKeywordLinker from "../components/RulesSearch/EnhancedKeywordLinker"
 import { scrollToAnchor } from "../utils/scrollToAnchor"
 
 const CombatMechanics = () => {
@@ -120,36 +122,219 @@ const CombatMechanics = () => {
                         {/* Section description */}
                         {section.description && (
                             <Typography variant='body1' paragraph>
-                                <KeywordLinker>
+                                <EnhancedKeywordLinker referencesOnly={true}>
                                     {section.description}
-                                </KeywordLinker>
+                                </EnhancedKeywordLinker>
                             </Typography>
                         )}
 
                         {/* Section rules */}
                         {section.rules && (
-                            <List>
-                                {section.rules.map((rule, index) => (
-                                    <ListItem key={index}>
-                                        <KeywordLinker>{rule}</KeywordLinker>
-                                    </ListItem>
-                                ))}
-                            </List>
+                            <>
+                                {" "}
+                                {section.id === "turns" ? (
+                                    /* Turns Grid Flowchart */
+                                    <Box
+                                        sx={{
+                                            display: "grid",
+                                            gridTemplateColumns: {
+                                                xs: "1fr",
+                                                sm: "5fr 0.2fr 5fr 0.2fr 5fr 0.2fr 5fr",
+                                                md: "5fr 0.15fr 5fr 0.15fr 5fr 0.15fr 5fr",
+                                            },
+                                            gridTemplateRows: {
+                                                xs: "repeat(7, auto)",
+                                                sm: "1fr",
+                                            },
+                                            gap: { xs: 1, sm: 0.1 },
+                                            alignItems: "stretch",
+                                            justifyItems: "center",
+                                            my: 3,
+                                            maxWidth: "100%",
+                                            height: {
+                                                xs: "auto",
+                                                sm: "180px",
+                                                md: "200px",
+                                            },
+                                        }}
+                                    >
+                                        {section.rules.map((rule, index) => (
+                                            <>
+                                                {/* Step Chip */}
+                                                <Chip
+                                                    key={`step-${index}`}
+                                                    label={rule}
+                                                    sx={{
+                                                        gridColumn: {
+                                                            xs: "1",
+                                                            sm: `${
+                                                                index * 2 + 1
+                                                            } / ${
+                                                                index * 2 + 2
+                                                            }`,
+                                                        },
+                                                        gridRow: {
+                                                            xs: `${
+                                                                index * 2 + 1
+                                                            }`,
+                                                            sm: "1",
+                                                        },
+                                                        height: {
+                                                            xs: "auto",
+                                                            sm: "100%",
+                                                        },
+                                                        width: "100%",
+                                                        maxWidth: "none",
+                                                        fontSize: {
+                                                            xs: "0.85rem",
+                                                            sm: "0.95rem",
+                                                            md: "1rem",
+                                                        },
+                                                        fontWeight: "600",
+                                                        fontFamily:
+                                                            "'Inter', 'Roboto', 'Helvetica', 'Arial', sans-serif",
+                                                        textAlign: "center",
+                                                        letterSpacing: "0.02em",
+                                                        "& .MuiChip-label": {
+                                                            whiteSpace:
+                                                                "normal",
+                                                            lineHeight: 1.4,
+                                                            padding: {
+                                                                xs: "10px 8px",
+                                                                sm: "16px 14px",
+                                                                md: "18px 16px",
+                                                            },
+                                                            display: "flex",
+                                                            alignItems:
+                                                                "center",
+                                                            justifyContent:
+                                                                "center",
+                                                            height: "100%",
+                                                        },
+                                                        bgcolor: (theme) =>
+                                                            theme.palette
+                                                                .mode === "dark"
+                                                                ? "#424242"
+                                                                : "#f8f9fa",
+                                                        color: (theme) =>
+                                                            theme.palette
+                                                                .mode === "dark"
+                                                                ? "#ffffff"
+                                                                : "#2c3e50",
+                                                        border: (theme) =>
+                                                            theme.palette
+                                                                .mode === "dark"
+                                                                ? "1px solid #616161"
+                                                                : "1px solid #dee2e6",
+                                                        boxShadow:
+                                                            "0 3px 8px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.08)",
+                                                        transition:
+                                                            "all 0.2s ease-in-out",
+                                                        "&:hover": {
+                                                            transform:
+                                                                "translateY(-1px)",
+                                                            boxShadow:
+                                                                "0 4px 12px rgba(0,0,0,0.15), 0 2px 6px rgba(0,0,0,0.1)",
+                                                        },
+                                                    }}
+                                                />
+
+                                                {/* Arrow between steps */}
+                                                {index <
+                                                    section.rules.length -
+                                                        1 && (
+                                                    <Typography
+                                                        key={`arrow-${index}`}
+                                                        variant='body1'
+                                                        sx={{
+                                                            gridColumn: {
+                                                                xs: "1",
+                                                                sm: `${
+                                                                    index * 2 +
+                                                                    2
+                                                                } / ${
+                                                                    index * 2 +
+                                                                    3
+                                                                }`,
+                                                            },
+                                                            gridRow: {
+                                                                xs: `${
+                                                                    index * 2 +
+                                                                    2
+                                                                }`,
+                                                                sm: "1",
+                                                            },
+                                                            color: (theme) =>
+                                                                theme.palette
+                                                                    .mode ===
+                                                                "dark"
+                                                                    ? "#81c784"
+                                                                    : "#66bb6a",
+                                                            fontWeight: "bold",
+                                                            fontSize: {
+                                                                xs: "1.1rem",
+                                                                sm: "1.4rem",
+                                                                md: "1.6rem",
+                                                            },
+                                                            transform: {
+                                                                xs: "rotate(90deg)",
+                                                                sm: "none",
+                                                            },
+                                                            userSelect: "none",
+                                                            display: "flex",
+                                                            alignItems:
+                                                                "center",
+                                                            justifyContent:
+                                                                "center",
+                                                            padding: 0,
+                                                            margin: 0,
+                                                            textShadow:
+                                                                "0 1px 2px rgba(0,0,0,0.1)",
+                                                            transition:
+                                                                "all 0.3s ease-in-out",
+                                                            "&:hover": {
+                                                                transform: {
+                                                                    xs: "rotate(90deg) scale(1.1)",
+                                                                    sm: "scale(1.2)",
+                                                                },
+                                                                color: (
+                                                                    theme
+                                                                ) =>
+                                                                    theme
+                                                                        .palette
+                                                                        .mode ===
+                                                                    "dark"
+                                                                        ? "#a5d6a7"
+                                                                        : "#4caf50",
+                                                            },
+                                                        }}
+                                                    >
+                                                        ▶
+                                                    </Typography>
+                                                )}
+                                            </>
+                                        ))}
+                                    </Box>
+                                ) : (
+                                    /* Regular list for other sections */
+                                    <List>
+                                        {section.rules.map((rule, index) => (
+                                            <ListItem key={index}>
+                                                <EnhancedKeywordLinker
+                                                    referencesOnly={true}
+                                                >
+                                                    {rule}
+                                                </EnhancedKeywordLinker>
+                                            </ListItem>
+                                        ))}
+                                    </List>
+                                )}
+                            </>
                         )}
 
                         {/* Combat actions */}
                         {section.actions && (
                             <>
-                                <List>
-                                    {section.actions.map((action, index) => (
-                                        <ListItem key={index}>
-                                            <KeywordLinker>
-                                                {action.name}
-                                            </KeywordLinker>
-                                        </ListItem>
-                                    ))}
-                                </List>
-
                                 {/* Detailed action descriptions */}
                                 {section.actions.map((action, index) => (
                                     <Paper
@@ -171,9 +356,11 @@ const CombatMechanics = () => {
                                             {action.name}:
                                         </Typography>
                                         <Typography variant='body1' paragraph>
-                                            <KeywordLinker>
+                                            <EnhancedKeywordLinker
+                                                referencesOnly={true}
+                                            >
                                                 {action.description}
-                                            </KeywordLinker>
+                                            </EnhancedKeywordLinker>
                                         </Typography>
                                     </Paper>
                                 ))}
@@ -203,9 +390,11 @@ const CombatMechanics = () => {
                                             {type.name}
                                         </Typography>
                                         <Typography variant='body1' paragraph>
-                                            <KeywordLinker>
+                                            <EnhancedKeywordLinker
+                                                referencesOnly={true}
+                                            >
                                                 {type.description}
-                                            </KeywordLinker>
+                                            </EnhancedKeywordLinker>
                                         </Typography>
                                         {type.examples && (
                                             <Typography
@@ -244,9 +433,11 @@ const CombatMechanics = () => {
                                             {item.name}:
                                         </Typography>
                                         <Typography variant='body1' paragraph>
-                                            <KeywordLinker>
+                                            <EnhancedKeywordLinker
+                                                referencesOnly={true}
+                                            >
                                                 {item.effect}
-                                            </KeywordLinker>
+                                            </EnhancedKeywordLinker>
                                         </Typography>
                                     </Paper>
                                 ))}
@@ -276,9 +467,11 @@ const CombatMechanics = () => {
                                             {condition.name}
                                         </Typography>
                                         <Typography variant='body1' paragraph>
-                                            <KeywordLinker>
+                                            <EnhancedKeywordLinker
+                                                referencesOnly={true}
+                                            >
                                                 {condition.description}
-                                            </KeywordLinker>
+                                            </EnhancedKeywordLinker>
                                         </Typography>
                                     </Paper>
                                 ))}

@@ -5,7 +5,7 @@
             {
                 "id": "hit-points",
                 "title": "Hit Points",
-                "description": "@HitPoints are a measure of superficial harm and your character's poise and ability to avoid @Death.",
+                "description": "Hit Points are a measure of superficial harm and your character's poise and ability to avoid @Death.",
                 "keywords": ["hit points", "hp", "poise", "harm"]
             },
             {
@@ -13,7 +13,7 @@
                 "title": "Death",
                 "%Source": ["@Death"],
                 "description": "When you reach 0 @HitPoints, test @Fate. On success, you live with 1 hit point. On failure, you die.",
-                "mechanics": "Roll 1d10 against @Fate. If the roll is equal to or less than your @Fate score, you survive with 1 hit point.",
+                "mechanics": "Roll 1d10 against @Fate. If the roll is equal to or less than your @Fate score, you survive with 1 hit point. If your roll on the d10 is a 1, you restore all @Hitpoints",
                 "keywords": [
                     "death",
                     "0 hit points",
@@ -26,31 +26,30 @@
                 "id": "grit-teeth",
                 "title": "Grit Teeth",
                 "%Source": ["@GritTeeth"],
-                "description": "Once per @NightsRest, you can regain 1 hit point during a 1-minute respite from combat.",
-                "limitations": "Can only be used once between each @NightsRest",
+                "description": "You take a 1-minute long respite from combat.",
+                "benefits": ["Restore all @HitPoints", "Gather 3 spells"],
                 "keywords": [
                     "grit teeth",
                     "regain hit point",
                     "respite",
                     "combat",
-                    "once per rest"
+                    "recovery",
+                    "restore hit points",
+                    "regain spells"
                 ]
             },
             {
                 "id": "nights-rest",
                 "title": "Night's Rest",
                 "%Source": ["@NightsRest"],
-                "description": "A comfortable place to sleep (like an inn or farmer's barn) provides full recovery.",
+                "description": "A comfortable place to sleep (like an inn or farmer's barn) provides mental recovery.",
                 "benefits": [
-                    "Restore all @HitPoints",
-                    "Regain all gathered spells",
-                    "Recharge all abilities",
-                    "Gain @Insight rerolls equal to your @Insight score"
+                    "Gain @Insight rerolls equal to your number of @Insight tokens"
                 ],
                 "keywords": [
                     "night's rest",
                     "comfortable",
-                    "full recovery",
+                    "recovery",
                     "restore hit points",
                     "regain spells",
                     "insight rerolls"

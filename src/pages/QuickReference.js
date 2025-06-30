@@ -1,4 +1,5 @@
-import React from "react"
+import React, { useEffect } from "react"
+import { useLocation } from "react-router-dom"
 import {
     Container,
     Typography,
@@ -19,9 +20,24 @@ import {
 } from "@mui/icons-material"
 import HomeButton from "../components/HomeButton"
 import useRulesEngine from "../hooks/useRulesEngine"
+import { scrollToAnchor } from "../utils/scrollToAnchor"
+import EnhancedKeywordLinker from "../components/RulesSearch/EnhancedKeywordLinker"
 
 const QuickReference = () => {
     const { rulesData, loading } = useRulesEngine()
+    const location = useLocation()
+
+    // Handle scrolling to anchor sections
+    useEffect(() => {
+        if (!loading && rulesData.database?.quickReference && location.hash) {
+            const timer = setTimeout(() => {
+                const elementId = location.hash.substring(1)
+                scrollToAnchor(elementId)
+            }, 100)
+
+            return () => clearTimeout(timer)
+        }
+    }, [loading, rulesData.database?.quickReference, location.hash])
 
     if (loading || !rulesData.database?.quickReference) {
         return (
@@ -78,9 +94,9 @@ const QuickReference = () => {
                     Quick Reference
                 </Typography>
 
-                <Grid container spacing={3}>
+                <Grid container spacing={2}>
                     {Object.entries(quickReference).map(([category, items]) => (
-                        <Grid item key={category} id={category}>
+                        <Grid item xs={12} md={4} key={category} id={category}>
                             <Paper
                                 sx={{
                                     bgcolor: (theme) =>
@@ -137,7 +153,11 @@ const QuickReference = () => {
                                                                                 useIndex
                                                                             }
                                                                             label={
-                                                                                use
+                                                                                <EnhancedKeywordLinker>
+                                                                                    {
+                                                                                        use
+                                                                                    }
+                                                                                </EnhancedKeywordLinker>
                                                                             }
                                                                             size='small'
                                                                             variant='outlined'
@@ -183,7 +203,11 @@ const QuickReference = () => {
                                                         )}
                                                     </Box>
                                                 }
-                                                secondary={item.description}
+                                                secondary={
+                                                    <EnhancedKeywordLinker>
+                                                        {item.description}
+                                                    </EnhancedKeywordLinker>
+                                                }
                                             />
                                             {index < items.length - 1 && (
                                                 <Divider />

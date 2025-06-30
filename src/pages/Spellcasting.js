@@ -117,7 +117,7 @@ const Spellcasting = () => {
                         {/* Section description */}
                         {section.description && (
                             <Typography variant='body1' paragraph>
-                                <EnhancedKeywordLinker>
+                                <EnhancedKeywordLinker referencesOnly={true}>
                                     {section.description}
                                 </EnhancedKeywordLinker>
                             </Typography>
@@ -127,7 +127,7 @@ const Spellcasting = () => {
                         {section.mechanics && (
                             <Typography variant='body1' paragraph>
                                 <strong>Mechanics:</strong>{" "}
-                                <EnhancedKeywordLinker>
+                                <EnhancedKeywordLinker referencesOnly={true}>
                                     {section.mechanics}
                                 </EnhancedKeywordLinker>
                             </Typography>
@@ -137,7 +137,7 @@ const Spellcasting = () => {
                         {section.limits && (
                             <Typography variant='body1' paragraph>
                                 <strong>Limits:</strong>{" "}
-                                <EnhancedKeywordLinker>
+                                <EnhancedKeywordLinker referencesOnly={true}>
                                     {section.limits}
                                 </EnhancedKeywordLinker>
                             </Typography>
@@ -147,7 +147,7 @@ const Spellcasting = () => {
                         {section.targeting && (
                             <Typography variant='body1' paragraph>
                                 <strong>Targeting:</strong>{" "}
-                                <EnhancedKeywordLinker>
+                                <EnhancedKeywordLinker referencesOnly={true}>
                                     {section.targeting}
                                 </EnhancedKeywordLinker>
                             </Typography>
@@ -157,7 +157,7 @@ const Spellcasting = () => {
                         {section.recovery && (
                             <Typography variant='body1' paragraph>
                                 <strong>Recovery:</strong>{" "}
-                                <EnhancedKeywordLinker>
+                                <EnhancedKeywordLinker referencesOnly={true}>
                                     {section.recovery}
                                 </EnhancedKeywordLinker>
                             </Typography>

@@ -4,13 +4,21 @@
         "sections": [
             {
                 "id": "turns",
-                "title": "Turns",
+                "title": "Turn Order",
                 "rules": [
-                    "Players act simultaneously, followed by monsters and NPCs",
-                    "The GM will inform players if their character is in danger (such as a monster targeting you with its next potential attack)",
-                    "GM rolls for the monsters' action(s)"
+                    "Monsters go first",
+                    "NPCs go next",
+                    "Danger is assessed and the GM tells players who is in danger",
+                    "Players go and then the round starts again"
                 ],
-                "keywords": ["turns", "simultaneous", "danger", "targeting"]
+                "keywords": [
+                    "turns",
+                    "monsters",
+                    "npcs",
+                    "danger",
+                    "players",
+                    "round"
+                ]
             },
             {
                 "id": "actions",

@@ -6,12 +6,14 @@ import {
     Paper,
     CircularProgress,
     Alert,
+    Grid,
+    Box,
 } from "@mui/material"
 import { useState, useEffect } from "react"
 import { useLocation } from "react-router-dom"
 import HomeButton from "../components/HomeButton"
 import useRulesEngine from "../hooks/useRulesEngine"
-import KeywordLinker from "../components/RulesSearch/EnhancedKeywordLinker"
+import EnhancedKeywordLinker from "../components/RulesSearch/EnhancedKeywordLinker"
 import { scrollToAnchor } from "../utils/scrollToAnchor"
 
 const CharacterCreation = () => {
@@ -126,21 +128,60 @@ const CharacterCreation = () => {
                                 : "0 4px 8px rgba(0,0,0,0.1)",
                     }}
                 >
-                    <Typography variant='h3' gutterBottom>
-                        {statsSection?.title}:
+                    <Typography variant='h3' gutterBottom sx={{ mb: 3 }}>
+                        {statsSection?.title}
                     </Typography>
-                    <List>
+
+                    <Grid container spacing={2}>
                         {statsSection?.content.map((stat, index) => (
-                            <ListItem key={index}>
-                                <strong>{stat.name}</strong>
-                                {" ("}
-                                <KeywordLinker>
-                                    {stat.description}
-                                </KeywordLinker>
-                                {")"}
-                            </ListItem>
+                            <Grid item xs={12} sm={6} key={index}>
+                                <Box
+                                    sx={{
+                                        p: 2,
+                                        border: (theme) =>
+                                            theme.palette.mode === "dark"
+                                                ? "1px solid #444"
+                                                : "1px solid #ddd",
+                                        borderRadius: 2,
+                                        backgroundColor: (theme) =>
+                                            theme.palette.mode === "dark"
+                                                ? "#2a2a2a"
+                                                : "#ffffff",
+                                        height: "100%",
+                                        display: "flex",
+                                        flexDirection: "column",
+                                    }}
+                                >
+                                    <Typography
+                                        variant='h5'
+                                        sx={{
+                                            fontWeight: "bold",
+                                            mb: 1,
+                                            color: (theme) =>
+                                                theme.palette.mode === "dark"
+                                                    ? "#4fc3f7"
+                                                    : "#1976d2",
+                                        }}
+                                    >
+                                        {stat.name}
+                                    </Typography>
+                                    <Typography
+                                        variant='body1'
+                                        sx={{
+                                            flexGrow: 1,
+                                            lineHeight: 1.6,
+                                        }}
+                                    >
+                                        <EnhancedKeywordLinker
+                                            referencesOnly={true}
+                                        >
+                                            {stat.description}
+                                        </EnhancedKeywordLinker>
+                                    </Typography>
+                                </Box>
+                            </Grid>
                         ))}
-                    </List>
+                    </Grid>
                 </Paper>
 
                 {/* Render all other sections dynamically */}
@@ -171,9 +212,11 @@ const CharacterCreation = () => {
 
                             {section.description && (
                                 <Typography variant='body1' paragraph>
-                                    <KeywordLinker>
+                                    <EnhancedKeywordLinker
+                                        referencesOnly={true}
+                                    >
                                         {section.description}
-                                    </KeywordLinker>
+                                    </EnhancedKeywordLinker>
                                 </Typography>
                             )}
 
@@ -195,9 +238,11 @@ const CharacterCreation = () => {
                                                 variant='body1'
                                                 paragraph
                                             >
-                                                <KeywordLinker>
+                                                <EnhancedKeywordLinker
+                                                    referencesOnly={true}
+                                                >
                                                     {subsection.description}
-                                                </KeywordLinker>
+                                                </EnhancedKeywordLinker>
                                             </Typography>
 
                                             {subsection.options && (
@@ -207,9 +252,13 @@ const CharacterCreation = () => {
                                                             <ListItem
                                                                 key={optIndex}
                                                             >
-                                                                <KeywordLinker>
+                                                                <EnhancedKeywordLinker
+                                                                    referencesOnly={
+                                                                        true
+                                                                    }
+                                                                >
                                                                     {option}
-                                                                </KeywordLinker>
+                                                                </EnhancedKeywordLinker>
                                                             </ListItem>
                                                         )
                                                     )}

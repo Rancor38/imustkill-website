@@ -117,7 +117,7 @@ const Progression = () => {
                         {/* Section description */}
                         {section.description && (
                             <Typography variant='body1' paragraph>
-                                <EnhancedKeywordLinker>
+                                <EnhancedKeywordLinker referencesOnly={true}>
                                     {section.description}
                                 </EnhancedKeywordLinker>
                             </Typography>
@@ -127,7 +127,7 @@ const Progression = () => {
                         {section.mechanics && (
                             <Typography variant='body1' paragraph>
                                 <strong>Mechanics:</strong>{" "}
-                                <EnhancedKeywordLinker>
+                                <EnhancedKeywordLinker referencesOnly={true}>
                                     {section.mechanics}
                                 </EnhancedKeywordLinker>
                             </Typography>
@@ -137,7 +137,7 @@ const Progression = () => {
                         {section.limits && (
                             <Typography variant='body1' paragraph>
                                 <strong>Limits:</strong>{" "}
-                                <EnhancedKeywordLinker>
+                                <EnhancedKeywordLinker referencesOnly={true}>
                                     {section.limits}
                                 </EnhancedKeywordLinker>
                             </Typography>
@@ -147,7 +147,7 @@ const Progression = () => {
                         {section.perception && (
                             <Typography variant='body1' paragraph>
                                 <strong>Perception:</strong>{" "}
-                                <EnhancedKeywordLinker>
+                                <EnhancedKeywordLinker referencesOnly={true}>
                                     {section.perception}
                                 </EnhancedKeywordLinker>
                             </Typography>
@@ -157,7 +157,7 @@ const Progression = () => {
                         {section.maximum && (
                             <Typography variant='body1' paragraph>
                                 <strong>Maximum:</strong>{" "}
-                                <EnhancedKeywordLinker>
+                                <EnhancedKeywordLinker referencesOnly={true}>
                                     {section.maximum}
                                 </EnhancedKeywordLinker>
                             </Typography>
@@ -167,7 +167,7 @@ const Progression = () => {
                         {section.ascendant && (
                             <Typography variant='body1' paragraph>
                                 <strong>Ascendant:</strong>{" "}
-                                <EnhancedKeywordLinker>
+                                <EnhancedKeywordLinker referencesOnly={true}>
                                     {section.ascendant}
                                 </EnhancedKeywordLinker>
                             </Typography>

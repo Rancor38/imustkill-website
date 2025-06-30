@@ -17,6 +17,9 @@ import DarkwatchGame from "./pages/DarkwatchGame.js"
 import QuickReference from "./pages/QuickReference.js"
 import SourceRegistry from "./components/RulesSearch/SourceRegistry.js"
 import RuleCategorizer from "./components/RulesSearch/RuleCategorizer.js"
+import DigitalTools from "./pages/DigitalTools.js"
+import InsightTokens from "./pages/InsightTokens.js"
+import DigitalCharacterSheet from "./pages/DigitalCharacterSheet.js"
 import Sparks from "./components/Sparks/Sparks.jsx"
 import BackButton from "./components/BackButton/BackButton.js"
 import ThemeToggle from "./components/ThemeToggle/ThemeToggle.js"
@@ -74,6 +77,12 @@ function App() {
                     <Route
                         path='rule-categorizer'
                         element={<RuleCategorizer />}
+                    />
+                    <Route path='digital-tools' element={<DigitalTools />} />
+                    <Route path='insight.token' element={<InsightTokens />} />
+                    <Route
+                        path='digital-character-sheet'
+                        element={<DigitalCharacterSheet />}
                     />
                     <Route path='/' element={<HomePage />} />
                 </Route>

@@ -120,7 +120,7 @@ const DeathAndResting = () => {
                         {/* Section description */}
                         {section.description && (
                             <Typography variant='body1' paragraph>
-                                <EnhancedKeywordLinker>
+                                <EnhancedKeywordLinker referencesOnly={true}>
                                     {section.description}
                                 </EnhancedKeywordLinker>
                             </Typography>
@@ -129,7 +129,7 @@ const DeathAndResting = () => {
                         {/* Section mechanics */}
                         {section.mechanics && (
                             <Typography variant='body1' paragraph>
-                                <EnhancedKeywordLinker>
+                                <EnhancedKeywordLinker referencesOnly={true}>
                                     {section.mechanics}
                                 </EnhancedKeywordLinker>
                             </Typography>
@@ -139,7 +139,7 @@ const DeathAndResting = () => {
                         {section.limitations && (
                             <Typography variant='body1' paragraph>
                                 <strong>Limitations:</strong>{" "}
-                                <EnhancedKeywordLinker>
+                                <EnhancedKeywordLinker referencesOnly={true}>
                                     {section.limitations}
                                 </EnhancedKeywordLinker>
                             </Typography>
@@ -154,7 +154,9 @@ const DeathAndResting = () => {
                                 <List>
                                     {section.benefits.map((benefit, index) => (
                                         <ListItem key={index}>
-                                            <EnhancedKeywordLinker>
+                                            <EnhancedKeywordLinker
+                                                referencesOnly={true}
+                                            >
                                                 {benefit}
                                             </EnhancedKeywordLinker>
                                         </ListItem>
@@ -176,7 +178,9 @@ const DeathAndResting = () => {
                                         paragraph
                                         sx={{ fontStyle: "italic", ml: 2 }}
                                     >
-                                        <EnhancedKeywordLinker>
+                                        <EnhancedKeywordLinker
+                                            referencesOnly={true}
+                                        >
                                             {example}
                                         </EnhancedKeywordLinker>
                                     </Typography>
@@ -196,7 +200,7 @@ const DeathAndResting = () => {
                         {section.timing && (
                             <Typography variant='body1' paragraph>
                                 <strong>Timing:</strong>{" "}
-                                <EnhancedKeywordLinker>
+                                <EnhancedKeywordLinker referencesOnly={true}>
                                     {section.timing}
                                 </EnhancedKeywordLinker>
                             </Typography>

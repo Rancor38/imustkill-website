@@ -3,7 +3,11 @@ import { Link } from "react-router-dom"
 import { Tooltip, Box } from "@mui/material"
 import useRulesEngine from "../../hooks/useRulesEngine"
 
-const EnhancedKeywordLinker = ({ children, disabled = false }) => {
+const EnhancedKeywordLinker = ({
+    children,
+    disabled = false,
+    referencesOnly = false,
+}) => {
     const [allContent, setAllContent] = useState({
         spells: [],
         equipment: [],
@@ -235,66 +239,69 @@ const EnhancedKeywordLinker = ({ children, disabled = false }) => {
                 )
             }
 
-            // Handle regular keyword matching
-            const cleanWord = part
-                .toLowerCase()
-                .replace(/[.,!?;:()[\]{}'""-]/g, "")
+            // Handle regular keyword matching (skip if referencesOnly is true)
+            if (!referencesOnly) {
+                const cleanWord = part
+                    .toLowerCase()
+                    .replace(/[.,!?;:()[\]{}'""-]/g, "")
 
-            if (cleanWord && enhancedKeywordMappings.has(cleanWord)) {
-                const mapping = enhancedKeywordMappings.get(cleanWord)
+                if (cleanWord && enhancedKeywordMappings.has(cleanWord)) {
+                    const mapping = enhancedKeywordMappings.get(cleanWord)
 
-                // Don't link reference IDs that are already processed
-                if (mapping.type === "reference") {
-                    return <span key={index}>{part}</span>
-                }
+                    // Don't link reference IDs that are already processed
+                    if (mapping.type === "reference") {
+                        return <span key={index}>{part}</span>
+                    }
 
-                return (
-                    <Tooltip
-                        key={index}
-                        title={
-                            <Box sx={{ p: 1 }}>
-                                <Box sx={{ fontWeight: "bold", mb: 0.5 }}>
-                                    {mapping.section}
+                    return (
+                        <Tooltip
+                            key={index}
+                            title={
+                                <Box sx={{ p: 1 }}>
+                                    <Box sx={{ fontWeight: "bold", mb: 0.5 }}>
+                                        {mapping.section}
+                                    </Box>
+                                    <Box sx={{ fontSize: "0.875rem" }}>
+                                        {mapping.description}
+                                    </Box>
+                                    <Box
+                                        sx={{
+                                            fontSize: "0.75rem",
+                                            mt: 0.5,
+                                            opacity: 0.8,
+                                        }}
+                                    >
+                                        From: {mapping.page}
+                                    </Box>
                                 </Box>
-                                <Box sx={{ fontSize: "0.875rem" }}>
-                                    {mapping.description}
-                                </Box>
-                                <Box
-                                    sx={{
-                                        fontSize: "0.75rem",
-                                        mt: 0.5,
-                                        opacity: 0.8,
-                                    }}
-                                >
-                                    From: {mapping.page}
-                                </Box>
-                            </Box>
-                        }
-                        arrow
-                        placement='top'
-                    >
-                        <Link
-                            to={mapping.path}
-                            style={{
-                                color: "inherit",
-                                textDecoration: "underline",
-                                textDecorationColor: "rgba(25, 118, 210, 0.4)",
-                                textUnderlineOffset: "2px",
-                                cursor: "pointer",
-                            }}
-                            onMouseEnter={(e) => {
-                                e.target.style.textDecorationColor =
-                                    "rgba(25, 118, 210, 0.8)"
-                            }}
-                            onMouseLeave={(e) => {
-                                e.target.style.textDecorationColor =
-                                    "rgba(25, 118, 210, 0.4)"
-                            }}
+                            }
+                            arrow
+                            placement='top'
                         >
-                            {part}
-                        </Link>
-                    </Tooltip>
-                )
+                            <Link
+                                to={mapping.path}
+                                style={{
+                                    color: "inherit",
+                                    textDecoration: "underline",
+                                    textDecorationColor:
+                                        "rgba(25, 118, 210, 0.4)",
+                                    textUnderlineOffset: "2px",
+                                    cursor: "pointer",
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.target.style.textDecorationColor =
+                                        "rgba(25, 118, 210, 0.8)"
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.target.style.textDecorationColor =
+                                        "rgba(25, 118, 210, 0.4)"
+                                }}
+                            >
+                                {part}
+                            </Link>
+                        </Tooltip>
+                    )
+                }
             }
 
             return <span key={index}>{part}</span>

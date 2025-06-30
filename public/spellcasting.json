@@ -6,22 +6,25 @@
                 "id": "gathering-spells",
                 "title": "Gathering Spells",
                 "%Source": ["@GatherSpells"],
-                "description": "Test @Focus to @Gather a @Spell. If you succeed, you can draw a @Spell card from your @Spell deck and keep this card until your next @NightsRest.",
+                "description": "Test @Focus to gather a spell. If you succeed, you can draw a spell card from your spell deck and keep this card until your next @NightsRest.",
                 "mechanics": "Roll 1d10 against @Focus. If the roll is equal to or less than your @Focus score, draw one spell from your deck.",
                 "limits": "You can only have 3 spells gathered at one time.",
+                "recovery": "When you complete a @NightsRest, you automatically gather 3 spells without needing to test @Focus.",
                 "keywords": [
                     "gathering spells",
                     "test focus",
                     "spell deck",
                     "3 spells",
-                    "night's rest"
+                    "night's rest",
+                    "automatic gathering",
+                    "rest recovery"
                 ]
             },
             {
                 "id": "casting-spells",
                 "title": "Casting Spells",
                 "%Source": ["@CastSpells"],
-                "description": "You can play @Spell cards at any time, triggering their effect. Follow the instructions on the @Spell card.",
+                "description": "You can play spell cards at any time, triggering their effect. Follow the instructions on the spell card.",
                 "targeting": "You cannot target something with a spell if you cannot perceive it, although you might still be able to harm it. You cannot select a target without a clear unbroken line from you to the location of it.",
                 "recovery": "Discarded spells can be returned to your spell deck when you complete a @NightsRest.",
                 "keywords": [

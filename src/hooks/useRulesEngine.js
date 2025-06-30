@@ -364,6 +364,7 @@ export const useRulesEngine = () => {
         getCategoryRules,
         getSourceMap,
         getUncategorizedRules,
+        getKeywordSuggestions,
         rulesData,
         loading,
         error,
