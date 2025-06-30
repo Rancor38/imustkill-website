@@ -12,6 +12,7 @@ import {
 } from "@mui/material"
 import { Upload, Save, RestartAlt } from "@mui/icons-material"
 import { saveAs } from "file-saver"
+import html2canvas from "html2canvas"
 
 const DigitalCharacterSheet = () => {
     // Character data state matching the original sheet
@@ -46,9 +47,139 @@ const DigitalCharacterSheet = () => {
         notes: "",
     })
 
+    // Utility functions for PNG metadata embedding
+    const embedCharacterDataInPNG = (canvas, characterData) => {
+        return new Promise((resolve) => {
+            canvas.toBlob((blob) => {
+                const reader = new FileReader()
+                reader.onload = () => {
+                    const arrayBuffer = reader.result
+                    const uint8Array = new Uint8Array(arrayBuffer)
+
+                    // Find the end of IDAT chunks (before IEND)
+                    let insertPosition = uint8Array.length - 12 // Before IEND chunk
+
+                    // Create custom tEXt chunk for character data
+                    const characterJSON = JSON.stringify(characterData)
+                    const keyword = "Character Data"
+                    const textData = new TextEncoder().encode(
+                        keyword + "\0" + characterJSON
+                    )
+
+                    // Create chunk: Length (4 bytes) + Type (4 bytes) + Data + CRC (4 bytes)
+                    const chunkLength = textData.length
+                    const chunkType = new TextEncoder().encode("tEXt")
+
+                    // Calculate CRC32 for chunk type + data
+                    const crc32 = calculateCRC32(
+                        new Uint8Array([...chunkType, ...textData])
+                    )
+
+                    // Create the complete chunk
+                    const chunk = new Uint8Array(4 + 4 + chunkLength + 4)
+                    const view = new DataView(chunk.buffer)
+
+                    // Length (big endian)
+                    view.setUint32(0, chunkLength, false)
+                    // Type
+                    chunk.set(chunkType, 4)
+                    // Data
+                    chunk.set(textData, 8)
+                    // CRC (big endian)
+                    view.setUint32(8 + chunkLength, crc32, false)
+
+                    // Insert the chunk before IEND
+                    const newPNG = new Uint8Array(
+                        uint8Array.length + chunk.length
+                    )
+                    newPNG.set(uint8Array.slice(0, insertPosition), 0)
+                    newPNG.set(chunk, insertPosition)
+                    newPNG.set(
+                        uint8Array.slice(insertPosition),
+                        insertPosition + chunk.length
+                    )
+
+                    const newBlob = new Blob([newPNG], { type: "image/png" })
+                    resolve(newBlob)
+                }
+                reader.readAsArrayBuffer(blob)
+            }, "image/png")
+        })
+    }
+
+    const extractCharacterDataFromPNG = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader()
+            reader.onload = () => {
+                try {
+                    const arrayBuffer = reader.result
+                    const uint8Array = new Uint8Array(arrayBuffer)
+
+                    // Look for tEXt chunks
+                    let offset = 8 // Skip PNG signature
+
+                    while (offset < uint8Array.length - 8) {
+                        const view = new DataView(uint8Array.buffer, offset)
+                        const chunkLength = view.getUint32(0, false) // big endian
+                        const chunkType = new TextDecoder().decode(
+                            uint8Array.slice(offset + 4, offset + 8)
+                        )
+
+                        if (chunkType === "tEXt") {
+                            const chunkData = uint8Array.slice(
+                                offset + 8,
+                                offset + 8 + chunkLength
+                            )
+                            const text = new TextDecoder().decode(chunkData)
+                            const nullIndex = text.indexOf("\0")
+
+                            if (nullIndex !== -1) {
+                                const keyword = text.slice(0, nullIndex)
+                                const data = text.slice(nullIndex + 1)
+
+                                if (keyword === "Character Data") {
+                                    const characterData = JSON.parse(data)
+                                    resolve(characterData)
+                                    return
+                                }
+                            }
+                        }
+
+                        if (chunkType === "IEND") break
+                        offset += 8 + chunkLength + 4 // length + type + data + crc
+                    }
+
+                    resolve(null) // No character data found
+                } catch (error) {
+                    reject(error)
+                }
+            }
+            reader.readAsArrayBuffer(file)
+        })
+    }
+
+    // Simple CRC32 implementation for PNG chunks
+    const calculateCRC32 = (data) => {
+        const crcTable = []
+        for (let i = 0; i < 256; i++) {
+            let c = i
+            for (let j = 0; j < 8; j++) {
+                c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1
+            }
+            crcTable[i] = c
+        }
+
+        let crc = 0xffffffff
+        for (let i = 0; i < data.length; i++) {
+            crc = crcTable[(crc ^ data[i]) & 0xff] ^ (crc >>> 8)
+        }
+        return (crc ^ 0xffffffff) >>> 0
+    }
+
     const [alertOpen, setAlertOpen] = useState(false)
     const [alertMessage, setAlertMessage] = useState("")
     const [alertSeverity, setAlertSeverity] = useState("success")
+    const [isDragOver, setIsDragOver] = useState(false)
     const fileInputRef = useRef(null)
     const characterSheetRef = useRef(null)
 
@@ -69,39 +200,174 @@ const DigitalCharacterSheet = () => {
         setAlertOpen(true)
     }
 
-    const saveToCharacterFile = () => {
+    const saveToCharacterFile = async () => {
         try {
-            const dataStr = JSON.stringify(characterData, null, 2)
-            const dataBlob = new Blob([dataStr], { type: "application/json" })
-            const fileName = characterData.characterName
-                ? `${characterData.characterName
-                      .replace(/[^a-z0-9]/gi, "_")
-                      .toLowerCase()}.character`
-                : "character_sheet.character"
-            saveAs(dataBlob, fileName)
-            showAlert("Character sheet saved successfully!")
+            if (characterSheetRef.current) {
+                // Hide the action buttons temporarily for a cleaner screenshot
+                const actionButtons = document.querySelector(
+                    '[data-testid="action-buttons"]'
+                )
+                if (actionButtons) {
+                    actionButtons.style.display = "none"
+                }
+
+                const canvas = await html2canvas(characterSheetRef.current, {
+                    backgroundColor: "#ffffff",
+                    scale: 2, // Higher resolution
+                    useCORS: true,
+                    allowTaint: true,
+                    logging: false,
+                    height: characterSheetRef.current.scrollHeight,
+                    width: characterSheetRef.current.scrollWidth,
+                })
+
+                // Show the action buttons again
+                if (actionButtons) {
+                    actionButtons.style.display = "flex"
+                }
+
+                // Embed character data in the PNG
+                const blobWithData = await embedCharacterDataInPNG(
+                    canvas,
+                    characterData
+                )
+
+                const fileName = characterData.characterName
+                    ? `${characterData.characterName
+                          .replace(/[^a-z0-9]/gi, "_")
+                          .toLowerCase()}.character.png`
+                    : "character_sheet.character.png"
+                saveAs(blobWithData, fileName)
+                showAlert(
+                    "Character saved as .character.png with embedded data!"
+                )
+            }
         } catch (error) {
+            console.error("Error saving character file:", error)
             showAlert("Error saving character sheet", "error")
         }
     }
 
-    const loadFromCharacterFile = (event) => {
+    const loadFromCharacterFile = async (event) => {
         const file = event.target.files[0]
         if (file) {
-            const reader = new FileReader()
-            reader.onload = (e) => {
-                try {
-                    const loadedData = JSON.parse(e.target.result)
-                    setCharacterData({ ...characterData, ...loadedData })
-                    showAlert("Character sheet loaded successfully!")
-                } catch (error) {
-                    showAlert("Error loading character sheet", "error")
+            try {
+                if (
+                    file.name.endsWith(".character.png") ||
+                    file.name.endsWith(".png")
+                ) {
+                    // Try to extract character data from PNG
+                    const characterData = await extractCharacterDataFromPNG(
+                        file
+                    )
+                    if (characterData) {
+                        setCharacterData((prev) => ({
+                            ...prev,
+                            ...characterData,
+                        }))
+                        showAlert("Character sheet loaded from .character.png!")
+                    } else {
+                        showAlert(
+                            "No character data found in this PNG file",
+                            "error"
+                        )
+                    }
+                } else {
+                    // Handle legacy .character and .json files
+                    const reader = new FileReader()
+                    reader.onload = (e) => {
+                        try {
+                            const loadedData = JSON.parse(e.target.result)
+                            setCharacterData((prev) => ({
+                                ...prev,
+                                ...loadedData,
+                            }))
+                            showAlert("Character sheet loaded successfully!")
+                        } catch (error) {
+                            showAlert("Error loading character sheet", "error")
+                        }
+                    }
+                    reader.readAsText(file)
                 }
+            } catch (error) {
+                showAlert("Error loading character sheet", "error")
             }
-            reader.readAsText(file)
         }
         // Reset the file input
         event.target.value = null
+    }
+
+    const loadCharacterFromFile = async (file) => {
+        try {
+            if (
+                file.name.endsWith(".character.png") ||
+                file.name.endsWith(".png")
+            ) {
+                // Try to extract character data from PNG
+                const characterData = await extractCharacterDataFromPNG(file)
+                if (characterData) {
+                    setCharacterData((prev) => ({ ...prev, ...characterData }))
+                    showAlert("Character sheet loaded from .character.png!")
+                } else {
+                    showAlert(
+                        "No character data found in this PNG file",
+                        "error"
+                    )
+                }
+            } else {
+                // Handle legacy .character and .json files
+                const reader = new FileReader()
+                reader.onload = (e) => {
+                    try {
+                        const loadedData = JSON.parse(e.target.result)
+                        setCharacterData((prev) => ({ ...prev, ...loadedData }))
+                        showAlert("Character sheet loaded successfully!")
+                    } catch (error) {
+                        showAlert("Error loading character sheet", "error")
+                    }
+                }
+                reader.readAsText(file)
+            }
+        } catch (error) {
+            showAlert("Error loading character sheet", "error")
+        }
+    }
+
+    const handleDragOver = (event) => {
+        event.preventDefault()
+        event.stopPropagation()
+        setIsDragOver(true)
+    }
+
+    const handleDragLeave = (event) => {
+        event.preventDefault()
+        event.stopPropagation()
+        setIsDragOver(false)
+    }
+
+    const handleDrop = (event) => {
+        event.preventDefault()
+        event.stopPropagation()
+        setIsDragOver(false)
+
+        const files = event.dataTransfer.files
+        if (files.length > 0) {
+            const file = files[0]
+            // Check if it's a character file (.character.png) or legacy formats
+            if (
+                file.name.endsWith(".character.png") ||
+                file.name.endsWith(".png") ||
+                file.name.endsWith(".character") ||
+                file.name.endsWith(".json")
+            ) {
+                loadCharacterFromFile(file)
+            } else {
+                showAlert(
+                    "Please drop a .character.png file (or legacy .character/.json file)",
+                    "error"
+                )
+            }
+        }
     }
 
     const resetSheet = () => {
@@ -130,11 +396,49 @@ const DigitalCharacterSheet = () => {
     return (
         <Container
             maxWidth='md'
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
             sx={{
                 py: 2,
                 minHeight: "100vh",
                 display: "flex",
                 flexDirection: "column",
+                position: "relative",
+                // Add visual feedback for drag over
+                ...(isDragOver && {
+                    "&::before": {
+                        content: '""',
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        backgroundColor: "rgba(139, 0, 0, 0.1)",
+                        border: "3px dashed #8B0000",
+                        borderRadius: "16px",
+                        zIndex: 1000,
+                        pointerEvents: "none",
+                    },
+                    "&::after": {
+                        content:
+                            '"Drop your character file here (.character.png)"',
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        backgroundColor: "#8B0000",
+                        color: "#ffffff",
+                        padding: "16px 32px",
+                        borderRadius: "12px",
+                        fontFamily: '"Cinzel", serif',
+                        fontSize: "18px",
+                        fontWeight: "bold",
+                        zIndex: 1001,
+                        pointerEvents: "none",
+                        boxShadow: "0 8px 24px rgba(139, 0, 0, 0.3)",
+                    },
+                }),
             }}
         >
             {/* Header */}
@@ -165,10 +469,22 @@ const DigitalCharacterSheet = () => {
                 >
                     Create, edit, and manage your I Must Kill character
                 </Typography>
+                <Typography
+                    variant='body2'
+                    sx={{
+                        opacity: 0.6,
+                        fontSize: { xs: "0.75rem", sm: "0.85rem" },
+                        maxWidth: "600px",
+                        margin: "8px auto 0",
+                        fontFamily: '"Cinzel", serif',
+                        fontStyle: "italic",
+                    }}
+                ></Typography>
             </Box>
 
             {/* Action Buttons */}
             <Box
+                data-testid='action-buttons'
                 sx={{
                     mb: 2,
                     display: "flex",
@@ -224,7 +540,7 @@ const DigitalCharacterSheet = () => {
                     type='file'
                     ref={fileInputRef}
                     onChange={loadFromCharacterFile}
-                    accept='.character,.json'
+                    accept='.character.png,.png,.character,.json'
                     style={{ display: "none" }}
                 />
             </Box>
