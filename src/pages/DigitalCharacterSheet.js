@@ -69,15 +69,15 @@ const DigitalCharacterSheet = () => {
         setAlertOpen(true)
     }
 
-    const saveToJSON = () => {
+    const saveToCharacterFile = () => {
         try {
             const dataStr = JSON.stringify(characterData, null, 2)
             const dataBlob = new Blob([dataStr], { type: "application/json" })
             const fileName = characterData.characterName
                 ? `${characterData.characterName
                       .replace(/[^a-z0-9]/gi, "_")
-                      .toLowerCase()}.imk.json`
-                : "character_sheet.imk.json"
+                      .toLowerCase()}.character`
+                : "character_sheet.character"
             saveAs(dataBlob, fileName)
             showAlert("Character sheet saved successfully!")
         } catch (error) {
@@ -85,7 +85,7 @@ const DigitalCharacterSheet = () => {
         }
     }
 
-    const loadFromJSON = (event) => {
+    const loadFromCharacterFile = (event) => {
         const file = event.target.files[0]
         if (file) {
             const reader = new FileReader()
@@ -180,7 +180,7 @@ const DigitalCharacterSheet = () => {
                 <Button
                     variant='contained'
                     startIcon={<Save />}
-                    onClick={saveToJSON}
+                    onClick={saveToCharacterFile}
                     sx={{
                         bgcolor: "#8B0000",
                         "&:hover": { bgcolor: "#660000" },
@@ -189,7 +189,7 @@ const DigitalCharacterSheet = () => {
                         fontFamily: '"Cinzel", serif',
                     }}
                 >
-                    Save JSON
+                    Save Character
                 </Button>
                 <Button
                     variant='contained'
@@ -203,7 +203,7 @@ const DigitalCharacterSheet = () => {
                         fontFamily: '"Cinzel", serif',
                     }}
                 >
-                    Load JSON
+                    Load Character
                 </Button>
                 <Button
                     variant='outlined'
@@ -223,8 +223,8 @@ const DigitalCharacterSheet = () => {
                 <input
                     type='file'
                     ref={fileInputRef}
-                    onChange={loadFromJSON}
-                    accept='.json,.imk.json'
+                    onChange={loadFromCharacterFile}
+                    accept='.character,.json'
                     style={{ display: "none" }}
                 />
             </Box>
