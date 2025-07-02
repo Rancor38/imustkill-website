@@ -10,9 +10,11 @@ import {
     Alert,
     Snackbar,
 } from "@mui/material"
-import { Upload, Save, RestartAlt } from "@mui/icons-material"
+import { Upload, Save, RestartAlt, PictureAsPdf } from "@mui/icons-material"
 import { saveAs } from "file-saver"
 import html2canvas from "html2canvas"
+import { PDFDocument, rgb } from "pdf-lib"
+import * as fontkit from "fontkit"
 
 const DigitalCharacterSheet = () => {
     // Character data state matching the original sheet
@@ -198,6 +200,616 @@ const DigitalCharacterSheet = () => {
         setAlertMessage(message)
         setAlertSeverity(severity)
         setAlertOpen(true)
+    }
+
+    const saveToFormFillablePDF = async () => {
+        try {
+            // Debug: Log the character data to see what's being passed
+            console.log("Character data when generating PDF:", characterData)
+
+            const pdfDoc = await PDFDocument.create()
+
+            // Register fontkit for custom font embedding
+            pdfDoc.registerFontkit(fontkit)
+
+            const page = pdfDoc.addPage([612, 792])
+            const form = pdfDoc.getForm()
+
+            // PDF-lib doesn't use setNeedAppearances - forms are automatically interactive
+
+            // Embed Cinzel fonts
+            const cinzelFontBytes = await fetch(
+                "/fonts/cinzel/Cinzel-Regular.otf"
+            ).then((res) => res.arrayBuffer())
+            const cinzelDecorativeFontBytes = await fetch(
+                "/fonts/cinzel/CinzelDecorative-Regular.otf"
+            ).then((res) => res.arrayBuffer())
+            const cinzelFont = await pdfDoc.embedFont(cinzelFontBytes)
+            const cinzelDecorativeFont = await pdfDoc.embedFont(
+                cinzelDecorativeFontBytes
+            )
+
+            // Colors
+            const black = rgb(0, 0, 0)
+            const darkRed = rgb(0.545, 0, 0)
+            const lightGray = rgb(0.976, 0.976, 0.976)
+
+            const white = rgb(1, 1, 1)
+
+            // Margins and layout
+            const margin = 40
+            const pageWidth = 612 - margin * 2
+            let yPos = 752
+
+            // Header: My Name Is...
+            page.drawText("My Name Is...", {
+                x: margin + pageWidth / 2 - 110,
+                y: yPos,
+                size: 28,
+                font: cinzelFont,
+                color: black,
+            })
+            yPos -= 38
+
+            // Character Name Field (dotted underline)
+            page.drawRectangle({
+                x: margin + 100,
+                y: yPos - 10,
+                width: 300,
+                height: 30,
+                borderColor: black,
+                borderWidth: 1.5,
+                borderRadius: 8,
+                color: white,
+            })
+            const nameField = form.createTextField("characterName")
+            nameField.setText(characterData.characterName || "")
+            nameField.addToPage(page, {
+                x: margin + 105,
+                y: yPos - 5,
+                width: 290,
+                height: 20,
+                borderColor: black,
+                borderWidth: 0,
+                backgroundColor: white,
+            })
+            page.drawText("and", {
+                x: margin + 420,
+                y: yPos + 2,
+                size: 16,
+                font: cinzelDecorativeFont,
+                color: black,
+            })
+            yPos -= 45
+
+            // I MUST KILL title
+            page.drawText("I MUST KILL", {
+                x: margin + pageWidth / 2 - 110,
+                y: yPos,
+                size: 32,
+                font: cinzelDecorativeFont,
+                color: darkRed,
+            })
+            yPos -= 40
+
+            // Draw a thick line
+            page.drawLine({
+                start: { x: margin, y: yPos },
+                end: { x: margin + pageWidth, y: yPos },
+                thickness: 2.5,
+                color: black,
+            })
+            yPos -= 30
+
+            // Core Stats Section
+            const statLabels = ["BODY", "AGILITY", "FOCUS", "FATE"]
+            const statFields = ["body", "agility", "focus", "fate"]
+
+            const statWidth = pageWidth / 4
+            for (let i = 0; i < statLabels.length; i++) {
+                const x = margin + i * statWidth
+                // Rounded stat box
+                page.drawRectangle({
+                    x: x + 8,
+                    y: yPos - 60,
+                    width: statWidth - 16,
+                    height: 60,
+                    borderColor: black,
+                    borderWidth: 2,
+                    borderRadius: 12,
+                    color: lightGray,
+                })
+                page.drawText(statLabels[i], {
+                    x: x + 20,
+                    y: yPos - 30,
+                    size: 18,
+                    font: cinzelFont,
+                    color: black,
+                })
+
+                // Add ATK bubbles for BODY, AGILITY, and FOCUS (positioned to the right)
+                if (i < 3) {
+                    // Only for BODY, AGILITY, FOCUS (not FATE)
+                    const atkField = statFields[i]
+                    const isChecked = characterData[`${atkField}AtkChecked`]
+
+                    // ATK bubble positioned to the right
+                    const bubbleX = x + statWidth - 24
+                    const bubbleY = yPos - 20
+
+                    // Draw ATK circle - always white background, checkbox will indicate state
+                    page.drawCircle({
+                        x: bubbleX,
+                        y: bubbleY,
+                        size: 12,
+                        borderColor: black,
+                        borderWidth: 1,
+                        color: white, // Always white background
+                    })
+
+                    // Draw "atk" text - always black
+                    page.drawText("atk", {
+                        x: bubbleX - 8,
+                        y: bubbleY - 3,
+                        size: 8,
+                        font: cinzelFont,
+                        color: black, // Always black text
+                    })
+
+                    // Add checkbox centered over the ATK bubble - this shows the state
+                    const atkCheckbox = form.createCheckBox(
+                        `${atkField}AtkChecked`
+                    )
+                    console.log(
+                        `ATK Debug - Field: ${atkField}, IsChecked: ${isChecked}, Character Data:`,
+                        characterData[`${atkField}AtkChecked`]
+                    )
+
+                    // Configure ATK checkbox appearance
+                    atkCheckbox.enableReadOnly(false)
+
+                    // Set default appearance for ATK checkbox
+                    try {
+                        atkCheckbox.defaultUpdateAppearances()
+                    } catch (e) {
+                        console.log(
+                            `Could not set default appearance for ${atkField} checkbox:`,
+                            e
+                        )
+                    }
+
+                    atkCheckbox.addToPage(page, {
+                        x: bubbleX - 6,
+                        y: bubbleY - 6,
+                        width: 12,
+                        height: 12,
+                        borderColor: black,
+                        borderWidth: 1,
+                    })
+                    // Check ATK state after adding to page
+                    if (isChecked) {
+                        console.log(`Checking ${atkField}AtkChecked checkbox`)
+                        atkCheckbox.check()
+                    }
+                }
+
+                // Stat value input field
+                const statField = form.createTextField(statFields[i])
+                statField.setText(characterData[statFields[i]] || "")
+
+                // Draw rounded background for stat input field
+                page.drawRectangle({
+                    x: x + 18,
+                    y: yPos - 52,
+                    width: 44,
+                    height: 19,
+                    borderColor: black,
+                    borderWidth: 1,
+                    borderRadius: 4,
+                    color: white,
+                })
+
+                statField.addToPage(page, {
+                    x: x + 20,
+                    y: yPos - 50,
+                    width: 40,
+                    height: 15,
+                    borderColor: black,
+                    borderWidth: 0,
+                    backgroundColor: white,
+                })
+            }
+            yPos -= 75
+
+            // Action Rolls Section
+            const actionLabels = ["BRACE", "DODGE", "CAST SPELL", "DYING"]
+            for (let i = 0; i < actionLabels.length; i++) {
+                const x = margin + i * statWidth
+                page.drawRectangle({
+                    x: x + 8,
+                    y: yPos - 38,
+                    width: statWidth - 16,
+                    height: 38,
+                    borderColor: black,
+                    borderWidth: 2,
+                    borderRadius: 12,
+                    color: lightGray,
+                })
+                page.drawText(actionLabels[i], {
+                    x: x + statWidth / 2 - 25,
+                    y: yPos - 18,
+                    size: 11,
+                    font: cinzelFont,
+                    color: black,
+                })
+            }
+            yPos -= 55
+
+            // Equipment and Health Section
+            const halfWidth = pageWidth / 2
+            // Equipment
+            page.drawRectangle({
+                x: margin,
+                y: yPos - 90,
+                width: halfWidth - 8,
+                height: 90,
+                borderColor: black,
+                borderWidth: 2,
+                borderRadius: 16,
+                color: lightGray,
+            })
+            page.drawText("EQUIPMENT", {
+                x: margin + halfWidth / 2 - 38,
+                y: yPos - 18,
+                size: 13,
+                font: cinzelFont,
+                color: black,
+            })
+            // Shield
+            page.drawText("SHIELD?", {
+                x: margin + 12,
+                y: yPos - 38,
+                size: 11,
+                font: cinzelFont,
+                color: black,
+            })
+            const shieldYes = form.createCheckBox("shieldYes")
+            const shieldNo = form.createCheckBox("shieldNo")
+            console.log(
+                "Shield Debug - Value:",
+                characterData.shield,
+                "Type:",
+                typeof characterData.shield
+            )
+
+            // Configure shield checkbox appearance
+            shieldYes.enableReadOnly(false)
+            shieldNo.enableReadOnly(false)
+
+            // Set default appearances for checkboxes
+            try {
+                shieldYes.defaultUpdateAppearances()
+                shieldNo.defaultUpdateAppearances()
+            } catch (e) {
+                console.log(
+                    "Could not set default appearances for shield checkboxes:",
+                    e
+                )
+            }
+
+            // Rounded background for shield yes checkbox
+            page.drawRectangle({
+                x: margin + 69,
+                y: yPos - 43,
+                width: 15,
+                height: 15,
+                borderColor: black,
+                borderWidth: 1,
+                borderRadius: 3,
+                color: white,
+            })
+            shieldYes.addToPage(page, {
+                x: margin + 70,
+                y: yPos - 42,
+                width: 13,
+                height: 13,
+                borderColor: black,
+                borderWidth: 1,
+            })
+            // Check shield state after adding to page
+            if (characterData.shield === true) {
+                console.log("Checking shieldYes checkbox")
+                shieldYes.check()
+            }
+            page.drawText("Y", {
+                x: margin + 88,
+                y: yPos - 39,
+                size: 11,
+                font: cinzelFont,
+                color: black,
+            })
+            // Rounded background for shield no checkbox
+            page.drawRectangle({
+                x: margin + 109,
+                y: yPos - 43,
+                width: 15,
+                height: 15,
+                borderColor: black,
+                borderWidth: 1,
+                borderRadius: 3,
+                color: white,
+            })
+            shieldNo.addToPage(page, {
+                x: margin + 110,
+                y: yPos - 42,
+                width: 13,
+                height: 13,
+                borderColor: black,
+                borderWidth: 1,
+            })
+            // Check shield state after adding to page
+            if (characterData.shield === false) {
+                console.log("Checking shieldNo checkbox")
+                shieldNo.check()
+            }
+            page.drawText("N", {
+                x: margin + 128,
+                y: yPos - 39,
+                size: 11,
+                font: cinzelFont,
+                color: black,
+            })
+            // Armor
+            page.drawText("ARMOR?", {
+                x: margin + 12,
+                y: yPos - 62,
+                size: 11,
+                font: cinzelFont,
+                color: black,
+            })
+            const armorYes = form.createCheckBox("armorYes")
+            const armorNo = form.createCheckBox("armorNo")
+            console.log(
+                "Armor Debug - Value:",
+                characterData.armor,
+                "Type:",
+                typeof characterData.armor
+            )
+
+            // Configure armor checkbox appearance
+            armorYes.enableReadOnly(false)
+            armorNo.enableReadOnly(false)
+
+            // Set default appearances for checkboxes
+            try {
+                armorYes.defaultUpdateAppearances()
+                armorNo.defaultUpdateAppearances()
+            } catch (e) {
+                console.log(
+                    "Could not set default appearances for armor checkboxes:",
+                    e
+                )
+            }
+
+            // Rounded background for armor yes checkbox
+            page.drawRectangle({
+                x: margin + 69,
+                y: yPos - 67,
+                width: 15,
+                height: 15,
+                borderColor: black,
+                borderWidth: 1,
+                borderRadius: 3,
+                color: white,
+            })
+            armorYes.addToPage(page, {
+                x: margin + 70,
+                y: yPos - 66,
+                width: 13,
+                height: 13,
+                borderColor: black,
+                borderWidth: 1,
+            })
+            // Check armor state after adding to page
+            if (characterData.armor === true) {
+                console.log("Checking armorYes checkbox")
+                armorYes.check()
+            }
+            page.drawText("Y", {
+                x: margin + 88,
+                y: yPos - 63,
+                size: 11,
+                font: cinzelFont,
+                color: black,
+            })
+            // Rounded background for armor no checkbox
+            page.drawRectangle({
+                x: margin + 109,
+                y: yPos - 67,
+                width: 15,
+                height: 15,
+                borderColor: black,
+                borderWidth: 1,
+                borderRadius: 3,
+                color: white,
+            })
+            armorNo.addToPage(page, {
+                x: margin + 110,
+                y: yPos - 66,
+                width: 13,
+                height: 13,
+                borderColor: black,
+                borderWidth: 1,
+            })
+            // Check armor state after adding to page
+            if (characterData.armor === false) {
+                console.log("Checking armorNo checkbox")
+                armorNo.check()
+            }
+            page.drawText("N", {
+                x: margin + 128,
+                y: yPos - 63,
+                size: 11,
+                font: cinzelFont,
+                color: black,
+            })
+
+            // Health
+            page.drawRectangle({
+                x: margin + halfWidth + 8,
+                y: yPos - 90,
+                width: halfWidth - 8,
+                height: 90,
+                borderColor: black,
+                borderWidth: 2,
+                borderRadius: 16,
+                color: lightGray,
+            })
+            page.drawText("HEALTH", {
+                x: margin + halfWidth + halfWidth / 2 - 30,
+                y: yPos - 18,
+                size: 13,
+                font: cinzelFont,
+                color: black,
+            })
+            // Max HP
+            page.drawText("MAX HP:", {
+                x: margin + halfWidth + 20,
+                y: yPos - 38,
+                size: 11,
+                font: cinzelFont,
+                color: black,
+            })
+            const maxHPField = form.createTextField("maxHP")
+            maxHPField.setText(characterData.maxHP || "")
+
+            // Rounded background for max HP input
+            page.drawRectangle({
+                x: margin + halfWidth + 113,
+                y: yPos - 45,
+                width: 54,
+                height: 22,
+                borderColor: black,
+                borderWidth: 1,
+                borderRadius: 4,
+                color: white,
+            })
+
+            maxHPField.addToPage(page, {
+                x: margin + halfWidth + 115, // Moved further to the right for better spacing
+                y: yPos - 43,
+                width: 50,
+                height: 18,
+                borderColor: black,
+                borderWidth: 0,
+                backgroundColor: white,
+            })
+            // Current HP
+            page.drawText("CURRENT HP:", {
+                x: margin + halfWidth + 20,
+                y: yPos - 62,
+                size: 11,
+                font: cinzelFont,
+                color: black,
+            })
+            const currentHPField = form.createTextField("currentHP")
+            currentHPField.setText(characterData.currentHP || "")
+
+            // Rounded background for current HP input
+            page.drawRectangle({
+                x: margin + halfWidth + 113,
+                y: yPos - 69,
+                width: 54,
+                height: 22,
+                borderColor: black,
+                borderWidth: 1,
+                borderRadius: 4,
+                color: white,
+            })
+
+            currentHPField.addToPage(page, {
+                x: margin + halfWidth + 115, // Moved further to the right for better spacing
+                y: yPos - 67,
+                width: 50,
+                height: 18,
+                borderColor: black,
+                borderWidth: 0,
+                backgroundColor: white,
+            })
+            yPos -= 110
+
+            // Notes Section
+            page.drawRectangle({
+                x: margin,
+                y: margin + 60,
+                width: pageWidth,
+                height: yPos - margin - 40,
+                borderColor: black,
+                borderWidth: 2,
+                borderRadius: 16,
+                color: lightGray,
+            })
+            page.drawText("NOTES", {
+                x: margin + pageWidth / 2 - 28,
+                y: yPos - 18,
+                size: 13,
+                font: cinzelFont,
+                color: black,
+            })
+            // Notes field (multiline)
+            const notesField = form.createTextField("notes")
+            notesField.setText(characterData.notes || "")
+            notesField.enableMultiline()
+
+            // Rounded background for notes field
+            page.drawRectangle({
+                x: margin + 10,
+                y: margin + 68,
+                width: pageWidth - 20,
+                height: yPos - margin - 66,
+                borderColor: black,
+                borderWidth: 1,
+                borderRadius: 8,
+                color: white,
+            })
+
+            notesField.addToPage(page, {
+                x: margin + 12,
+                y: margin + 70,
+                width: pageWidth - 24,
+                height: yPos - margin - 70,
+                borderColor: black,
+                borderWidth: 0,
+                backgroundColor: white,
+            })
+            // Placeholder text (drawn, not part of field)
+            if (!characterData.notes) {
+                page.drawText(
+                    "Character notes, backstory, equipment details, spells, etc...",
+                    {
+                        x: margin + 18,
+                        y: margin + 80 + (yPos - margin - 70) - 24,
+                        size: 10,
+                        font: cinzelFont,
+                        color: rgb(0.6, 0.6, 0.6),
+                    }
+                )
+            }
+
+            // Save the PDF
+            const pdfBytes = await pdfDoc.save()
+            const blob = new Blob([pdfBytes], { type: "application/pdf" })
+            const fileName = characterData.characterName
+                ? `${characterData.characterName
+                      .replace(/[^a-z0-9]/gi, "_")
+                      .toLowerCase()}_form_fillable.pdf`
+                : "character_sheet_form_fillable.pdf"
+            saveAs(blob, fileName)
+            showAlert("Form-fillable PDF saved successfully!")
+        } catch (error) {
+            console.error("Error creating form-fillable PDF:", error)
+            showAlert(`Error creating PDF: ${error.message}", "error`)
+        }
     }
 
     const saveToCharacterFile = async () => {
@@ -522,6 +1134,52 @@ const DigitalCharacterSheet = () => {
                     Load Character
                 </Button>
                 <Button
+                    variant='contained'
+                    startIcon={<PictureAsPdf />}
+                    onClick={() => {
+                        console.log("=== PDF GENERATION STARTED ===")
+                        console.log("Current character data at PDF generation:")
+                        console.log(
+                            "- bodyAtkChecked:",
+                            characterData.bodyAtkChecked
+                        )
+                        console.log(
+                            "- agilityAtkChecked:",
+                            characterData.agilityAtkChecked
+                        )
+                        console.log(
+                            "- focusAtkChecked:",
+                            characterData.focusAtkChecked
+                        )
+                        console.log(
+                            "- shield:",
+                            characterData.shield,
+                            "(type:",
+                            typeof characterData.shield,
+                            ")"
+                        )
+                        console.log(
+                            "- armor:",
+                            characterData.armor,
+                            "(type:",
+                            typeof characterData.armor,
+                            ")"
+                        )
+                        console.log("Complete data object:", characterData)
+                        console.log("=== CALLING PDF GENERATION FUNCTION ===")
+                        saveToFormFillablePDF()
+                    }}
+                    sx={{
+                        bgcolor: "#8B0000",
+                        "&:hover": { bgcolor: "#660000" },
+                        borderRadius: "12px",
+                        fontSize: "0.9rem",
+                        fontFamily: '"Cinzel", serif',
+                    }}
+                >
+                    Form Fillable PDF
+                </Button>
+                <Button
                     variant='outlined'
                     startIcon={<RestartAlt />}
                     onClick={resetSheet}
@@ -686,13 +1344,33 @@ const DigitalCharacterSheet = () => {
                                         <Box
                                             onClick={() => {
                                                 // Toggle an 'atkChecked' property for this stat
-                                                setCharacterData((prev) => ({
-                                                    ...prev,
-                                                    [`${field}AtkChecked`]:
-                                                        !prev[
+                                                const currentValue =
+                                                    characterData[
+                                                        `${field}AtkChecked`
+                                                    ]
+                                                const newValue = !currentValue
+                                                console.log(
+                                                    `ATK Bubble Clicked - Field: ${field}, Current Value: ${currentValue}, New Value: ${newValue}`
+                                                )
+
+                                                setCharacterData((prev) => {
+                                                    const updatedData = {
+                                                        ...prev,
+                                                        [`${field}AtkChecked`]:
+                                                            newValue,
+                                                    }
+                                                    console.log(
+                                                        `ATK State Updated - ${field}AtkChecked:`,
+                                                        updatedData[
                                                             `${field}AtkChecked`
-                                                        ],
-                                                }))
+                                                        ]
+                                                    )
+                                                    console.log(
+                                                        "Complete character data after ATK update:",
+                                                        updatedData
+                                                    )
+                                                    return updatedData
+                                                })
                                             }}
                                             sx={{
                                                 position: "absolute",
@@ -881,12 +1559,23 @@ const DigitalCharacterSheet = () => {
                                             : "contained"
                                     }
                                     size='small'
-                                    onClick={() =>
-                                        setCharacterData((prev) => ({
-                                            ...prev,
-                                            shield: true,
-                                        }))
-                                    }
+                                    onClick={() => {
+                                        console.log(
+                                            "Shield Y button clicked - Current shield value:",
+                                            characterData.shield
+                                        )
+                                        setCharacterData((prev) => {
+                                            const updatedData = {
+                                                ...prev,
+                                                shield: true,
+                                            }
+                                            console.log(
+                                                "Shield updated to TRUE, complete data:",
+                                                updatedData
+                                            )
+                                            return updatedData
+                                        })
+                                    }}
                                     sx={{
                                         minWidth: "30px",
                                         width: "30px",
@@ -921,12 +1610,23 @@ const DigitalCharacterSheet = () => {
                                             : "contained"
                                     }
                                     size='small'
-                                    onClick={() =>
-                                        setCharacterData((prev) => ({
-                                            ...prev,
-                                            shield: false,
-                                        }))
-                                    }
+                                    onClick={() => {
+                                        console.log(
+                                            "Shield N button clicked - Current shield value:",
+                                            characterData.shield
+                                        )
+                                        setCharacterData((prev) => {
+                                            const updatedData = {
+                                                ...prev,
+                                                shield: false,
+                                            }
+                                            console.log(
+                                                "Shield updated to FALSE, complete data:",
+                                                updatedData
+                                            )
+                                            return updatedData
+                                        })
+                                    }}
                                     sx={{
                                         minWidth: "30px",
                                         width: "30px",
@@ -975,12 +1675,23 @@ const DigitalCharacterSheet = () => {
                                             : "contained"
                                     }
                                     size='small'
-                                    onClick={() =>
-                                        setCharacterData((prev) => ({
-                                            ...prev,
-                                            armor: true,
-                                        }))
-                                    }
+                                    onClick={() => {
+                                        console.log(
+                                            "Armor Y button clicked - Current armor value:",
+                                            characterData.armor
+                                        )
+                                        setCharacterData((prev) => {
+                                            const updatedData = {
+                                                ...prev,
+                                                armor: true,
+                                            }
+                                            console.log(
+                                                "Armor updated to TRUE, complete data:",
+                                                updatedData
+                                            )
+                                            return updatedData
+                                        })
+                                    }}
                                     sx={{
                                         minWidth: "30px",
                                         width: "30px",
@@ -1015,12 +1726,23 @@ const DigitalCharacterSheet = () => {
                                             : "contained"
                                     }
                                     size='small'
-                                    onClick={() =>
-                                        setCharacterData((prev) => ({
-                                            ...prev,
-                                            armor: false,
-                                        }))
-                                    }
+                                    onClick={() => {
+                                        console.log(
+                                            "Armor N button clicked - Current armor value:",
+                                            characterData.armor
+                                        )
+                                        setCharacterData((prev) => {
+                                            const updatedData = {
+                                                ...prev,
+                                                armor: false,
+                                            }
+                                            console.log(
+                                                "Armor updated to FALSE, complete data:",
+                                                updatedData
+                                            )
+                                            return updatedData
+                                        })
+                                    }}
                                     sx={{
                                         minWidth: "30px",
                                         width: "30px",
