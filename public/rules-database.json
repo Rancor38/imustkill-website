@@ -218,6 +218,108 @@
                 "category": "death-and-resting",
                 "section": "nights-rest",
                 "description": "Recovery mechanisms including Night's Rest"
+            },
+            "@HuntOutline": {
+                "title": "Hunt Outline",
+                "category": "running-the-game",
+                "section": "hunt-outline",
+                "description": "The structured phases of a monster hunt"
+            },
+            "@Hook": {
+                "title": "The Hook",
+                "category": "running-the-game",
+                "section": "hunt-outline",
+                "description": "Introduce the scenario and monster threat to hunters"
+            },
+            "@NegotiatePay": {
+                "title": "Negotiate Pay",
+                "category": "running-the-game",
+                "section": "hunt-outline",
+                "description": "Test Focus to bargain for higher compensation"
+            },
+            "@RumorPhase": {
+                "title": "Rumor Phase",
+                "category": "running-the-game",
+                "section": "hunt-outline",
+                "description": "Meet contacts who provide information about the monster"
+            },
+            "@ResearchPhase": {
+                "title": "Research Phase",
+                "category": "running-the-game",
+                "section": "hunt-outline",
+                "description": "Use old sources to learn monster's weakness by testing Fate"
+            },
+            "@TrackingMonster": {
+                "title": "Tracking the Monster",
+                "category": "running-the-game",
+                "section": "hunt-outline",
+                "description": "Find the monster in its lair or be ambushed"
+            },
+            "@Fight": {
+                "title": "The Fight",
+                "category": "running-the-game",
+                "section": "hunt-outline",
+                "description": "Battle the monster using combat mechanics"
+            },
+            "@Denouement": {
+                "title": "Denouement",
+                "category": "running-the-game",
+                "section": "hunt-outline",
+                "description": "Collect bounty, replenish equipment, rest and level up"
+            },
+            "@MonsterStats": {
+                "title": "Monster Stats",
+                "category": "running-the-game",
+                "section": "monster-stats-explained",
+                "description": "Understanding monster statistics and abilities"
+            },
+            "@Bloodied": {
+                "title": "Bloodied Threshold",
+                "category": "running-the-game",
+                "section": "monster-stats-explained",
+                "description": "HP threshold when monsters attempt to flee or negotiate"
+            },
+            "@Guise": {
+                "title": "Monster Guise",
+                "category": "running-the-game",
+                "section": "monster-stats-explained",
+                "description": "How monsters appear to those with insufficient Insight"
+            },
+            "@SpecialWeaknesses": {
+                "title": "Special Weaknesses",
+                "category": "running-the-game",
+                "section": "monster-stats-explained",
+                "description": "Unique vulnerabilities discovered during research phase"
+            },
+            "@Monster": {
+                "title": "Monster",
+                "category": "running-the-game",
+                "section": "monsters",
+                "description": "Supernatural creatures that hunters must track and defeat"
+            },
+            "@DownsidesOfInsight": {
+                "title": "Downsides of Insight",
+                "category": "running-the-game",
+                "section": "downsides-of-insight",
+                "description": "Risks of having higher Insight than fellow hunters"
+            },
+            "@SpecialAbilities": {
+                "title": "Special Abilities",
+                "category": "running-the-game",
+                "section": "special-abilities",
+                "description": "Unique monster powers that can negate defenses or deal extra damage"
+            },
+            "@DragonsBreath": {
+                "title": "Dragon's Breath",
+                "category": "running-the-game",
+                "section": "special-abilities",
+                "description": "Special ability that deals damage equal to monster's hit points"
+            },
+            "@BreathWeapon": {
+                "title": "Breath Weapon",
+                "category": "running-the-game",
+                "section": "special-abilities",
+                "description": "Special monster ability triggered on critical rolls"
             }
         },
         "categories": {

@@ -6,9 +6,9 @@
                 "id": "leveling-up",
                 "title": "Leveling Up",
                 "%Source": ["@LevelingUp"],
-                "description": "After you survive a Fight and @Rest, you can level up by testing one of your stats.",
+                "description": "After you survive a Fight and @Rest, you can level up by testing one of your stats OR gain 1 additional @Insight",
                 "mechanics": "Roll 1d10 against 1 chosen stat (@Body, @Agility, @Focus, or @Fate). If the roll is lower than your current stat value, increase that stat by 1.",
-                "limits": "Maximum stat value is 9. If all your stats are at 9, you can instead gain 1 @Insight.",
+                "limits": "Maximum stat value is 9. If all your stats are at 9.",
                 "keywords": [
                     "leveling up",
                     "survive fight",

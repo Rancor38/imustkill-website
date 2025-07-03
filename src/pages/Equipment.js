@@ -7,7 +7,7 @@ import {
     List,
     ListItem,
 } from "@mui/material"
-import HomeButton from "../components/HomeButton"
+import PlayerToolsButton from "../components/PlayerToolsButton"
 
 const Equipment = () => {
     const [equipment, setEquipment] = useState([])
@@ -147,7 +147,7 @@ const Equipment = () => {
                 </Paper>
             </Container>
 
-            <HomeButton />
+            <PlayerToolsButton />
         </>
     )
 }

@@ -5,22 +5,23 @@
             {
                 "id": "hunt-outline",
                 "title": "Hunt Outline",
+                "%Source": ["@HuntOutline"],
                 "phases": [
                     {
                         "name": "The Hook",
-                        "description": "Introduce the scenario and the monster threat to the hunters."
+                        "description": "Introduce the scenario and the @Monster threat to the hunters."
                     },
                     {
                         "name": "Negotiate Pay",
-                        "description": "Test Focus. You bargain for high pay, otherwise you agree to low pay. High pay is enough to have spending money later, low pay is enough only for subsistence."
+                        "description": "Test @Focus. You bargain for high pay, otherwise you agree to low pay. High pay is enough to have spending money later, low pay is enough only for subsistence."
                     },
                     {
                         "name": "The Rumor Phase",
-                        "description": "Meet someone who can tell you information about the monster. They present rumors for the monster (curated by the GM with true and misleading information). The GM chooses which of these rumors is true in this given scenario."
+                        "description": "Meet someone who can tell you information about the @Monster. They present rumors for the @Monster (curated by the GM with true and misleading information). The GM chooses which of these rumors is true in this given scenario."
                     },
                     {
                         "name": "The Research Phase",
-                        "description": "An old journal, a tale from long ago, an old friend. You reach out to learn information about the monster, and test Fate to learn its weakness (draw a weakness from the Weaknesses deck)."
+                        "description": "An old journal, a tale from long ago, an old friend. You reach out to learn information about the @Monster, and test @Fate to learn its weakness (draw a weakness from the Weaknesses deck)."
                     },
                     {
                         "name": "Prepare",
@@ -28,27 +29,26 @@
                     },
                     {
                         "name": "Tracking the Monster",
-                        "description": "Find the monster in its home (test Fate) or it ambushes you."
+                        "description": "Find the @Monster in its home (test @Fate) or it ambushes you."
                     },
                     {
                         "name": "The Fight",
-                        "description": "Battle the monster, win or die."
+                        "description": "Battle the @Monster, win or die."
                     },
                     {
                         "name": "Denouement",
-                        "description": "Collect the bounty. Replenish equipment up to 10, and if high pay, everyone can purchase new equipment. Rest and level up."
+                        "description": "Collect the bounty. Replenish equipment up to 10, and if high pay, everyone can purchase new equipment. @NightsRest and @LevelingUp."
                     }
                 ],
                 "keywords": [
-                    "hunt outline",
-                    "hook",
-                    "negotiate pay",
-                    "rumor phase",
-                    "research phase",
-                    "prepare",
-                    "tracking",
-                    "fight",
-                    "denouement"
+                    "@HuntOutline",
+                    "@Hook",
+                    "@NegotiatePay",
+                    "@RumorPhase",
+                    "@ResearchPhase",
+                    "@TrackingMonster",
+                    "@Fight",
+                    "@Denouement"
                 ]
             },
             {
@@ -63,26 +63,17 @@
                             "Monsters have a rating of @Insight required before a hunter can see them as they are. These creatures are metaphysical threats that challenge perception of the physical realm.",
                             "All monsters that lie beyond a human's @Insight appear as beasts rationalized by the context the human has. They might perceive a werewolf as a large bear, or a changeling as a deformed man."
                         ],
-                        "keywords": [
-                            "hidden creatures",
-                            "insight required",
-                            "metaphysical threats",
-                            "perception",
-                            "rationalized",
-                            "werewolf",
-                            "changeling"
-                        ]
+                        "keywords": ["@HiddenCreatures", "@Insight", "@Monster"]
                     },
                     {
                         "id": "downsides-of-insight",
                         "title": "The Downsides of Insight",
+                        "%Source": ["@DownsidesOfInsight"],
                         "description": "Having higher @Insight enables hunters to perceive entities that others cannot. However, exceeding your fellow hunters' @Insight scores may pose risks. If only your hunter has the required @Insight to see a creature, then only your hunter can @Attack it effectively, but this also draws the creature's attention who will target your hunter viciously. Fellow hunters, lacking the required @Insight, would struggle to assist effectively.",
                         "keywords": [
-                            "downsides of insight",
-                            "perceive entities",
-                            "pose risks",
-                            "target viciously",
-                            "struggle to assist"
+                            "@DownsidesOfInsight",
+                            "@Insight",
+                            "@Attack"
                         ]
                     }
                 ]
@@ -104,12 +95,10 @@
                             "Multi-attack: Some monsters can target multiple creatures"
                         ],
                         "keywords": [
-                            "monster tables",
-                            "d10",
-                            "attack value",
-                            "wind up",
-                            "double damage",
-                            "multi-attack"
+                            "@MonsterTables",
+                            "@Attack",
+                            "@WindUp",
+                            "@Damage"
                         ]
                     },
                     {
@@ -163,17 +152,14 @@
                             }
                         ],
                         "keywords": [
-                            "monster stats",
-                            "attack value",
-                            "damage value",
-                            "hit points multiplier",
-                            "bloodied",
-                            "buffs",
-                            "crit",
-                            "immunities",
-                            "insight",
-                            "guise",
-                            "special weaknesses"
+                            "@MonsterStats",
+                            "@Attack",
+                            "@Damage",
+                            "@HitPoints",
+                            "@Bloodied",
+                            "@Insight",
+                            "@Guise",
+                            "@SpecialWeaknesses"
                         ]
                     },
                     {
@@ -181,46 +167,38 @@
                         "title": "Damage and Wind Up",
                         "description": "Monsters deal their @Damage value when they successfully @Attack. The '@WindUp' mechanic makes failed @Attack actions more dangerous.",
                         "mechanics": "When a monster fails to @Attack (rolls higher than @Attack value), it '@WindUp'. The next successful @Attack deals double the normal @Damage value.",
-                        "keywords": [
-                            "monster damage",
-                            "wind up",
-                            "double damage",
-                            "failed attack"
-                        ]
+                        "keywords": ["@Damage", "@WindUp", "@Attack"]
                     },
                     {
                         "id": "special-abilities",
                         "title": "Examples of Special Abilities",
+                        "%Source": ["@SpecialAbilities"],
                         "examples": [
-                            "Some attacks may negate dodging or bracing",
-                            "Dragons breath deals damage equal to the monster's hit points",
-                            "Special abilities triggered on a 1 (maybe a breath weapon, something that does 3 damage)",
-                            "Other unique abilities specific to each monster"
+                            "Some attacks may negate @Dodge or @Brace",
+                            "@DragonsBreath deals @Damage equal to the @Monster's @HitPoints",
+                            "@SpecialAbilities triggered on a 1 (maybe a @BreathWeapon, something that does 3 @Damage)",
+                            "Other unique abilities specific to each @Monster"
                         ],
                         "keywords": [
-                            "special abilities",
-                            "negate dodging",
-                            "dragons breath",
-                            "breath weapon",
-                            "unique abilities"
+                            "@SpecialAbilities",
+                            "@Dodge",
+                            "@Brace",
+                            "@DragonsBreath",
+                            "@BreathWeapon"
                         ]
                     },
                     {
                         "id": "explaining-monster-stats",
                         "title": "Hit Points and Bloodied Calculation",
-                        "description": "@HitPoints are calculated based on the number of players, and bloodied thresholds determine when monsters become desperate.",
+                        "%Source": ["@HitPoints", "@Bloodied"],
+                        "description": "@HitPoints are calculated based on the number of players, and @Bloodied thresholds determine when @Monster become desperate.",
                         "examples": [
                             "@HitPoints '0+1' with 4 players: (4 × 0) + 1 = 1 @HitPoints",
                             "@HitPoints '5' with 3 players: 3 × 5 = 15 @HitPoints",
                             "@HitPoints '2+3' with 2 players: (2 × 2) + 3 = 7 @HitPoints",
-                            "Bloodied '2' with 3 players: Monster flees or negotiates when below 6 @HitPoints"
+                            "@Bloodied '2' with 3 players: @Monster flees or negotiates when below 6 @HitPoints"
                         ],
-                        "keywords": [
-                            "hit points calculation",
-                            "number of players",
-                            "bloodied threshold",
-                            "monster flees or negotiates"
-                        ]
+                        "keywords": ["@HitPoints", "@Bloodied", "@Monster"]
                     }
                 ]
             }

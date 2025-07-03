@@ -159,7 +159,7 @@
                 "types": [
                     {
                         "name": "Physical Damage",
-                        "description": "Standard @Damage from conventional weapons such as swords, guns, clubs, and other mundane armaments. Most creatures can be harmed by @PhysicalDamage, though some may have resistance or immunity to certain types of physical attacks.",
+                        "description": "Standard @Damage from conventional weapons such as swords, guns, clubs, and other mundane armaments. Most creatures can be harmed by @PhysicalDamage, though some may have resistance or immunity to certain types of @PhysicalDamage attacks.",
                         "examples": [
                             "swords",
                             "firearms",

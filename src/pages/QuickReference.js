@@ -18,7 +18,7 @@ import {
     LocalFireDepartment,
     Psychology,
 } from "@mui/icons-material"
-import HomeButton from "../components/HomeButton"
+import PlayerToolsButton from "../components/PlayerToolsButton"
 import useRulesEngine from "../hooks/useRulesEngine"
 import { scrollToAnchor } from "../utils/scrollToAnchor"
 import EnhancedKeywordLinker from "../components/RulesSearch/EnhancedKeywordLinker"
@@ -283,7 +283,7 @@ const QuickReference = () => {
                 </Paper>
             </Container>
 
-            <HomeButton />
+            <PlayerToolsButton />
         </>
     )
 }

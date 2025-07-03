@@ -10,10 +10,10 @@ import {
     CardContent,
     CardActions,
 } from "@mui/material"
-import { MoreHoriz, MenuBook, Inventory, Assignment } from "@mui/icons-material"
+import { MoreHoriz, MenuBook, Pets, Casino } from "@mui/icons-material"
 import HomeButton from "../components/HomeButton.js"
 
-const DigitalTools = () => {
+const GMTools = () => {
     const getButtonStyles = () => ({
         width: "100%",
         height: "50px",
@@ -66,34 +66,34 @@ const DigitalTools = () => {
 
     const tools = [
         {
-            title: "Quick Reference",
+            title: "Initiative Tracker",
             description:
-                "Quick access to essential rules, mechanics, and game information for easy reference during play.",
+                "Track combat initiative order with drag-and-drop support for monsters, NPCs, players, and environmental hazards.",
+            icon: <Casino sx={{ fontSize: 40 }} />,
+            path: "/initiative-tracker",
+            available: true,
+        },
+        {
+            title: "Running the Game",
+            description:
+                "Comprehensive guide for Game Masters on running sessions, managing monsters, and creating engaging hunts.",
             icon: <MenuBook sx={{ fontSize: 40 }} />,
-            path: "/quick-reference",
+            path: "/running-the-game",
             available: true,
         },
         {
-            title: "Character Sheet",
+            title: "Bestiary",
             description:
-                "Create, edit, and manage your character with our interactive digital character sheet. Includes insight token management.",
-            icon: <Assignment sx={{ fontSize: 40 }} />,
-            path: "/digital-character-sheet",
+                "Complete monster compendium with stats, abilities, and guidance for encounters.",
+            icon: <Pets sx={{ fontSize: 40 }} />,
+            path: "/monsters",
             available: true,
         },
+        // Placeholder for future GM tools
         {
-            title: "Equipment Deck",
+            title: "More GM Tools Coming Soon",
             description:
-                "Browse and manage weapons, armor, and equipment with detailed stats and descriptions.",
-            icon: <Inventory sx={{ fontSize: 40 }} />,
-            path: "/equipment",
-            available: true,
-        },
-        // Placeholder for future tools
-        {
-            title: "More Tools Coming Soon",
-            description:
-                "Additional digital tools will be added here to enhance your gaming experience.",
+                "Additional tools for Game Masters will be added here to help run your sessions.",
             icon: <MoreHoriz sx={{ fontSize: 40 }} />,
             path: "#",
             available: false,
@@ -134,7 +134,7 @@ const DigitalTools = () => {
                             marginBottom: 2,
                         }}
                     >
-                        Player Tools
+                        GM Tools
                     </Typography>
                     <Typography
                         variant='h6'
@@ -145,8 +145,8 @@ const DigitalTools = () => {
                             margin: "0 auto",
                         }}
                     >
-                        Enhanced digital tools to improve your tabletop gaming
-                        experience
+                        Enhanced digital tools to help Game Masters run their
+                        sessions
                     </Typography>
                 </Box>
 
@@ -231,4 +231,4 @@ const DigitalTools = () => {
     )
 }
 
-export default DigitalTools
+export default GMTools

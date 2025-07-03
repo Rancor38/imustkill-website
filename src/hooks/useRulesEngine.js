@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useMemo, useCallback } from "react"
 
 // Hook for managing all rules data and search functionality
 export const useRulesEngine = () => {
@@ -199,58 +199,65 @@ export const useRulesEngine = () => {
     }, [rulesData])
 
     // Search function
-    const search = (query) => {
-        if (!query.trim()) return []
+    const search = useCallback(
+        (query) => {
+            if (!query.trim()) return []
 
-        const searchTerms = query.toLowerCase().trim().split(/\s+/)
-        const results = []
+            const searchTerms = query.toLowerCase().trim().split(/\s+/)
+            const results = []
 
-        searchableContent.forEach((item) => {
-            const searchText = `${item.title} ${
-                item.description
-            } ${item.keywords.join(" ")}`.toLowerCase()
+            searchableContent.forEach((item) => {
+                const searchText = `${item.title} ${
+                    item.description
+                } ${item.keywords.join(" ")}`.toLowerCase()
 
-            // Check if all search terms are present
-            const matchesAllTerms = searchTerms.every((term) =>
-                searchText.includes(term)
-            )
+                // Check if all search terms are present
+                const matchesAllTerms = searchTerms.every((term) =>
+                    searchText.includes(term)
+                )
 
-            if (matchesAllTerms) {
-                // Calculate relevance score
-                let score = 0
+                if (matchesAllTerms) {
+                    // Calculate relevance score
+                    let score = 0
 
-                // Title matches get highest score
-                if (item.title.toLowerCase().includes(query.toLowerCase())) {
-                    score += 10
+                    // Title matches get highest score
+                    if (
+                        item.title.toLowerCase().includes(query.toLowerCase())
+                    ) {
+                        score += 10
+                    }
+
+                    // Keyword matches get medium score
+                    const keywordMatches = item.keywords.filter((keyword) =>
+                        keyword.toLowerCase().includes(query.toLowerCase())
+                    ).length
+                    score += keywordMatches * 5
+
+                    // Description matches get lower score
+                    if (
+                        item.description
+                            .toLowerCase()
+                            .includes(query.toLowerCase())
+                    ) {
+                        score += 2
+                    }
+
+                    results.push({ ...item, relevanceScore: score })
                 }
-
-                // Keyword matches get medium score
-                const keywordMatches = item.keywords.filter((keyword) =>
-                    keyword.toLowerCase().includes(query.toLowerCase())
-                ).length
-                score += keywordMatches * 5
-
-                // Description matches get lower score
-                if (
-                    item.description.toLowerCase().includes(query.toLowerCase())
-                ) {
-                    score += 2
-                }
-
-                results.push({ ...item, relevanceScore: score })
-            }
-        })
-
-        // Sort by relevance score, then alphabetically
-        return results
-            .sort((a, b) => {
-                if (b.relevanceScore !== a.relevanceScore) {
-                    return b.relevanceScore - a.relevanceScore
-                }
-                return a.title.localeCompare(b.title)
             })
-            .slice(0, 20) // Limit to top 20 results
-    }
+
+            // Sort by relevance score, then alphabetically
+            return results
+                .sort((a, b) => {
+                    if (b.relevanceScore !== a.relevanceScore) {
+                        return b.relevanceScore - a.relevanceScore
+                    }
+                    return a.title.localeCompare(b.title)
+                })
+                .slice(0, 20) // Limit to top 20 results
+        },
+        [searchableContent]
+    )
 
     // Get specific rule data
     const getRule = (category, sectionId) => {
@@ -272,28 +279,31 @@ export const useRulesEngine = () => {
     }
 
     // Get keyword suggestions for search
-    const getKeywordSuggestions = (partialQuery) => {
-        if (!partialQuery || partialQuery.length < 2) return []
+    const getKeywordSuggestions = useCallback(
+        (partialQuery) => {
+            if (!partialQuery || partialQuery.length < 2) return []
 
-        const suggestions = new Set()
-        const query = partialQuery.toLowerCase()
+            const suggestions = new Set()
+            const query = partialQuery.toLowerCase()
 
-        searchableContent.forEach((item) => {
-            // Check title
-            if (item.title.toLowerCase().includes(query)) {
-                suggestions.add(item.title)
-            }
-
-            // Check keywords
-            item.keywords.forEach((keyword) => {
-                if (keyword.toLowerCase().includes(query)) {
-                    suggestions.add(keyword)
+            searchableContent.forEach((item) => {
+                // Check title
+                if (item.title.toLowerCase().includes(query)) {
+                    suggestions.add(item.title)
                 }
-            })
-        })
 
-        return Array.from(suggestions).slice(0, 10)
-    }
+                // Check keywords
+                item.keywords.forEach((keyword) => {
+                    if (keyword.toLowerCase().includes(query)) {
+                        suggestions.add(keyword)
+                    }
+                })
+            })
+
+            return Array.from(suggestions).slice(0, 10)
+        },
+        [searchableContent]
+    )
 
     // Get source information for rules
     const getSourceMap = () => {

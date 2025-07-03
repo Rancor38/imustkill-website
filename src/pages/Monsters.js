@@ -11,7 +11,7 @@ import {
     MenuItem,
     Box,
 } from "@mui/material"
-import HomeButton from "../components/HomeButton"
+import GMToolsButton from "../components/GMToolsButton"
 import Section from "../components/Section"
 
 const Monsters = () => {
@@ -116,7 +116,7 @@ const Monsters = () => {
                                 : "#121212",
                     }}
                 >
-                    Monsters
+                    Bestiary
                 </Typography>
                 <Paper
                     sx={{
@@ -241,7 +241,7 @@ const Monsters = () => {
                 </Paper>
             </Container>
 
-            <HomeButton />
+            <GMToolsButton />
         </>
     )
 }

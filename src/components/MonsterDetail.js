@@ -17,7 +17,7 @@ import {
     CardContent,
     Divider,
 } from "@mui/material"
-import HomeButton from "./HomeButton"
+import GMToolsButton from "./GMToolsButton"
 
 const MonsterDetail = () => {
     const [monstersData, setMonstersData] = useState([])
@@ -108,7 +108,7 @@ const MonsterDetail = () => {
                 >
                     Monster not found
                 </Typography>
-                <HomeButton />
+                <GMToolsButton />
             </Container>
         )
     }
@@ -604,7 +604,7 @@ const MonsterDetail = () => {
                     ← Back to Monsters
                 </Button>
             </Paper>
-            <HomeButton />
+            <GMToolsButton />
         </Container>
     )
 }

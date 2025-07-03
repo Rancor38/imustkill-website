@@ -9,7 +9,7 @@ import {
 } from "@mui/material"
 import { useState, useEffect } from "react"
 import { useLocation } from "react-router-dom"
-import HomeButton from "../components/HomeButton"
+import GMToolsButton from "../components/GMToolsButton"
 import useRulesEngine from "../hooks/useRulesEngine"
 import EnhancedKeywordLinker from "../components/RulesSearch/EnhancedKeywordLinker"
 import { scrollToAnchor } from "../utils/scrollToAnchor"
@@ -348,7 +348,7 @@ const RunningTheGame = () => {
                 ))}
             </Container>
 
-            <HomeButton />
+            <GMToolsButton />
         </>
     )
 }

@@ -9,12 +9,19 @@ import {
     Button,
     Alert,
     Snackbar,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+    Divider,
 } from "@mui/material"
 import { Upload, Save, RestartAlt, PictureAsPdf } from "@mui/icons-material"
 import { saveAs } from "file-saver"
 import html2canvas from "html2canvas"
 import { PDFDocument, rgb } from "pdf-lib"
 import * as fontkit from "fontkit"
+import InsightToken from "../components/InsightToken"
+import PlayerToolsButton from "../components/PlayerToolsButton"
 
 const DigitalCharacterSheet = () => {
     // Character data state matching the original sheet
@@ -48,6 +55,69 @@ const DigitalCharacterSheet = () => {
         // Notes
         notes: "",
     })
+
+    // Insight Tokens state management
+    const [tokenCount, setTokenCount] = useState(1)
+    const [tokenStates, setTokenStates] = useState({})
+
+    // Load insight tokens from localStorage on component mount
+    React.useEffect(() => {
+        const savedTokenCount = localStorage.getItem("insightTokenCount")
+        const savedTokenStates = localStorage.getItem("insightTokenStates")
+
+        if (savedTokenCount) {
+            setTokenCount(parseInt(savedTokenCount, 10))
+        }
+
+        if (savedTokenStates) {
+            try {
+                setTokenStates(JSON.parse(savedTokenStates))
+            } catch (error) {
+                console.error(
+                    "Error parsing token states from localStorage:",
+                    error
+                )
+            }
+        }
+    }, [])
+
+    // Save insight tokens to localStorage whenever tokenCount changes
+    React.useEffect(() => {
+        localStorage.setItem("insightTokenCount", tokenCount.toString())
+    }, [tokenCount])
+
+    // Save insight tokens to localStorage whenever tokenStates changes
+    React.useEffect(() => {
+        localStorage.setItem("insightTokenStates", JSON.stringify(tokenStates))
+    }, [tokenStates])
+
+    const handleTokenCountChange = (event) => {
+        const newCount = event.target.value
+        setTokenCount(newCount)
+
+        // Clear token states that are beyond the new count
+        setTokenStates((prevStates) => {
+            const newStates = { ...prevStates }
+            Object.keys(newStates).forEach((tokenId) => {
+                if (parseInt(tokenId, 10) >= newCount) {
+                    delete newStates[tokenId]
+                }
+            })
+            return newStates
+        })
+    }
+
+    const handleTokenFlip = (tokenId) => {
+        setTokenStates((prevStates) => ({
+            ...prevStates,
+            [tokenId]: !prevStates[tokenId],
+        }))
+    }
+
+    const handleResetTokens = () => {
+        // Reset all tokens to front (false state) while keeping the current count
+        setTokenStates({})
+    }
 
     // Utility functions for PNG metadata embedding
     const embedCharacterDataInPNG = (canvas, characterData) => {
@@ -1006,975 +1076,1227 @@ const DigitalCharacterSheet = () => {
     }
 
     return (
-        <Container
-            maxWidth='md'
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-            sx={{
-                py: 2,
-                minHeight: "100vh",
-                display: "flex",
-                flexDirection: "column",
-                position: "relative",
-                // Add visual feedback for drag over
-                ...(isDragOver && {
-                    "&::before": {
-                        content: '""',
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        backgroundColor: "rgba(139, 0, 0, 0.1)",
-                        border: "3px dashed #8B0000",
-                        borderRadius: "16px",
-                        zIndex: 1000,
-                        pointerEvents: "none",
-                    },
-                    "&::after": {
-                        content:
-                            '"Drop your character file here (.character.png)"',
-                        position: "absolute",
-                        top: "50%",
-                        left: "50%",
-                        transform: "translate(-50%, -50%)",
-                        backgroundColor: "#8B0000",
-                        color: "#ffffff",
-                        padding: "16px 32px",
-                        borderRadius: "12px",
-                        fontFamily: '"Cinzel", serif',
-                        fontSize: "18px",
-                        fontWeight: "bold",
-                        zIndex: 1001,
-                        pointerEvents: "none",
-                        boxShadow: "0 8px 24px rgba(139, 0, 0, 0.3)",
-                    },
-                }),
-            }}
-        >
-            {/* Header */}
-            <Box sx={{ textAlign: "center", mb: 2 }}>
-                <Typography
-                    variant='h3'
-                    component='h1'
-                    gutterBottom
-                    sx={{
-                        fontWeight: "bold",
-                        fontSize: { xs: "1.8rem", sm: "2.2rem", md: "2.5rem" },
-                        mb: 1,
-                        fontFamily:
-                            '"Cinzel", "Libre Baskerville", "Crimson Text", serif',
-                    }}
-                >
-                    Digital Character Sheet
-                </Typography>
-                <Typography
-                    variant='h6'
-                    sx={{
-                        opacity: 0.8,
-                        fontSize: { xs: "0.9rem", sm: "1rem" },
-                        maxWidth: "600px",
-                        margin: "0 auto",
-                        fontFamily: '"Cinzel", "Libre Baskerville", serif',
-                    }}
-                >
-                    Create, edit, and manage your I Must Kill character
-                </Typography>
-                <Typography
-                    variant='body2'
-                    sx={{
-                        opacity: 0.6,
-                        fontSize: { xs: "0.75rem", sm: "0.85rem" },
-                        maxWidth: "600px",
-                        margin: "8px auto 0",
-                        fontFamily: '"Cinzel", serif',
-                        fontStyle: "italic",
-                    }}
-                ></Typography>
-            </Box>
-
-            {/* Action Buttons */}
-            <Box
-                data-testid='action-buttons'
+        <>
+            <Container
+                maxWidth='md'
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
                 sx={{
-                    mb: 2,
-                    display: "flex",
-                    gap: 1.5,
-                    flexWrap: "wrap",
-                    justifyContent: "center",
-                }}
-            >
-                <Button
-                    variant='contained'
-                    startIcon={<Save />}
-                    onClick={saveToCharacterFile}
-                    sx={{
-                        bgcolor: "#8B0000",
-                        "&:hover": { bgcolor: "#660000" },
-                        borderRadius: "12px",
-                        fontSize: "0.9rem",
-                        fontFamily: '"Cinzel", serif',
-                    }}
-                >
-                    Save Character
-                </Button>
-                <Button
-                    variant='contained'
-                    startIcon={<Upload />}
-                    onClick={() => fileInputRef.current?.click()}
-                    sx={{
-                        bgcolor: "#8B0000",
-                        "&:hover": { bgcolor: "#660000" },
-                        borderRadius: "12px",
-                        fontSize: "0.9rem",
-                        fontFamily: '"Cinzel", serif',
-                    }}
-                >
-                    Load Character
-                </Button>
-                <Button
-                    variant='contained'
-                    startIcon={<PictureAsPdf />}
-                    onClick={() => {
-                        console.log("=== PDF GENERATION STARTED ===")
-                        console.log("Current character data at PDF generation:")
-                        console.log(
-                            "- bodyAtkChecked:",
-                            characterData.bodyAtkChecked
-                        )
-                        console.log(
-                            "- agilityAtkChecked:",
-                            characterData.agilityAtkChecked
-                        )
-                        console.log(
-                            "- focusAtkChecked:",
-                            characterData.focusAtkChecked
-                        )
-                        console.log(
-                            "- shield:",
-                            characterData.shield,
-                            "(type:",
-                            typeof characterData.shield,
-                            ")"
-                        )
-                        console.log(
-                            "- armor:",
-                            characterData.armor,
-                            "(type:",
-                            typeof characterData.armor,
-                            ")"
-                        )
-                        console.log("Complete data object:", characterData)
-                        console.log("=== CALLING PDF GENERATION FUNCTION ===")
-                        saveToFormFillablePDF()
-                    }}
-                    sx={{
-                        bgcolor: "#8B0000",
-                        "&:hover": { bgcolor: "#660000" },
-                        borderRadius: "12px",
-                        fontSize: "0.9rem",
-                        fontFamily: '"Cinzel", serif',
-                    }}
-                >
-                    Form Fillable PDF
-                </Button>
-                <Button
-                    variant='outlined'
-                    startIcon={<RestartAlt />}
-                    onClick={resetSheet}
-                    sx={{
-                        borderColor: "#8B0000",
-                        color: "#8B0000",
-                        "&:hover": { borderColor: "#660000", color: "#660000" },
-                        borderRadius: "12px",
-                        fontSize: "0.9rem",
-                        fontFamily: '"Cinzel", serif',
-                    }}
-                >
-                    Reset
-                </Button>
-                <input
-                    type='file'
-                    ref={fileInputRef}
-                    onChange={loadFromCharacterFile}
-                    accept='.character.png,.png,.character,.json'
-                    style={{ display: "none" }}
-                />
-            </Box>
-
-            {/* Character Sheet - PDF-faithful layout */}
-            <Paper
-                id='character-sheet-container'
-                ref={characterSheetRef}
-                sx={{
-                    backgroundColor: "#ffffff",
-                    color: "#000000",
-                    p: 3,
-                    border: "2px solid #000000",
-                    borderRadius: "16px",
-                    fontFamily:
-                        '"Cinzel", "Libre Baskerville", "Crimson Text", serif',
-                    boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
-                    flex: 1,
+                    py: 2,
+                    minHeight: "100vh",
                     display: "flex",
                     flexDirection: "column",
-                    minHeight: 0,
+                    position: "relative",
+                    // Add visual feedback for drag over
+                    ...(isDragOver && {
+                        "&::before": {
+                            content: '""',
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            backgroundColor: "rgba(139, 0, 0, 0.1)",
+                            border: "3px dashed #8B0000",
+                            borderRadius: "16px",
+                            zIndex: 1000,
+                            pointerEvents: "none",
+                        },
+                        "&::after": {
+                            content:
+                                '"Drop your character file here (.character.png)"',
+                            position: "absolute",
+                            top: "50%",
+                            left: "50%",
+                            transform: "translate(-50%, -50%)",
+                            backgroundColor: "#8B0000",
+                            color: "#ffffff",
+                            padding: "16px 32px",
+                            borderRadius: "12px",
+                            fontFamily: '"Cinzel", serif',
+                            fontSize: "18px",
+                            fontWeight: "bold",
+                            zIndex: 1001,
+                            pointerEvents: "none",
+                            boxShadow: "0 8px 24px rgba(139, 0, 0, 0.3)",
+                        },
+                    }),
                 }}
             >
                 {/* Header */}
-                <Box
-                    sx={{
-                        textAlign: "center",
-                        mb: 3,
-                        borderBottom: "2px solid #000",
-                        pb: 2,
-                    }}
-                >
-                    <Typography
-                        variant='h4'
-                        sx={{
-                            fontWeight: "bold",
-                            fontSize: "24px",
-                            color: "#000000",
-                            letterSpacing: "2px",
-                            fontFamily: '"Cinzel Decorative", "Cinzel", serif',
-                        }}
-                    >
-                        My Name Is...
-                    </Typography>
-                    <Box
-                        sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                        }}
-                    >
-                        <TextField
-                            value={characterData.characterName}
-                            onChange={handleInputChange("characterName")}
-                            variant='standard'
-                            placeholder='Character Name'
-                            sx={{
-                                mt: 2,
-                                width: "300px",
-                                "& .MuiInput-underline:before": {
-                                    borderBottomStyle: "dotted",
-                                    borderBottomWidth: "2px",
-                                    borderBottomColor: "#000000",
-                                },
-                                "& .MuiInput-underline:hover:not(.Mui-disabled):before":
-                                    {
-                                        borderBottomColor: "#333333",
-                                    },
-                                "& .MuiInput-underline:after": {
-                                    borderBottomColor: "#000000",
-                                },
-                                "& .MuiInputBase-input": {
-                                    color: "#000000",
-                                    textAlign: "center",
-                                    fontSize: "16px",
-                                    fontWeight: "bold",
-                                    fontFamily: '"Cinzel", serif',
-                                    padding: "4px 0",
-                                },
-                            }}
-                        />
-                        <Typography
-                            sx={{
-                                mt: 2,
-                                ml: 2,
-                                fontWeight: "bold",
-                                fontSize: "18px",
-                                fontFamily: '"Cinzel", serif',
-                            }}
-                        >
-                            and
-                        </Typography>
-                    </Box>
+                <Box sx={{ textAlign: "center", mb: 2 }}>
                     <Typography
                         variant='h3'
+                        component='h1'
+                        gutterBottom
                         sx={{
                             fontWeight: "bold",
-                            fontSize: "28px",
-                            color: "#8B0000",
-                            mt: 2,
-                            letterSpacing: "3px",
-                            fontFamily: '"Cinzel Decorative", "Cinzel", serif',
+                            fontSize: {
+                                xs: "1.8rem",
+                                sm: "2.2rem",
+                                md: "2.5rem",
+                            },
+                            mb: 1,
+                            fontFamily:
+                                '"Cinzel", "Libre Baskerville", "Crimson Text", serif',
                         }}
                     >
-                        I MUST KILL
+                        Character Sheet
                     </Typography>
+                    <Typography
+                        variant='h6'
+                        sx={{
+                            opacity: 0.8,
+                            fontSize: { xs: "0.9rem", sm: "1rem" },
+                            maxWidth: "600px",
+                            margin: "0 auto",
+                            fontFamily: '"Cinzel", "Libre Baskerville", serif',
+                        }}
+                    >
+                        Create, edit, and manage your I Must Kill character
+                    </Typography>
+                    <Typography
+                        variant='body2'
+                        sx={{
+                            opacity: 0.6,
+                            fontSize: { xs: "0.75rem", sm: "0.85rem" },
+                            maxWidth: "600px",
+                            margin: "8px auto 0",
+                            fontFamily: '"Cinzel", serif',
+                            fontStyle: "italic",
+                        }}
+                    ></Typography>
                 </Box>
 
-                {/* Core Stats Grid */}
-                <Grid container spacing={2} sx={{ mb: 3 }}>
-                    {[
-                        { label: "BODY", field: "body" },
-                        { label: "AGILITY", field: "agility" },
-                        { label: "FOCUS", field: "focus" },
-                        { label: "FATE", field: "fate" },
-                    ].map(({ label, field }) => (
-                        <Grid item xs={6} sm={3} key={field}>
-                            <Box
+                {/* Action Buttons */}
+                <Box
+                    data-testid='action-buttons'
+                    sx={{
+                        mb: 2,
+                        display: "flex",
+                        gap: 1.5,
+                        flexWrap: "wrap",
+                        justifyContent: "center",
+                    }}
+                >
+                    <Button
+                        variant='contained'
+                        startIcon={<Save />}
+                        onClick={saveToCharacterFile}
+                        sx={{
+                            bgcolor: "#8B0000",
+                            "&:hover": { bgcolor: "#660000" },
+                            borderRadius: "12px",
+                            fontSize: "0.9rem",
+                            fontFamily: '"Cinzel", serif',
+                        }}
+                    >
+                        Save Character
+                    </Button>
+                    <Button
+                        variant='contained'
+                        startIcon={<Upload />}
+                        onClick={() => fileInputRef.current?.click()}
+                        sx={{
+                            bgcolor: "#8B0000",
+                            "&:hover": { bgcolor: "#660000" },
+                            borderRadius: "12px",
+                            fontSize: "0.9rem",
+                            fontFamily: '"Cinzel", serif',
+                        }}
+                    >
+                        Load Character
+                    </Button>
+                    <Button
+                        variant='contained'
+                        startIcon={<PictureAsPdf />}
+                        onClick={() => {
+                            console.log("=== PDF GENERATION STARTED ===")
+                            console.log(
+                                "Current character data at PDF generation:"
+                            )
+                            console.log(
+                                "- bodyAtkChecked:",
+                                characterData.bodyAtkChecked
+                            )
+                            console.log(
+                                "- agilityAtkChecked:",
+                                characterData.agilityAtkChecked
+                            )
+                            console.log(
+                                "- focusAtkChecked:",
+                                characterData.focusAtkChecked
+                            )
+                            console.log(
+                                "- shield:",
+                                characterData.shield,
+                                "(type:",
+                                typeof characterData.shield,
+                                ")"
+                            )
+                            console.log(
+                                "- armor:",
+                                characterData.armor,
+                                "(type:",
+                                typeof characterData.armor,
+                                ")"
+                            )
+                            console.log("Complete data object:", characterData)
+                            console.log(
+                                "=== CALLING PDF GENERATION FUNCTION ==="
+                            )
+                            saveToFormFillablePDF()
+                        }}
+                        sx={{
+                            bgcolor: "#8B0000",
+                            "&:hover": { bgcolor: "#660000" },
+                            borderRadius: "12px",
+                            fontSize: "0.9rem",
+                            fontFamily: '"Cinzel", serif',
+                        }}
+                    >
+                        Form Fillable PDF
+                    </Button>
+                    <Button
+                        variant='outlined'
+                        startIcon={<RestartAlt />}
+                        onClick={resetSheet}
+                        sx={{
+                            borderColor: "#8B0000",
+                            color: "#8B0000",
+                            "&:hover": {
+                                borderColor: "#660000",
+                                color: "#660000",
+                            },
+                            borderRadius: "12px",
+                            fontSize: "0.9rem",
+                            fontFamily: '"Cinzel", serif',
+                        }}
+                    >
+                        Reset
+                    </Button>
+                    <input
+                        type='file'
+                        ref={fileInputRef}
+                        onChange={loadFromCharacterFile}
+                        accept='.character.png,.png,.character,.json'
+                        style={{ display: "none" }}
+                    />
+                </Box>
+
+                {/* Character Sheet - PDF-faithful layout */}
+                <Paper
+                    id='character-sheet-container'
+                    ref={characterSheetRef}
+                    sx={{
+                        backgroundColor: "#ffffff",
+                        color: "#000000",
+                        p: 3,
+                        border: "2px solid #000000",
+                        borderRadius: "16px",
+                        fontFamily:
+                            '"Cinzel", "Libre Baskerville", "Crimson Text", serif',
+                        boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
+                        flex: 1,
+                        display: "flex",
+                        flexDirection: "column",
+                        minHeight: 0,
+                    }}
+                >
+                    {/* Header */}
+                    <Box
+                        sx={{
+                            textAlign: "center",
+                            mb: 3,
+                            borderBottom: "2px solid #000",
+                            pb: 2,
+                        }}
+                    >
+                        <Typography
+                            variant='h4'
+                            sx={{
+                                fontWeight: "bold",
+                                fontSize: "24px",
+                                color: "#000000",
+                                letterSpacing: "2px",
+                                fontFamily:
+                                    '"Cinzel Decorative", "Cinzel", serif',
+                            }}
+                        >
+                            My Name Is...
+                        </Typography>
+                        <Box
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }}
+                        >
+                            <TextField
+                                value={characterData.characterName}
+                                onChange={handleInputChange("characterName")}
+                                variant='standard'
+                                placeholder='Character Name'
                                 sx={{
-                                    border: "2px solid #000000",
-                                    p: 1.5,
-                                    textAlign: "center",
-                                    backgroundColor: "#f9f9f9",
-                                    borderRadius: "12px",
+                                    mt: 2,
+                                    width: "300px",
+                                    "& .MuiInput-underline:before": {
+                                        borderBottomStyle: "dotted",
+                                        borderBottomWidth: "2px",
+                                        borderBottomColor: "#000000",
+                                    },
+                                    "& .MuiInput-underline:hover:not(.Mui-disabled):before":
+                                        {
+                                            borderBottomColor: "#333333",
+                                        },
+                                    "& .MuiInput-underline:after": {
+                                        borderBottomColor: "#000000",
+                                    },
+                                    "& .MuiInputBase-input": {
+                                        color: "#000000",
+                                        textAlign: "center",
+                                        fontSize: "16px",
+                                        fontWeight: "bold",
+                                        fontFamily: '"Cinzel", serif',
+                                        padding: "4px 0",
+                                    },
+                                }}
+                            />
+                            <Typography
+                                sx={{
+                                    mt: 2,
+                                    ml: 2,
+                                    fontWeight: "bold",
+                                    fontSize: "18px",
+                                    fontFamily: '"Cinzel", serif',
                                 }}
                             >
-                                <Box sx={{ position: "relative" }}>
-                                    <Typography
-                                        variant='h6'
-                                        sx={{
-                                            fontWeight: "bold",
-                                            mb: 1,
-                                            color: "#000000",
-                                            fontSize: "12px",
-                                            fontFamily: '"Cinzel", serif',
-                                        }}
-                                    >
-                                        {label}
-                                    </Typography>
-                                    {(field === "body" ||
-                                        field === "agility" ||
-                                        field === "focus") && (
-                                        <Box
-                                            onClick={() => {
-                                                // Toggle an 'atkChecked' property for this stat
-                                                const currentValue =
-                                                    characterData[
-                                                        `${field}AtkChecked`
-                                                    ]
-                                                const newValue = !currentValue
-                                                console.log(
-                                                    `ATK Bubble Clicked - Field: ${field}, Current Value: ${currentValue}, New Value: ${newValue}`
-                                                )
+                                and
+                            </Typography>
+                        </Box>
+                        <Typography
+                            variant='h3'
+                            sx={{
+                                fontWeight: "bold",
+                                fontSize: "28px",
+                                color: "#8B0000",
+                                mt: 2,
+                                letterSpacing: "3px",
+                                fontFamily:
+                                    '"Cinzel Decorative", "Cinzel", serif',
+                            }}
+                        >
+                            I MUST KILL
+                        </Typography>
+                    </Box>
 
-                                                setCharacterData((prev) => {
-                                                    const updatedData = {
-                                                        ...prev,
-                                                        [`${field}AtkChecked`]:
-                                                            newValue,
-                                                    }
-                                                    console.log(
-                                                        `ATK State Updated - ${field}AtkChecked:`,
-                                                        updatedData[
-                                                            `${field}AtkChecked`
-                                                        ]
-                                                    )
-                                                    console.log(
-                                                        "Complete character data after ATK update:",
-                                                        updatedData
-                                                    )
-                                                    return updatedData
-                                                })
-                                            }}
-                                            sx={{
-                                                position: "absolute",
-                                                top: "-14px",
-                                                right: "-14px",
-                                                width: "32px",
-                                                height: "32px",
-                                                borderRadius: "50%",
-                                                border: "1px dotted #000",
-                                                backgroundColor: "#f9f9f9",
-                                                display: "flex",
-                                                alignItems: "center",
-                                                justifyContent: "center",
-                                                fontSize: "12px",
-                                                fontWeight: "bold",
-                                                fontFamily: '"Cinzel", serif',
-                                                cursor: "pointer",
-                                                overflow: "visible",
-                                                zIndex: 5,
-                                            }}
-                                        >
-                                            {characterData[
-                                                `${field}AtkChecked`
-                                            ] ? (
-                                                <>
-                                                    <Box
-                                                        sx={{
-                                                            position:
-                                                                "absolute",
-                                                            top: 0,
-                                                            left: 0,
-                                                            width: "32px",
-                                                            height: "32px",
-                                                            borderRadius: "50%",
-                                                            backgroundColor:
-                                                                "#8B0000",
-                                                            zIndex: 10,
-                                                            display: "flex",
-                                                            alignItems:
-                                                                "center",
-                                                            justifyContent:
-                                                                "center",
-                                                        }}
-                                                    />
-                                                    <span
-                                                        style={{
-                                                            position:
-                                                                "relative",
-                                                            zIndex: 15,
-                                                            color: "#ffffff",
-                                                        }}
-                                                    >
-                                                        atk
-                                                    </span>
-                                                </>
-                                            ) : (
-                                                "atk"
-                                            )}
-                                        </Box>
-                                    )}
-                                </Box>
-                                <TextField
-                                    value={characterData[field]}
-                                    onChange={handleInputChange(field)}
-                                    variant='standard'
-                                    size='small'
-                                    sx={{
-                                        width: "50px",
-                                        "& .MuiInput-underline:before": {
-                                            borderBottomStyle: "dotted",
-                                            borderBottomWidth: "2px",
-                                            borderBottomColor: "#000000",
-                                        },
-                                        "& .MuiInput-underline:hover:not(.Mui-disabled):before":
-                                            {
-                                                borderBottomColor: "#333333",
-                                            },
-                                        "& .MuiInput-underline:after": {
-                                            borderBottomColor: "#000000",
-                                        },
-                                        "& .MuiInputBase-input": {
-                                            color: "#000000",
-                                            textAlign: "center",
-                                            fontSize: "16px",
-                                            fontWeight: "bold",
-                                            fontFamily: '"Cinzel", serif',
-                                            padding: "4px 0",
-                                        },
-                                    }}
-                                />
-                            </Box>
-                        </Grid>
-                    ))}
-                </Grid>
-
-                {/* Action Rolls */}
-                <Box sx={{ mb: 3 }}>
-                    <Grid container spacing={2}>
+                    {/* Core Stats Grid */}
+                    <Grid container spacing={2} sx={{ mb: 3 }}>
                         {[
-                            { label: "BRACE" },
-                            { label: "DODGE" },
-                            { label: "CAST SPELL" },
-                            { label: "DYING" },
-                        ].map(({ label }) => (
-                            <Grid item xs={6} sm={3} key={label}>
+                            { label: "BODY", field: "body" },
+                            { label: "AGILITY", field: "agility" },
+                            { label: "FOCUS", field: "focus" },
+                            { label: "FATE", field: "fate" },
+                        ].map(({ label, field }) => (
+                            <Grid item xs={6} sm={3} key={field}>
                                 <Box
                                     sx={{
                                         border: "2px solid #000000",
-                                        p: 2,
+                                        p: 1.5,
                                         textAlign: "center",
                                         backgroundColor: "#f9f9f9",
                                         borderRadius: "12px",
-                                        minHeight: "60px",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "center",
                                     }}
                                 >
-                                    <Typography
-                                        variant='body1'
+                                    <Box sx={{ position: "relative" }}>
+                                        <Typography
+                                            variant='h6'
+                                            sx={{
+                                                fontWeight: "bold",
+                                                mb: 1,
+                                                color: "#000000",
+                                                fontSize: "12px",
+                                                fontFamily: '"Cinzel", serif',
+                                            }}
+                                        >
+                                            {label}
+                                        </Typography>
+                                        {(field === "body" ||
+                                            field === "agility" ||
+                                            field === "focus") && (
+                                            <Box
+                                                onClick={() => {
+                                                    // Toggle an 'atkChecked' property for this stat
+                                                    const currentValue =
+                                                        characterData[
+                                                            `${field}AtkChecked`
+                                                        ]
+                                                    const newValue =
+                                                        !currentValue
+                                                    console.log(
+                                                        `ATK Bubble Clicked - Field: ${field}, Current Value: ${currentValue}, New Value: ${newValue}`
+                                                    )
+
+                                                    setCharacterData((prev) => {
+                                                        const updatedData = {
+                                                            ...prev,
+                                                            [`${field}AtkChecked`]:
+                                                                newValue,
+                                                        }
+                                                        console.log(
+                                                            `ATK State Updated - ${field}AtkChecked:`,
+                                                            updatedData[
+                                                                `${field}AtkChecked`
+                                                            ]
+                                                        )
+                                                        console.log(
+                                                            "Complete character data after ATK update:",
+                                                            updatedData
+                                                        )
+                                                        return updatedData
+                                                    })
+                                                }}
+                                                sx={{
+                                                    position: "absolute",
+                                                    top: "-14px",
+                                                    right: "-14px",
+                                                    width: "32px",
+                                                    height: "32px",
+                                                    borderRadius: "50%",
+                                                    border: "1px dotted #000",
+                                                    backgroundColor: "#f9f9f9",
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    justifyContent: "center",
+                                                    fontSize: "12px",
+                                                    fontWeight: "bold",
+                                                    fontFamily:
+                                                        '"Cinzel", serif',
+                                                    cursor: "pointer",
+                                                    overflow: "visible",
+                                                    zIndex: 5,
+                                                }}
+                                            >
+                                                {characterData[
+                                                    `${field}AtkChecked`
+                                                ] ? (
+                                                    <>
+                                                        <Box
+                                                            sx={{
+                                                                position:
+                                                                    "absolute",
+                                                                top: 0,
+                                                                left: 0,
+                                                                width: "32px",
+                                                                height: "32px",
+                                                                borderRadius:
+                                                                    "50%",
+                                                                backgroundColor:
+                                                                    "#8B0000",
+                                                                zIndex: 10,
+                                                                display: "flex",
+                                                                alignItems:
+                                                                    "center",
+                                                                justifyContent:
+                                                                    "center",
+                                                            }}
+                                                        />
+                                                        <span
+                                                            style={{
+                                                                position:
+                                                                    "relative",
+                                                                zIndex: 15,
+                                                                color: "#ffffff",
+                                                            }}
+                                                        >
+                                                            atk
+                                                        </span>
+                                                    </>
+                                                ) : (
+                                                    "atk"
+                                                )}
+                                            </Box>
+                                        )}
+                                    </Box>
+                                    <TextField
+                                        value={characterData[field]}
+                                        onChange={handleInputChange(field)}
+                                        variant='standard'
+                                        size='small'
                                         sx={{
-                                            fontWeight: "bold",
-                                            color: "#000000",
-                                            fontSize: "12px",
-                                            fontFamily: '"Cinzel", serif',
-                                            textAlign: "center",
+                                            width: "50px",
+                                            "& .MuiInput-underline:before": {
+                                                borderBottomStyle: "dotted",
+                                                borderBottomWidth: "2px",
+                                                borderBottomColor: "#000000",
+                                            },
+                                            "& .MuiInput-underline:hover:not(.Mui-disabled):before":
+                                                {
+                                                    borderBottomColor:
+                                                        "#333333",
+                                                },
+                                            "& .MuiInput-underline:after": {
+                                                borderBottomColor: "#000000",
+                                            },
+                                            "& .MuiInputBase-input": {
+                                                color: "#000000",
+                                                textAlign: "center",
+                                                fontSize: "16px",
+                                                fontWeight: "bold",
+                                                fontFamily: '"Cinzel", serif',
+                                                padding: "4px 0",
+                                            },
                                         }}
-                                    >
-                                        {label}
-                                    </Typography>
+                                    />
                                 </Box>
                             </Grid>
                         ))}
                     </Grid>
-                </Box>
 
-                {/* Equipment and Health */}
-                <Grid container spacing={3} sx={{ mb: 3 }}>
-                    {/* Equipment */}
-                    <Grid item xs={12} sm={6}>
-                        <Box
-                            sx={{
-                                border: "2px solid #000000",
-                                p: 2,
-                                backgroundColor: "#f9f9f9",
-                                borderRadius: "12px",
-                            }}
-                        >
-                            <Typography
-                                variant='h6'
-                                sx={{
-                                    fontWeight: "bold",
-                                    mb: 2,
-                                    textAlign: "center",
-                                    color: "#000000",
-                                    fontSize: "14px",
-                                    fontFamily: '"Cinzel", serif',
-                                }}
-                            >
-                                EQUIPMENT
-                            </Typography>
+                    {/* Action Rolls */}
+                    <Box sx={{ mb: 3 }}>
+                        <Grid container spacing={2}>
+                            {[
+                                { label: "BRACE" },
+                                { label: "DODGE" },
+                                { label: "CAST SPELL" },
+                                { label: "DYING" },
+                            ].map(({ label }) => (
+                                <Grid item xs={6} sm={3} key={label}>
+                                    <Box
+                                        sx={{
+                                            border: "2px solid #000000",
+                                            p: 2,
+                                            textAlign: "center",
+                                            backgroundColor: "#f9f9f9",
+                                            borderRadius: "12px",
+                                            minHeight: "60px",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                        }}
+                                    >
+                                        <Typography
+                                            variant='body1'
+                                            sx={{
+                                                fontWeight: "bold",
+                                                color: "#000000",
+                                                fontSize: "12px",
+                                                fontFamily: '"Cinzel", serif',
+                                                textAlign: "center",
+                                            }}
+                                        >
+                                            {label}
+                                        </Typography>
+                                    </Box>
+                                </Grid>
+                            ))}
+                        </Grid>
+                    </Box>
 
-                            {/* Shield Y/N */}
+                    {/* Equipment and Health */}
+                    <Grid container spacing={3} sx={{ mb: 3 }}>
+                        {/* Equipment */}
+                        <Grid item xs={12} sm={6}>
                             <Box
                                 sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    mb: 2,
+                                    border: "2px solid #000000",
+                                    p: 2,
+                                    backgroundColor: "#f9f9f9",
+                                    borderRadius: "12px",
                                 }}
                             >
                                 <Typography
+                                    variant='h6'
                                     sx={{
-                                        color: "#000000",
                                         fontWeight: "bold",
-                                        fontSize: "12px",
+                                        mb: 2,
+                                        textAlign: "center",
+                                        color: "#000000",
+                                        fontSize: "14px",
                                         fontFamily: '"Cinzel", serif',
-                                        mr: 2,
                                     }}
                                 >
-                                    SHIELD?
+                                    EQUIPMENT
                                 </Typography>
-                                <Button
-                                    variant={
-                                        characterData.shield === true
-                                            ? "outlined"
-                                            : "contained"
-                                    }
-                                    size='small'
-                                    onClick={() => {
-                                        console.log(
-                                            "Shield Y button clicked - Current shield value:",
-                                            characterData.shield
-                                        )
-                                        setCharacterData((prev) => {
-                                            const updatedData = {
-                                                ...prev,
-                                                shield: true,
-                                            }
-                                            console.log(
-                                                "Shield updated to TRUE, complete data:",
-                                                updatedData
-                                            )
-                                            return updatedData
-                                        })
-                                    }}
+
+                                {/* Shield Y/N */}
+                                <Box
                                     sx={{
-                                        minWidth: "30px",
-                                        width: "30px",
-                                        height: "30px",
-                                        borderRadius: "50%",
-                                        mr: 1,
-                                        fontSize: "12px",
-                                        fontWeight: "bold",
-                                        bgcolor:
+                                        display: "flex",
+                                        alignItems: "center",
+                                        mb: 2,
+                                    }}
+                                >
+                                    <Typography
+                                        sx={{
+                                            color: "#000000",
+                                            fontWeight: "bold",
+                                            fontSize: "12px",
+                                            fontFamily: '"Cinzel", serif',
+                                            mr: 2,
+                                        }}
+                                    >
+                                        SHIELD?
+                                    </Typography>
+                                    <Button
+                                        variant={
                                             characterData.shield === true
-                                                ? "transparent"
-                                                : "#8B0000",
-                                        color:
-                                            characterData.shield === true
-                                                ? "#000000"
-                                                : "#ffffff",
-                                        borderColor: "#000000",
-                                        "&:hover": {
+                                                ? "outlined"
+                                                : "contained"
+                                        }
+                                        size='small'
+                                        onClick={() => {
+                                            console.log(
+                                                "Shield Y button clicked - Current shield value:",
+                                                characterData.shield
+                                            )
+                                            setCharacterData((prev) => {
+                                                const updatedData = {
+                                                    ...prev,
+                                                    shield: true,
+                                                }
+                                                console.log(
+                                                    "Shield updated to TRUE, complete data:",
+                                                    updatedData
+                                                )
+                                                return updatedData
+                                            })
+                                        }}
+                                        sx={{
+                                            minWidth: "30px",
+                                            width: "30px",
+                                            height: "30px",
+                                            borderRadius: "50%",
+                                            mr: 1,
+                                            fontSize: "12px",
+                                            fontWeight: "bold",
                                             bgcolor:
                                                 characterData.shield === true
-                                                    ? "#f0f0f0"
-                                                    : "#660000",
-                                        },
-                                    }}
-                                >
-                                    Y
-                                </Button>
-                                <Button
-                                    variant={
-                                        characterData.shield === false
-                                            ? "outlined"
-                                            : "contained"
-                                    }
-                                    size='small'
-                                    onClick={() => {
-                                        console.log(
-                                            "Shield N button clicked - Current shield value:",
-                                            characterData.shield
-                                        )
-                                        setCharacterData((prev) => {
-                                            const updatedData = {
-                                                ...prev,
-                                                shield: false,
-                                            }
+                                                    ? "transparent"
+                                                    : "#8B0000",
+                                            color:
+                                                characterData.shield === true
+                                                    ? "#000000"
+                                                    : "#ffffff",
+                                            borderColor: "#000000",
+                                            "&:hover": {
+                                                bgcolor:
+                                                    characterData.shield ===
+                                                    true
+                                                        ? "#f0f0f0"
+                                                        : "#660000",
+                                            },
+                                        }}
+                                    >
+                                        Y
+                                    </Button>
+                                    <Button
+                                        variant={
+                                            characterData.shield === false
+                                                ? "outlined"
+                                                : "contained"
+                                        }
+                                        size='small'
+                                        onClick={() => {
                                             console.log(
-                                                "Shield updated to FALSE, complete data:",
-                                                updatedData
+                                                "Shield N button clicked - Current shield value:",
+                                                characterData.shield
                                             )
-                                            return updatedData
-                                        })
-                                    }}
-                                    sx={{
-                                        minWidth: "30px",
-                                        width: "30px",
-                                        height: "30px",
-                                        borderRadius: "50%",
-                                        fontSize: "12px",
-                                        fontWeight: "bold",
-                                        bgcolor:
-                                            characterData.shield === false
-                                                ? "transparent"
-                                                : "#8B0000",
-                                        color:
-                                            characterData.shield === false
-                                                ? "#000000"
-                                                : "#ffffff",
-                                        borderColor: "#000000",
-                                        "&:hover": {
+                                            setCharacterData((prev) => {
+                                                const updatedData = {
+                                                    ...prev,
+                                                    shield: false,
+                                                }
+                                                console.log(
+                                                    "Shield updated to FALSE, complete data:",
+                                                    updatedData
+                                                )
+                                                return updatedData
+                                            })
+                                        }}
+                                        sx={{
+                                            minWidth: "30px",
+                                            width: "30px",
+                                            height: "30px",
+                                            borderRadius: "50%",
+                                            fontSize: "12px",
+                                            fontWeight: "bold",
                                             bgcolor:
                                                 characterData.shield === false
-                                                    ? "#f0f0f0"
-                                                    : "#660000",
-                                        },
-                                    }}
-                                >
-                                    N
-                                </Button>
-                            </Box>
+                                                    ? "transparent"
+                                                    : "#8B0000",
+                                            color:
+                                                characterData.shield === false
+                                                    ? "#000000"
+                                                    : "#ffffff",
+                                            borderColor: "#000000",
+                                            "&:hover": {
+                                                bgcolor:
+                                                    characterData.shield ===
+                                                    false
+                                                        ? "#f0f0f0"
+                                                        : "#660000",
+                                            },
+                                        }}
+                                    >
+                                        N
+                                    </Button>
+                                </Box>
 
-                            {/* Armor Y/N */}
-                            <Box sx={{ display: "flex", alignItems: "center" }}>
-                                <Typography
+                                {/* Armor Y/N */}
+                                <Box
                                     sx={{
-                                        color: "#000000",
-                                        fontWeight: "bold",
-                                        fontSize: "12px",
-                                        fontFamily: '"Cinzel", serif',
-                                        mr: 2,
+                                        display: "flex",
+                                        alignItems: "center",
                                     }}
                                 >
-                                    ARMOR?
-                                </Typography>
-                                <Button
-                                    variant={
-                                        characterData.armor === true
-                                            ? "outlined"
-                                            : "contained"
-                                    }
-                                    size='small'
-                                    onClick={() => {
-                                        console.log(
-                                            "Armor Y button clicked - Current armor value:",
-                                            characterData.armor
-                                        )
-                                        setCharacterData((prev) => {
-                                            const updatedData = {
-                                                ...prev,
-                                                armor: true,
-                                            }
+                                    <Typography
+                                        sx={{
+                                            color: "#000000",
+                                            fontWeight: "bold",
+                                            fontSize: "12px",
+                                            fontFamily: '"Cinzel", serif',
+                                            mr: 2,
+                                        }}
+                                    >
+                                        ARMOR?
+                                    </Typography>
+                                    <Button
+                                        variant={
+                                            characterData.armor === true
+                                                ? "outlined"
+                                                : "contained"
+                                        }
+                                        size='small'
+                                        onClick={() => {
                                             console.log(
-                                                "Armor updated to TRUE, complete data:",
-                                                updatedData
+                                                "Armor Y button clicked - Current armor value:",
+                                                characterData.armor
                                             )
-                                            return updatedData
-                                        })
-                                    }}
-                                    sx={{
-                                        minWidth: "30px",
-                                        width: "30px",
-                                        height: "30px",
-                                        borderRadius: "50%",
-                                        mr: 1,
-                                        fontSize: "12px",
-                                        fontWeight: "bold",
-                                        bgcolor:
-                                            characterData.armor === true
-                                                ? "transparent"
-                                                : "#8B0000",
-                                        color:
-                                            characterData.armor === true
-                                                ? "#000000"
-                                                : "#ffffff",
-                                        borderColor: "#000000",
-                                        "&:hover": {
+                                            setCharacterData((prev) => {
+                                                const updatedData = {
+                                                    ...prev,
+                                                    armor: true,
+                                                }
+                                                console.log(
+                                                    "Armor updated to TRUE, complete data:",
+                                                    updatedData
+                                                )
+                                                return updatedData
+                                            })
+                                        }}
+                                        sx={{
+                                            minWidth: "30px",
+                                            width: "30px",
+                                            height: "30px",
+                                            borderRadius: "50%",
+                                            mr: 1,
+                                            fontSize: "12px",
+                                            fontWeight: "bold",
                                             bgcolor:
                                                 characterData.armor === true
-                                                    ? "#f0f0f0"
-                                                    : "#660000",
-                                        },
-                                    }}
-                                >
-                                    Y
-                                </Button>
-                                <Button
-                                    variant={
-                                        characterData.armor === false
-                                            ? "outlined"
-                                            : "contained"
-                                    }
-                                    size='small'
-                                    onClick={() => {
-                                        console.log(
-                                            "Armor N button clicked - Current armor value:",
-                                            characterData.armor
-                                        )
-                                        setCharacterData((prev) => {
-                                            const updatedData = {
-                                                ...prev,
-                                                armor: false,
-                                            }
+                                                    ? "transparent"
+                                                    : "#8B0000",
+                                            color:
+                                                characterData.armor === true
+                                                    ? "#000000"
+                                                    : "#ffffff",
+                                            borderColor: "#000000",
+                                            "&:hover": {
+                                                bgcolor:
+                                                    characterData.armor === true
+                                                        ? "#f0f0f0"
+                                                        : "#660000",
+                                            },
+                                        }}
+                                    >
+                                        Y
+                                    </Button>
+                                    <Button
+                                        variant={
+                                            characterData.armor === false
+                                                ? "outlined"
+                                                : "contained"
+                                        }
+                                        size='small'
+                                        onClick={() => {
                                             console.log(
-                                                "Armor updated to FALSE, complete data:",
-                                                updatedData
+                                                "Armor N button clicked - Current armor value:",
+                                                characterData.armor
                                             )
-                                            return updatedData
-                                        })
-                                    }}
-                                    sx={{
-                                        minWidth: "30px",
-                                        width: "30px",
-                                        height: "30px",
-                                        borderRadius: "50%",
-                                        fontSize: "12px",
-                                        fontWeight: "bold",
-                                        bgcolor:
-                                            characterData.armor === false
-                                                ? "transparent"
-                                                : "#8B0000",
-                                        color:
-                                            characterData.armor === false
-                                                ? "#000000"
-                                                : "#ffffff",
-                                        borderColor: "#000000",
-                                        "&:hover": {
+                                            setCharacterData((prev) => {
+                                                const updatedData = {
+                                                    ...prev,
+                                                    armor: false,
+                                                }
+                                                console.log(
+                                                    "Armor updated to FALSE, complete data:",
+                                                    updatedData
+                                                )
+                                                return updatedData
+                                            })
+                                        }}
+                                        sx={{
+                                            minWidth: "30px",
+                                            width: "30px",
+                                            height: "30px",
+                                            borderRadius: "50%",
+                                            fontSize: "12px",
+                                            fontWeight: "bold",
                                             bgcolor:
                                                 characterData.armor === false
-                                                    ? "#f0f0f0"
-                                                    : "#660000",
-                                        },
+                                                    ? "transparent"
+                                                    : "#8B0000",
+                                            color:
+                                                characterData.armor === false
+                                                    ? "#000000"
+                                                    : "#ffffff",
+                                            borderColor: "#000000",
+                                            "&:hover": {
+                                                bgcolor:
+                                                    characterData.armor ===
+                                                    false
+                                                        ? "#f0f0f0"
+                                                        : "#660000",
+                                            },
+                                        }}
+                                    >
+                                        N
+                                    </Button>
+                                </Box>
+                            </Box>
+                        </Grid>
+
+                        {/* Health */}
+                        <Grid item xs={12} sm={6}>
+                            <Box
+                                sx={{
+                                    border: "2px solid #000000",
+                                    p: 2,
+                                    backgroundColor: "#f9f9f9",
+                                    borderRadius: "12px",
+                                }}
+                            >
+                                <Typography
+                                    variant='h6'
+                                    sx={{
+                                        fontWeight: "bold",
+                                        mb: 2,
+                                        textAlign: "center",
+                                        color: "#000000",
+                                        fontSize: "14px",
+                                        fontFamily: '"Cinzel", serif',
                                     }}
                                 >
-                                    N
-                                </Button>
+                                    HEALTH
+                                </Typography>
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "space-between",
+                                        mb: 2,
+                                    }}
+                                >
+                                    <Typography
+                                        sx={{
+                                            color: "#000000",
+                                            fontWeight: "bold",
+                                            mr: 1,
+                                            fontSize: "11px",
+                                            fontFamily: '"Cinzel", serif',
+                                        }}
+                                    >
+                                        MAX HP:
+                                    </Typography>
+                                    <TextField
+                                        value={characterData.maxHP}
+                                        onChange={handleInputChange("maxHP")}
+                                        variant='standard'
+                                        size='small'
+                                        sx={{
+                                            width: "70px",
+                                            "& .MuiInput-underline:before": {
+                                                borderBottomStyle: "dotted",
+                                                borderBottomWidth: "2px",
+                                                borderBottomColor: "#000000",
+                                            },
+                                            "& .MuiInput-underline:hover:not(.Mui-disabled):before":
+                                                {
+                                                    borderBottomColor:
+                                                        "#333333",
+                                                },
+                                            "& .MuiInput-underline:after": {
+                                                borderBottomColor: "#000000",
+                                            },
+                                            "& .MuiInputBase-input": {
+                                                color: "#000000",
+                                                textAlign: "center",
+                                                fontSize: "14px",
+                                                fontWeight: "bold",
+                                                fontFamily: '"Cinzel", serif',
+                                                padding: "4px 0",
+                                            },
+                                        }}
+                                    />
+                                </Box>
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "space-between",
+                                    }}
+                                >
+                                    <Typography
+                                        sx={{
+                                            color: "#000000",
+                                            fontWeight: "bold",
+                                            mr: 1,
+                                            fontSize: "11px",
+                                            fontFamily: '"Cinzel", serif',
+                                        }}
+                                    >
+                                        CURRENT HP:
+                                    </Typography>
+                                    <TextField
+                                        value={characterData.currentHP}
+                                        onChange={handleInputChange(
+                                            "currentHP"
+                                        )}
+                                        variant='standard'
+                                        size='small'
+                                        sx={{
+                                            width: "70px",
+                                            "& .MuiInput-underline:before": {
+                                                borderBottomStyle: "dotted",
+                                                borderBottomWidth: "2px",
+                                                borderBottomColor: "#000000",
+                                            },
+                                            "& .MuiInput-underline:hover:not(.Mui-disabled):before":
+                                                {
+                                                    borderBottomColor:
+                                                        "#333333",
+                                                },
+                                            "& .MuiInput-underline:after": {
+                                                borderBottomColor: "#000000",
+                                            },
+                                            "& .MuiInputBase-input": {
+                                                color: "#000000",
+                                                textAlign: "center",
+                                                fontSize: "14px",
+                                                fontWeight: "bold",
+                                                fontFamily: '"Cinzel", serif',
+                                                padding: "4px 0",
+                                            },
+                                        }}
+                                    />
+                                </Box>
                             </Box>
-                        </Box>
+                        </Grid>
                     </Grid>
 
-                    {/* Health */}
-                    <Grid item xs={12} sm={6}>
-                        <Box
+                    {/* Notes Section */}
+                    <Box
+                        sx={{
+                            border: "2px solid #000000",
+                            p: 2,
+                            backgroundColor: "#f9f9f9",
+                            borderRadius: "12px",
+                            flex: 1,
+                            display: "flex",
+                            flexDirection: "column",
+                        }}
+                    >
+                        <Typography
+                            variant='h6'
                             sx={{
-                                border: "2px solid #000000",
-                                p: 2,
-                                backgroundColor: "#f9f9f9",
-                                borderRadius: "12px",
+                                fontWeight: "bold",
+                                mb: 2,
+                                textAlign: "center",
+                                color: "#000000",
+                                fontSize: "14px",
+                                fontFamily: '"Cinzel", serif',
                             }}
                         >
-                            <Typography
-                                variant='h6'
-                                sx={{
-                                    fontWeight: "bold",
-                                    mb: 2,
-                                    textAlign: "center",
+                            NOTES
+                        </Typography>
+                        <TextField
+                            value={characterData.notes}
+                            onChange={handleInputChange("notes")}
+                            variant='outlined'
+                            multiline
+                            fullWidth
+                            placeholder='Character notes, backstory, equipment details, spells, etc...'
+                            sx={{
+                                flex: 1,
+                                "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#ffffff",
+                                    borderRadius: "8px",
+                                    height: "100%",
+                                    "& fieldset": {
+                                        borderColor: "#000000",
+                                        borderWidth: "2px",
+                                        borderRadius: "8px",
+                                    },
+                                    "&:hover fieldset": {
+                                        borderColor: "#333333",
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                        borderColor: "#000000",
+                                    },
+                                },
+                                "& .MuiInputBase-input": {
                                     color: "#000000",
-                                    fontSize: "14px",
-                                    fontFamily: '"Cinzel", serif',
-                                }}
-                            >
-                                HEALTH
-                            </Typography>
-                            <Box
-                                sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "space-between",
-                                    mb: 2,
-                                }}
-                            >
-                                <Typography
-                                    sx={{
-                                        color: "#000000",
-                                        fontWeight: "bold",
-                                        mr: 1,
-                                        fontSize: "11px",
-                                        fontFamily: '"Cinzel", serif',
-                                    }}
-                                >
-                                    MAX HP:
-                                </Typography>
-                                <TextField
-                                    value={characterData.maxHP}
-                                    onChange={handleInputChange("maxHP")}
-                                    variant='standard'
-                                    size='small'
-                                    sx={{
-                                        width: "70px",
-                                        "& .MuiInput-underline:before": {
-                                            borderBottomStyle: "dotted",
-                                            borderBottomWidth: "2px",
-                                            borderBottomColor: "#000000",
-                                        },
-                                        "& .MuiInput-underline:hover:not(.Mui-disabled):before":
-                                            {
-                                                borderBottomColor: "#333333",
-                                            },
-                                        "& .MuiInput-underline:after": {
-                                            borderBottomColor: "#000000",
-                                        },
-                                        "& .MuiInputBase-input": {
-                                            color: "#000000",
-                                            textAlign: "center",
-                                            fontSize: "14px",
-                                            fontWeight: "bold",
-                                            fontFamily: '"Cinzel", serif',
-                                            padding: "4px 0",
-                                        },
-                                    }}
-                                />
-                            </Box>
-                            <Box
-                                sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "space-between",
-                                }}
-                            >
-                                <Typography
-                                    sx={{
-                                        color: "#000000",
-                                        fontWeight: "bold",
-                                        mr: 1,
-                                        fontSize: "11px",
-                                        fontFamily: '"Cinzel", serif',
-                                    }}
-                                >
-                                    CURRENT HP:
-                                </Typography>
-                                <TextField
-                                    value={characterData.currentHP}
-                                    onChange={handleInputChange("currentHP")}
-                                    variant='standard'
-                                    size='small'
-                                    sx={{
-                                        width: "70px",
-                                        "& .MuiInput-underline:before": {
-                                            borderBottomStyle: "dotted",
-                                            borderBottomWidth: "2px",
-                                            borderBottomColor: "#000000",
-                                        },
-                                        "& .MuiInput-underline:hover:not(.Mui-disabled):before":
-                                            {
-                                                borderBottomColor: "#333333",
-                                            },
-                                        "& .MuiInput-underline:after": {
-                                            borderBottomColor: "#000000",
-                                        },
-                                        "& .MuiInputBase-input": {
-                                            color: "#000000",
-                                            textAlign: "center",
-                                            fontSize: "14px",
-                                            fontWeight: "bold",
-                                            fontFamily: '"Cinzel", serif',
-                                            padding: "4px 0",
-                                        },
-                                    }}
-                                />
-                            </Box>
-                        </Box>
-                    </Grid>
-                </Grid>
+                                    fontSize: "12px",
+                                    fontFamily: '"Libre Baskerville", serif',
+                                },
+                                "& .MuiInputBase-root": {
+                                    height: "100%",
+                                    alignItems: "flex-start",
+                                },
+                            }}
+                        />
+                    </Box>
+                </Paper>
 
-                {/* Notes Section */}
-                <Box
-                    sx={{
-                        border: "2px solid #000000",
-                        p: 2,
-                        backgroundColor: "#f9f9f9",
-                        borderRadius: "12px",
-                        flex: 1,
-                        display: "flex",
-                        flexDirection: "column",
-                    }}
-                >
+                {/* Insight Tokens Section */}
+                <Divider sx={{ my: 4 }} />
+
+                <Box sx={{ mb: "100px" }}>
+                    <Typography
+                        variant='h4'
+                        component='h2'
+                        gutterBottom
+                        sx={{
+                            fontWeight: "bold",
+                            textAlign: "center",
+                            fontSize: {
+                                xs: "1.5rem",
+                                sm: "2rem",
+                                md: "2.25rem",
+                            },
+                            mb: 2,
+                            fontFamily: '"Cinzel Decorative", "Cinzel", serif',
+                            color: (theme) =>
+                                theme.palette.mode === "dark"
+                                    ? "#e0e0e0"
+                                    : "#000000",
+                        }}
+                    >
+                        Insight Tokens
+                    </Typography>
                     <Typography
                         variant='h6'
                         sx={{
-                            fontWeight: "bold",
-                            mb: 2,
+                            opacity: 0.8,
+                            fontSize: { xs: "0.9rem", sm: "1rem" },
+                            maxWidth: "600px",
+                            margin: "0 auto 3rem",
                             textAlign: "center",
-                            color: "#000000",
-                            fontSize: "14px",
                             fontFamily: '"Cinzel", serif',
+                            color: (theme) =>
+                                theme.palette.mode === "dark"
+                                    ? "#e0e0e0"
+                                    : "#000000",
                         }}
                     >
-                        NOTES
+                        Manage your insight tokens - click to flip between front
+                        and back
                     </Typography>
-                    <TextField
-                        value={characterData.notes}
-                        onChange={handleInputChange("notes")}
-                        variant='outlined'
-                        multiline
-                        fullWidth
-                        placeholder='Character notes, backstory, equipment details, spells, etc...'
-                        sx={{
-                            flex: 1,
-                            "& .MuiOutlinedInput-root": {
-                                backgroundColor: "#ffffff",
-                                borderRadius: "8px",
-                                height: "100%",
-                                "& fieldset": {
-                                    borderColor: "#000000",
-                                    borderWidth: "2px",
-                                    borderRadius: "8px",
-                                },
-                                "&:hover fieldset": { borderColor: "#333333" },
-                                "&.Mui-focused fieldset": {
-                                    borderColor: "#000000",
-                                },
-                            },
-                            "& .MuiInputBase-input": {
-                                color: "#000000",
-                                fontSize: "12px",
-                                fontFamily: '"Libre Baskerville", serif',
-                            },
-                            "& .MuiInputBase-root": {
-                                height: "100%",
-                                alignItems: "flex-start",
-                            },
-                        }}
-                    />
-                </Box>
-            </Paper>
 
-            {/* Alert Snackbar */}
-            <Snackbar
-                open={alertOpen}
-                autoHideDuration={3000}
-                onClose={() => setAlertOpen(false)}
-                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-            >
-                <Alert
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: { xs: "column", sm: "row" },
+                            alignItems: "center",
+                            gap: 3,
+                            marginBottom: 3,
+                            justifyContent: "center",
+                        }}
+                    >
+                        <FormControl sx={{ minWidth: 150 }}>
+                            <InputLabel
+                                id='token-count-label'
+                                sx={{
+                                    color: (theme) =>
+                                        theme.palette.mode === "dark"
+                                            ? "#e0e0e0"
+                                            : "#000000",
+                                    fontFamily: '"Cinzel", serif',
+                                }}
+                            >
+                                Token Count
+                            </InputLabel>
+                            <Select
+                                labelId='token-count-label'
+                                value={tokenCount}
+                                label='Token Count'
+                                onChange={handleTokenCountChange}
+                                sx={{
+                                    color: (theme) =>
+                                        theme.palette.mode === "dark"
+                                            ? "#e0e0e0"
+                                            : "#000000",
+                                    fontFamily: '"Cinzel", serif',
+                                    "& .MuiOutlinedInput-notchedOutline": {
+                                        borderColor: (theme) =>
+                                            theme.palette.mode === "dark"
+                                                ? "#ffffff"
+                                                : "#000000",
+                                        borderWidth: "2px",
+                                    },
+                                    "&:hover .MuiOutlinedInput-notchedOutline":
+                                        {
+                                            borderColor: (theme) =>
+                                                theme.palette.mode === "dark"
+                                                    ? "#ffffff"
+                                                    : "#333333",
+                                        },
+                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline":
+                                        {
+                                            borderColor: (theme) =>
+                                                theme.palette.mode === "dark"
+                                                    ? "#ffffff"
+                                                    : "#000000",
+                                        },
+                                }}
+                            >
+                                {[...Array(10)].map((_, index) => (
+                                    <MenuItem
+                                        key={index + 1}
+                                        value={index + 1}
+                                        sx={{
+                                            color: (theme) =>
+                                                theme.palette.mode === "dark"
+                                                    ? "#e0e0e0"
+                                                    : "#000000",
+                                            fontFamily: '"Cinzel", serif',
+                                        }}
+                                    >
+                                        {index + 1}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+
+                        <Button
+                            variant='outlined'
+                            startIcon={<RestartAlt />}
+                            onClick={handleResetTokens}
+                            sx={{
+                                borderColor: (theme) =>
+                                    theme.palette.mode === "dark"
+                                        ? "#ffffff"
+                                        : "#8B0000",
+                                color: (theme) =>
+                                    theme.palette.mode === "dark"
+                                        ? "#ffffff"
+                                        : "#8B0000",
+                                "&:hover": {
+                                    borderColor: (theme) =>
+                                        theme.palette.mode === "dark"
+                                            ? "#e0e0e0"
+                                            : "#660000",
+                                    color: (theme) =>
+                                        theme.palette.mode === "dark"
+                                            ? "#e0e0e0"
+                                            : "#660000",
+                                    bgcolor: (theme) =>
+                                        theme.palette.mode === "dark"
+                                            ? "rgba(255, 255, 255, 0.05)"
+                                            : "rgba(139, 0, 0, 0.05)",
+                                },
+                                borderRadius: "12px",
+                                fontSize: "0.9rem",
+                                fontFamily: '"Cinzel", serif',
+                            }}
+                        >
+                            Reset Tokens
+                        </Button>
+                    </Box>
+
+                    <Paper
+                        sx={{
+                            padding: 3,
+                            backgroundColor: (theme) =>
+                                theme.palette.mode === "dark"
+                                    ? "rgba(255, 255, 255, 0.05)"
+                                    : "#f9f9f9",
+                            border: (theme) =>
+                                theme.palette.mode === "dark"
+                                    ? "2px solid #ffffff"
+                                    : "2px solid #000000",
+                            borderRadius: "12px",
+                            minHeight: "200px",
+                        }}
+                    >
+                        <Grid
+                            container
+                            spacing={2}
+                            justifyContent='center'
+                            alignItems='center'
+                        >
+                            {[...Array(tokenCount)].map((_, index) => (
+                                <Grid item key={index}>
+                                    <InsightToken
+                                        id={index}
+                                        isFlipped={tokenStates[index] || false}
+                                        onFlip={handleTokenFlip}
+                                        size={100}
+                                    />
+                                </Grid>
+                            ))}
+                        </Grid>
+
+                        {tokenCount === 0 && (
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    height: "150px",
+                                }}
+                            >
+                                <Typography
+                                    variant='h6'
+                                    sx={{
+                                        opacity: 0.6,
+                                        textAlign: "center",
+                                        fontFamily: '"Cinzel", serif',
+                                        color: (theme) =>
+                                            theme.palette.mode === "dark"
+                                                ? "#e0e0e0"
+                                                : "#000000",
+                                    }}
+                                >
+                                    Select a token count to get started
+                                </Typography>
+                            </Box>
+                        )}
+                    </Paper>
+                </Box>
+
+                {/* Alert Snackbar */}
+                <Snackbar
+                    open={alertOpen}
+                    autoHideDuration={3000}
                     onClose={() => setAlertOpen(false)}
-                    severity={alertSeverity}
-                    sx={{ width: "100%" }}
+                    anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
                 >
-                    {alertMessage}
-                </Alert>
-            </Snackbar>
-        </Container>
+                    <Alert
+                        onClose={() => setAlertOpen(false)}
+                        severity={alertSeverity}
+                        sx={{ width: "100%" }}
+                    >
+                        {alertMessage}
+                    </Alert>
+                </Snackbar>
+            </Container>
+
+            <PlayerToolsButton />
+        </>
     )
 }
 

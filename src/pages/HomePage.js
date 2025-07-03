@@ -164,19 +164,11 @@ const HomePage = () => {
                     </Button>
                     <Button
                         component={Link}
-                        to='/character-sheet'
+                        to='/player-tools'
                         variant='contained'
                         sx={getButtonStyles()}
                     >
-                        Character Sheet
-                    </Button>
-                    <Button
-                        component={Link}
-                        to='/digital-tools'
-                        variant='contained'
-                        sx={getButtonStyles()}
-                    >
-                        Digital Tools
+                        Player Tools
                     </Button>
                     <Button
                         component={Link}
@@ -220,24 +212,11 @@ const HomePage = () => {
                     </Button>
                     <Button
                         component={Link}
-                        to='/running-the-game'
-                        variant='contained'
-                        sx={{
-                            ...getButtonStyles(),
-                            textAlign: "center",
-                        }}
-                    >
-                        Running the Game
-                        <br />
-                        (GM's Only)
-                    </Button>
-                    <Button
-                        component={Link}
-                        to='/monsters'
+                        to='/gm-tools'
                         variant='contained'
                         sx={getButtonStyles()}
                     >
-                        Monsters <br /> (GM's Only)
+                        GM Tools
                     </Button>
                 </FlashyMenu>
             </Box>

@@ -9,7 +9,6 @@ import DeathAndResting from "./pages/DeathAndResting.js"
 import Spellcasting from "./pages/Spellcasting.js"
 import Progression from "./pages/Progression.js"
 import Spells from "./pages/Spells.js"
-import CharacterSheet from "./pages/CharacterSheet.js"
 import RunningTheGame from "./pages/RunningTheGame.js"
 import Monsters from "./pages/Monsters.js"
 import MonsterDetail from "./components/MonsterDetail.js"
@@ -18,8 +17,9 @@ import QuickReference from "./pages/QuickReference.js"
 import SourceRegistry from "./components/RulesSearch/SourceRegistry.js"
 import RuleCategorizer from "./components/RulesSearch/RuleCategorizer.js"
 import DigitalTools from "./pages/DigitalTools.js"
-import InsightTokens from "./pages/InsightTokens.js"
+import GMTools from "./pages/GMTools.js"
 import DigitalCharacterSheet from "./pages/DigitalCharacterSheet.js"
+import InitiativeTracker from "./pages/InitiativeTracker.js"
 import Sparks from "./components/Sparks/Sparks.jsx"
 import BackButton from "./components/BackButton/BackButton.js"
 import ThemeToggle from "./components/ThemeToggle/ThemeToggle.js"
@@ -42,10 +42,6 @@ function App() {
                     <Route
                         path='character-creation'
                         element={<CharacterCreation />}
-                    />
-                    <Route
-                        path='character-sheet'
-                        element={<CharacterSheet />}
                     />
                     <Route path='equipment' element={<Equipment />} />
                     <Route
@@ -78,8 +74,12 @@ function App() {
                         path='rule-categorizer'
                         element={<RuleCategorizer />}
                     />
-                    <Route path='digital-tools' element={<DigitalTools />} />
-                    <Route path='insight.token' element={<InsightTokens />} />
+                    <Route path='player-tools' element={<DigitalTools />} />
+                    <Route path='gm-tools' element={<GMTools />} />
+                    <Route
+                        path='initiative-tracker'
+                        element={<InitiativeTracker />}
+                    />
                     <Route
                         path='digital-character-sheet'
                         element={<DigitalCharacterSheet />}

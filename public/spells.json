@@ -328,7 +328,7 @@
             "name": "Tenebrous Form",
             "rarity": "rare",
             "deck": "Vampire",
-            "description": "You become living shadow for 3 turns. You can pass through small openings and are immune to physical attacks, but cannot attack. Discard this card after the effect ends."
+            "description": "You become living shadow for 3 turns. You can pass through small openings and are immune to @PhysicalDamage attacks, but cannot attack. Discard this card after the effect ends."
         },
         {
             "name": "Telepathy",
