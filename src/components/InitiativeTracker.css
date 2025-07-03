@@ -1,0 +1,186 @@
+/* Styles for initiative tracker form elements - now targeting active cards directly */
+.active-card {
+    /* Ensure proper stacking and interaction */
+    position: relative !important;
+    z-index: 1000 !important;
+    isolation: isolate !important;
+    /* Enhanced ResizeObserver prevention */
+    contain: layout style size !important;
+    will-change: background-color !important;
+    transform: translateZ(0) !important;
+    backface-visibility: hidden !important;
+}
+
+/* Enhanced background for active cards that respects theme */
+.active-card .MuiCard-root {
+    backdrop-filter: none !important;
+}
+
+/* Round button styling for delete and move buttons */
+.active-card .MuiIconButton-root {
+    border-radius: 50% !important;
+    transition: all 0.2s ease !important;
+}
+
+/* Specific styling for delete button */
+.active-card .MuiIconButton-root[title*="Delete"] {
+    background-color: rgba(244, 67, 54, 0.9) !important;
+    color: white !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+.active-card .MuiIconButton-root[title*="Delete"]:hover {
+    background-color: rgba(244, 67, 54, 1) !important;
+    transform: scale(1.1) !important;
+}
+
+/* Specific styling for move buttons */
+.active-card .MuiIconButton-root[title*="Move"] {
+    background-color: rgba(0, 0, 0, 0.2) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+.active-card .MuiIconButton-root[title*="Move"]:hover {
+    background-color: rgba(0, 0, 0, 0.4) !important;
+    transform: scale(1.1) !important;
+}
+
+/* Ensure all inputs in active cards are interactive */
+.active-card input,
+.active-card textarea {
+    cursor: text !important;
+    pointer-events: auto !important;
+    position: relative;
+    z-index: 1200 !important; /* Higher z-index to ensure visibility */
+    user-select: text !important;
+    -webkit-user-select: text !important;
+    -moz-user-select: text !important;
+    touch-action: auto !important; /* Enable default touch behavior */
+}
+
+/* Specific higher z-index for name and notes fields */
+.active-card .name-field input,
+.active-card .notes-field textarea {
+    z-index: 1300 !important;
+    position: relative !important;
+}
+
+/* Material UI component support */
+.active-card .MuiTextField-root,
+.active-card .MuiOutlinedInput-root,
+.active-card .MuiInputBase-root {
+    pointer-events: auto !important;
+    position: relative;
+    z-index: 1100 !important;
+    cursor: text !important;
+}
+
+/* Interactive elements */
+.active-card .MuiIconButton-root,
+.active-card .MuiCheckbox-root,
+.active-card button {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    z-index: 1100 !important;
+    /* Don't set position here - let individual elements control their positioning */
+}
+
+/* Focus styles for inputs in active cards */
+.active-card input:focus,
+.active-card textarea:focus {
+    z-index: 1400 !important;
+    outline-color: rgba(25, 118, 210, 0.8) !important;
+    outline-width: 2px !important;
+    outline-style: solid !important;
+    pointer-events: auto !important;
+    box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.4) !important;
+}
+
+/* Additional Material UI support */
+.active-card .MuiInputBase-input {
+    pointer-events: auto !important;
+    cursor: text !important;
+    z-index: 1200 !important;
+    position: relative !important;
+}
+
+/* Form controls */
+.active-card .MuiFormControlLabel-root {
+    pointer-events: auto !important;
+}
+
+/* Visual enhancements */
+.active-card .MuiOutlinedInput-root {
+    min-height: 40px;
+}
+
+.active-card input::selection,
+.active-card textarea::selection {
+    background-color: rgba(25, 118, 210, 0.4) !important;
+}
+
+.active-card .MuiOutlinedInput-root:hover,
+.active-card input:hover,
+.active-card textarea:hover {
+    background-color: rgba(25, 118, 210, 0.04) !important;
+}
+
+/* Prevent ResizeObserver loops by using stable dimensions */
+.active-card * {
+    box-sizing: border-box !important;
+}
+
+/* Stabilize card dimensions */
+.active-card .MuiCard-root {
+    min-height: 0 !important;
+    flex-shrink: 0 !important;
+}
+
+/* Stabilize content dimensions */
+.active-card .MuiCardContent-root {
+    min-height: 0 !important;
+    flex-shrink: 0 !important;
+}
+
+/* Ensure all clickable elements are accessible */
+.active-card [role="button"],
+.active-card [type="button"],
+.active-card [type="submit"],
+.active-card [type="reset"],
+.active-card .MuiButton-root,
+.active-card .MuiToggleButton-root {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    position: relative !important;
+    z-index: 800 !important;
+}
+
+/* Ensure dropdown and select elements work */
+.active-card select,
+.active-card .MuiSelect-root,
+.active-card .MuiAutocomplete-root {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    position: relative !important;
+    z-index: 850 !important;
+}
+
+/* Specifically target delete buttons (positioned absolutely) - ENHANCED SELECTOR */
+.active-card .MuiCard-root .MuiIconButton-root[title*="Delete"],
+.active-card .MuiIconButton-root[title*="Delete"],
+.active-card [title*="Delete combatant"] {
+    position: absolute !important;
+    top: 8px !important;
+    left: 8px !important;
+    transform: none !important; /* Override any transforms that might affect positioning */
+    margin: 0 !important; /* Remove any margins */
+}
+
+/* Move button positioning is handled by JavaScript - no CSS override needed */
+
+/* Final fallback for any missed interactive elements */
+.active-card [tabindex]:not([tabindex="-1"]) {
+    pointer-events: auto !important;
+    position: relative !important;
+    z-index: 750 !important;
+}

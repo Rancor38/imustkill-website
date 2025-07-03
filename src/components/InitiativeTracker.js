@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from "react"
+import "./InitiativeTracker.css"
 import {
     Box,
     Card,
@@ -24,43 +25,12 @@ import {
 import {
     Add as AddIcon,
     Delete as DeleteIcon,
-    DragIndicator as DragIcon,
     NavigateNext as NextIcon,
 } from "@mui/icons-material"
-import {
-    DndContext,
-    closestCenter,
-    KeyboardSensor,
-    PointerSensor,
-    useSensor,
-    useSensors,
-} from "@dnd-kit/core"
-import {
-    arrayMove,
-    SortableContext,
-    sortableKeyboardCoordinates,
-    horizontalListSortingStrategy,
-} from "@dnd-kit/sortable"
-import { useSortable } from "@dnd-kit/sortable"
-import { CSS } from "@dnd-kit/utilities"
+// @dnd-kit removed to prevent ResizeObserver errors
 
 // Individual combatant card component
 const CombatantCard = ({ combatant, onUpdate, onDelete, isActive }) => {
-    const {
-        attributes,
-        listeners,
-        setNodeRef,
-        transform,
-        transition,
-        isDragging,
-    } = useSortable({ id: combatant.id })
-
-    const style = {
-        transform: CSS.Transform.toString(transform),
-        transition,
-        opacity: isDragging ? 0.5 : 1,
-    }
-
     const getBorderColor = (type) => {
         switch (type) {
             case "Monster":
@@ -107,30 +77,32 @@ const CombatantCard = ({ combatant, onUpdate, onDelete, isActive }) => {
         onUpdate(combatant.id, { name: newName })
     }
 
-    const cardScale = isActive ? 1.25 : 1
     const cardOpacity = combatant.isDead ? 0.5 : 1
 
     return (
         <Card
-            ref={setNodeRef}
-            style={style}
+            className={isActive ? "active-card" : ""}
             sx={{
                 minWidth: 200,
                 maxWidth: 250,
+                width: 250, // Fixed width to prevent any resizing
+                height: "fit-content",
                 margin: 1,
-                transform: `scale(${cardScale})`,
                 opacity: cardOpacity,
                 border: `3px solid ${getBorderColor(combatant.type)}`,
                 borderRadius: 2,
                 position: "relative",
-                transition: "all 0.3s ease-in-out",
-                cursor: isDragging ? "grabbing" : "grab",
-                boxShadow: isActive
-                    ? "0 8px 24px rgba(0,0,0,0.3)"
-                    : "0 2px 8px rgba(0,0,0,0.1)",
+                transition: "background-color 0.3s ease-in-out",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                backgroundColor: isActive
+                    ? "rgba(76, 175, 80, 0.1)"
+                    : "background.paper",
                 "&:hover": {
                     boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
                 },
+                // Prevent any layout shifts
+                contain: "layout style",
+                willChange: "background-color",
             }}
         >
             <CardContent sx={{ padding: 2 }}>
@@ -154,21 +126,6 @@ const CombatantCard = ({ combatant, onUpdate, onDelete, isActive }) => {
                             transition: "opacity 0.3s ease",
                         }}
                     />
-                </Box>
-
-                {/* Drag handle */}
-                <Box
-                    {...attributes}
-                    {...listeners}
-                    sx={{
-                        position: "absolute",
-                        top: 8,
-                        right: 8,
-                        cursor: "grab",
-                        "&:active": { cursor: "grabbing" },
-                    }}
-                >
-                    <DragIcon sx={{ color: "grey.500" }} />
                 </Box>
 
                 {/* Delete button */}
@@ -296,13 +253,6 @@ const InitiativeTracker = () => {
         type: "Player Character",
     })
 
-    const sensors = useSensors(
-        useSensor(PointerSensor),
-        useSensor(KeyboardSensor, {
-            coordinateGetter: sortableKeyboardCoordinates,
-        })
-    )
-
     // Get combatants in turn order
     const getCombatantsInTurnOrder = useCallback(() => {
         const monsters = combatants.filter((c) => c.type === "Monster")
@@ -348,24 +298,6 @@ const InitiativeTracker = () => {
         if (currentTurn >= orderedCombatants.length) {
             setCurrentTurn(0)
         }
-    }
-
-    // Handle drag end for reordering within type
-    const handleDragEnd = (event) => {
-        const { active, over } = event
-
-        if (!over || active.id === over.id) return
-
-        const activeIndex = combatants.findIndex((c) => c.id === active.id)
-        const overIndex = combatants.findIndex((c) => c.id === over.id)
-
-        const activeCombatant = combatants[activeIndex]
-        const overCombatant = combatants[overIndex]
-
-        // Only allow reordering within the same type
-        if (activeCombatant.type !== overCombatant.type) return
-
-        setCombatants((prev) => arrayMove(prev, activeIndex, overIndex))
     }
 
     // Next turn
@@ -451,56 +383,45 @@ const InitiativeTracker = () => {
             </Paper>
 
             {/* Combat tracker */}
-            <DndContext
-                sensors={sensors}
-                collisionDetection={closestCenter}
-                onDragEnd={handleDragEnd}
-            >
-                {Object.entries(groupedCombatants).map(
-                    ([type, typeCombatants]) =>
-                        typeCombatants.length > 0 && (
-                            <Box key={type} sx={{ marginBottom: 3 }}>
-                                <Typography variant='h6' gutterBottom>
-                                    {type}s
-                                </Typography>
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        overflowX: "auto",
-                                        padding: 1,
-                                        gap: 1,
-                                        minHeight: 300,
-                                    }}
-                                >
-                                    <SortableContext
-                                        items={typeCombatants.map((c) => c.id)}
-                                        strategy={horizontalListSortingStrategy}
-                                    >
-                                        {typeCombatants.map((combatant) => {
-                                            const combatantIndex =
-                                                orderedCombatants.findIndex(
-                                                    (c) => c.id === combatant.id
-                                                )
-                                            const isActive =
-                                                combatantIndex === currentTurn
+            {Object.entries(groupedCombatants).map(
+                ([type, typeCombatants]) =>
+                    typeCombatants.length > 0 && (
+                        <Box key={type} sx={{ marginBottom: 3 }}>
+                            <Typography variant='h6' gutterBottom>
+                                {type}s
+                            </Typography>
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    overflowX: "auto",
+                                    padding: 1,
+                                    gap: 1,
+                                    minHeight: 300,
+                                }}
+                            >
+                                {typeCombatants.map((combatant) => {
+                                    const combatantIndex =
+                                        orderedCombatants.findIndex(
+                                            (c) => c.id === combatant.id
+                                        )
+                                    const isActive =
+                                        combatantIndex === currentTurn
 
-                                            return (
-                                                <CombatantCard
-                                                    key={combatant.id}
-                                                    combatant={combatant}
-                                                    onUpdate={updateCombatant}
-                                                    onDelete={deleteCombatant}
-                                                    isActive={isActive}
-                                                />
-                                            )
-                                        })}
-                                    </SortableContext>
-                                </Box>
-                                <Divider sx={{ marginY: 2 }} />
+                                    return (
+                                        <CombatantCard
+                                            key={combatant.id}
+                                            combatant={combatant}
+                                            onUpdate={updateCombatant}
+                                            onDelete={deleteCombatant}
+                                            isActive={isActive}
+                                        />
+                                    )
+                                })}
                             </Box>
-                        )
-                )}
-            </DndContext>
+                            <Divider sx={{ marginY: 2 }} />
+                        </Box>
+                    )
+            )}
 
             {/* Next turn button */}
             {orderedCombatants.length > 0 && (
