@@ -260,32 +260,53 @@ const CombatantCard = ({
             }}
         >
             {/* Delete button - positioned relative to Card, not CardContent */}
-            {isActive && (
-                <IconButton
-                    onClick={() => onDelete(combatant.id)}
-                    size='small'
-                    sx={{
-                        position: "absolute",
-                        top: 8,
-                        left: 8,
-                        width: 28,
-                        height: 28,
-                        borderRadius: "50%", // Make it perfectly round
-                        padding: 0,
-                        backgroundColor: "rgba(244, 67, 54, 0.9)",
-                        color: "white",
-                        border: "1px solid rgba(255, 255, 255, 0.3)",
-                        "&:hover": {
-                            backgroundColor: "rgba(244, 67, 54, 1)",
-                            transform: "scale(1.1)",
-                        },
-                        zIndex: 1200,
-                    }}
-                    title='Delete combatant'
-                >
-                    <DeleteIcon sx={{ fontSize: "0.8rem" }} />
-                </IconButton>
-            )}
+            {/* Always render a button/placeholder to maintain consistent spacing */}
+            <Box
+                sx={{
+                    position: "absolute",
+                    top: 8,
+                    left: 8,
+                    width: 28,
+                    height: 28,
+                    borderRadius: "50%",
+                    zIndex: 1200,
+                }}
+            >
+                {isActive ? (
+                    <IconButton
+                        onClick={() => onDelete(combatant.id)}
+                        size='small'
+                        sx={{
+                            width: "100%",
+                            height: "100%",
+                            borderRadius: "50%", // Make it perfectly round
+                            padding: 0,
+                            backgroundColor: "rgba(244, 67, 54, 0.9)",
+                            color: "white",
+                            border: "1px solid rgba(255, 255, 255, 0.3)",
+                            "&:hover": {
+                                backgroundColor: "rgba(244, 67, 54, 1)",
+                                transform: "scale(1.1)",
+                            },
+                        }}
+                        title='Delete combatant'
+                    >
+                        <DeleteIcon sx={{ fontSize: "0.8rem" }} />
+                    </IconButton>
+                ) : (
+                    /* Invisible placeholder to maintain spacing */
+                    <Box
+                        sx={{
+                            width: "100%",
+                            height: "100%",
+                            borderRadius: "50%",
+                            backgroundColor: "transparent",
+                            pointerEvents: "none",
+                            opacity: 0,
+                        }}
+                    />
+                )}
+            </Box>
 
             {/* Move back/forward buttons - positioned relative to Card */}
             <Box
@@ -883,6 +904,72 @@ const InitiativeTrackerPage = () => {
             document.removeEventListener("keydown", handleKeyPress)
         }
     }, [addDialogOpen])
+
+    // Add keyboard navigation for left/right arrow keys to navigate carousel
+    useEffect(() => {
+        const handleArrowNavigation = (event) => {
+            // Only handle arrow keys when no input/textarea is focused and no dialog is open
+            const activeElement = document.activeElement
+            const isInputFocused =
+                activeElement &&
+                (activeElement.tagName === "INPUT" ||
+                    activeElement.tagName === "TEXTAREA" ||
+                    activeElement.contentEditable === "true")
+
+            if (isInputFocused || addDialogOpen) {
+                return // Don't interfere with text input or dialog interaction
+            }
+
+            // Get current combatants count directly from state
+            const monsters = combatants.filter((c) => c.type === "Monster")
+            const npcs = combatants.filter((c) => c.type === "NPC")
+            const environment = combatants.filter(
+                (c) => c.type === "Environment"
+            )
+            const players = combatants.filter(
+                (c) => c.type === "Player Character"
+            )
+
+            // Add DANGER card before players if there are any players
+            const orderedList = [...monsters, ...npcs, ...environment]
+            if (players.length > 0) {
+                const dangerCard = {
+                    id: "danger-card",
+                    name: "DANGER!",
+                    type: "DANGER",
+                    statuses: [],
+                    isDead: false,
+                    notes: "Remind players they are in danger",
+                    isDangerCard: true,
+                }
+                orderedList.push(dangerCard)
+            }
+            const orderedCombatants = [...orderedList, ...players]
+
+            if (event.key === "ArrowLeft") {
+                event.preventDefault()
+                // Navigate to previous combatant (same logic as left arrow button)
+                const prevIndex =
+                    currentTurn === 0
+                        ? orderedCombatants.length - 1
+                        : currentTurn - 1
+                setCurrentTurn(prevIndex)
+            } else if (event.key === "ArrowRight") {
+                event.preventDefault()
+                // Navigate to next combatant (same logic as right arrow button)
+                const nextIndex =
+                    currentTurn === orderedCombatants.length - 1
+                        ? 0
+                        : currentTurn + 1
+                setCurrentTurn(nextIndex)
+            }
+        }
+
+        document.addEventListener("keydown", handleArrowNavigation)
+        return () => {
+            document.removeEventListener("keydown", handleArrowNavigation)
+        }
+    }, [currentTurn, addDialogOpen, combatants])
 
     // Get combatants in turn order
     const getCombatantsInTurnOrder = useCallback(() => {
