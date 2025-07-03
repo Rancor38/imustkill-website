@@ -73,7 +73,9 @@ window.addEventListener(
                 e.message.includes("ResizeObserver loop limit exceeded") ||
                 e.message.includes("ResizeObserver"))
         ) {
-            e.stopImmediatePropagation()
+            if (e.stopImmediatePropagation) {
+                e.stopImmediatePropagation()
+            }
             e.preventDefault()
             return false
         }

@@ -131,6 +131,69 @@
 .active-card .notes-field textarea {
     z-index: 1300 !important;
     position: relative !important;
+    width: 100% !important;
+}
+
+/* Ensure notes field specifically matches container width */
+.active-card .notes-field {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.active-card .notes-field .MuiTextField-root {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+}
+
+.active-card .notes-field .MuiOutlinedInput-root {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
+    box-sizing: border-box !important;
+    border: none !important; /* Remove any default border that might affect width */
+}
+
+.active-card .notes-field .MuiInputBase-input {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
+    box-sizing: border-box !important;
+    border: none !important;
+    outline: none !important;
+}
+
+.active-card .notes-field * {
+    flex-shrink: 0 !important;
+    flex-grow: 1 !important;
+    max-width: 100% !important;
+}
+
+/* Ensure the fieldset (border outline) matches container width */
+.active-card .notes-field .MuiOutlinedInput-notchedOutline {
+    width: calc(100% - 2px) !important; /* Account for border width */
+    max-width: calc(100% - 2px) !important;
+    left: 1px !important;
+    right: 1px !important;
+    border-width: 1px !important;
+}
+
+/* Ensure no margin or padding issues with fieldset and outline */
+.active-card .notes-field .MuiOutlinedInput-notchedOutline,
+.active-card .notes-field fieldset {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+}
+
+/* Remove any default margins/padding that might cause width issues */
+.active-card .notes-field .MuiFormControl-root {
+    width: 100% !important;
+    margin: 0 !important;
 }
 
 /* Material UI component support */
@@ -154,16 +217,47 @@
     /* Don't set position here - let individual elements control their positioning */
 }
 
-/* Focus styles for inputs in active cards */
+/* Focus styles for inputs in active cards - remove default borders */
 .active-card input:focus,
 .active-card textarea:focus {
     z-index: 1400 !important;
-    outline-color: rgba(25, 118, 210, 0.8) !important;
-    outline-width: 2px !important;
-    outline-style: solid !important;
+    outline: none !important;
+    border: none !important;
+    box-shadow: none !important;
     pointer-events: auto !important;
-    box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.4) !important;
     transition: all 0.5s ease !important;
+}
+
+/* Remove Material-UI default focus styling completely */
+.active-card .MuiOutlinedInput-root:focus-within,
+.active-card .MuiOutlinedInput-root.Mui-focused {
+    outline: none !important;
+    border: 1px solid rgba(0, 0, 0, 0.23) !important; /* Keep subtle border but no highlight */
+    box-shadow: none !important;
+}
+
+.active-card .MuiOutlinedInput-notchedOutline {
+    border: 1px solid rgba(0, 0, 0, 0.23) !important;
+}
+
+.active-card
+    .MuiOutlinedInput-root.Mui-focused
+    .MuiOutlinedInput-notchedOutline {
+    border: 1px solid rgba(0, 0, 0, 0.23) !important; /* Same as default, no highlight */
+    border-width: 1px !important;
+}
+
+/* Remove any focus highlighting from TextField root */
+.active-card .MuiTextField-root:focus-within {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Remove focus ring from input elements */
+.active-card input:focus-visible,
+.active-card textarea:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
 }
 
 /* Additional Material UI support */
@@ -200,7 +294,8 @@
 /* Prevent ResizeObserver loops by using stable dimensions */
 .active-card * {
     box-sizing: border-box !important;
-    transition: opacity 0.5s ease, background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease !important;
+    transition: opacity 0.5s ease, background-color 0.5s ease,
+        border-color 0.5s ease, color 0.5s ease !important;
 }
 
 /* Stabilize card dimensions */
@@ -268,6 +363,23 @@
     pointer-events: none !important;
     user-select: none !important;
     transition: none !important;
+}
+
+/* Ensure all text fields in active cards take full width */
+.active-card .MuiTextField-root {
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.active-card .MuiOutlinedInput-root,
+.active-card .MuiInputBase-root {
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+/* Override any default Material-UI width constraints */
+.active-card .MuiFormControl-root {
+    width: 100% !important;
 }
 
 /* Final fallback for any missed interactive elements */

@@ -60,6 +60,17 @@ const CombatantCard = ({
     onMoveDown,
     onDelete,
 }) => {
+    // Helper function to safely stop event propagation
+    const stopAllPropagation = (e) => {
+        e.stopPropagation()
+        if (e.stopImmediatePropagation) {
+            e.stopImmediatePropagation()
+        }
+        if (e.nativeEvent && e.nativeEvent.stopImmediatePropagation) {
+            e.nativeEvent.stopImmediatePropagation()
+        }
+    }
+
     // onMoveUp now represents moving backward in initiative
     // onMoveDown now represents moving forward in initiative
 
@@ -401,49 +412,42 @@ const CombatantCard = ({
                     size='small'
                     onClick={(e) => {
                         // Fully cancel any propagation
-                        e.stopPropagation()
-                        e.stopImmediatePropagation()
-                        e.nativeEvent.stopImmediatePropagation()
+                        stopAllPropagation(e)
 
                         // Ensure focus isn't lost when clicking
                         const input = e.currentTarget.querySelector("input")
                         if (input) {
                             // Stop propagation on the input too
                             input.onclick = (e) => {
-                                e.stopPropagation()
-                                e.stopImmediatePropagation()
+                                stopAllPropagation(e)
                                 return true
                             }
 
                             // Focus with a delay to ensure it works
                             setTimeout(() => {
                                 input.focus()
-                                // Make sure selection is at end
-                                const length = input.value.length
-                                input.setSelectionRange(length, length)
+                                // Make sure selection is at end - check if input and value exist
+                                if (input && input.value != null) {
+                                    const length = input.value.length
+                                    input.setSelectionRange(length, length)
+                                }
                             }, 10)
                         }
                     }}
                     onMouseDown={(e) => {
                         // Absolute prevention of event bubbling
-                        e.stopPropagation()
-                        e.stopImmediatePropagation()
-                        e.nativeEvent.stopImmediatePropagation()
+                        stopAllPropagation(e)
                         e.preventDefault() // Only for mousedown - prevents losing focus
                     }}
                     onMouseUp={(e) => {
-                        e.stopPropagation()
-                        e.stopImmediatePropagation()
-                        e.nativeEvent.stopImmediatePropagation()
+                        stopAllPropagation(e)
                     }}
                     onFocus={(e) => {
-                        e.stopPropagation()
-                        e.stopImmediatePropagation()
+                        stopAllPropagation(e)
                     }}
                     onTouchStart={(e) => {
                         // Handle touch events for mobile devices
-                        e.stopPropagation()
-                        e.stopImmediatePropagation()
+                        stopAllPropagation(e)
                     }}
                     className='editable-field name-field'
                     inputProps={{
@@ -455,30 +459,29 @@ const CombatantCard = ({
                             userSelect: "text",
                         },
                         onClick: (e) => {
-                            e.stopPropagation()
-                            e.stopImmediatePropagation()
-                            e.nativeEvent.stopImmediatePropagation()
+                            stopAllPropagation(e)
                         },
                         onMouseDown: (e) => {
-                            e.stopPropagation()
-                            e.stopImmediatePropagation()
-                            e.nativeEvent.stopImmediatePropagation()
+                            stopAllPropagation(e)
                             // Allow default behavior for the input itself
                         },
                         onMouseUp: (e) => {
-                            e.stopPropagation()
-                            e.stopImmediatePropagation()
-                            e.nativeEvent.stopImmediatePropagation()
+                            stopAllPropagation(e)
                         },
                         onFocus: (e) => {
                             e.stopPropagation()
                             // Position cursor at end instead of selecting all text
                             setTimeout(() => {
-                                const length = e.currentTarget.value.length
-                                e.currentTarget.setSelectionRange(
-                                    length,
-                                    length
-                                )
+                                if (
+                                    e.currentTarget &&
+                                    e.currentTarget.value != null
+                                ) {
+                                    const length = e.currentTarget.value.length
+                                    e.currentTarget.setSelectionRange(
+                                        length,
+                                        length
+                                    )
+                                }
                             }, 0)
                         },
                     }}
@@ -605,9 +608,7 @@ const CombatantCard = ({
                     rows={2}
                     onClick={(e) => {
                         // Fully cancel any propagation
-                        e.stopPropagation()
-                        e.stopImmediatePropagation()
-                        e.nativeEvent.stopImmediatePropagation()
+                        stopAllPropagation(e)
 
                         // Ensure focus isn't lost when clicking
                         const textarea =
@@ -615,8 +616,7 @@ const CombatantCard = ({
                         if (textarea) {
                             // Stop propagation on the textarea too
                             textarea.onclick = (e) => {
-                                e.stopPropagation()
-                                e.stopImmediatePropagation()
+                                stopAllPropagation(e)
                                 return true
                             }
 
@@ -629,24 +629,18 @@ const CombatantCard = ({
                     }}
                     onMouseDown={(e) => {
                         // Absolute prevention of event bubbling
-                        e.stopPropagation()
-                        e.stopImmediatePropagation()
-                        e.nativeEvent.stopImmediatePropagation()
+                        stopAllPropagation(e)
                         // Allow default behavior to maintain selection capabilities
                     }}
                     onMouseUp={(e) => {
-                        e.stopPropagation()
-                        e.stopImmediatePropagation()
-                        e.nativeEvent.stopImmediatePropagation()
+                        stopAllPropagation(e)
                     }}
                     onFocus={(e) => {
-                        e.stopPropagation()
-                        e.stopImmediatePropagation()
+                        stopAllPropagation(e)
                     }}
                     onTouchStart={(e) => {
                         // Handle touch events for mobile devices
-                        e.stopPropagation()
-                        e.stopImmediatePropagation()
+                        stopAllPropagation(e)
                     }}
                     className='editable-field notes-field'
                     inputProps={{
@@ -658,23 +652,17 @@ const CombatantCard = ({
                             userSelect: "text",
                         },
                         onClick: (e) => {
-                            e.stopPropagation()
-                            e.stopImmediatePropagation()
-                            e.nativeEvent.stopImmediatePropagation()
+                            stopAllPropagation(e)
                         },
                         onMouseDown: (e) => {
-                            e.stopPropagation()
-                            e.stopImmediatePropagation()
-                            e.nativeEvent.stopImmediatePropagation()
+                            stopAllPropagation(e)
                             // Allow default behavior for the textarea itself
                         },
                         onMouseUp: (e) => {
-                            e.stopPropagation()
-                            e.stopImmediatePropagation()
-                            e.nativeEvent.stopImmediatePropagation()
+                            stopAllPropagation(e)
                         },
                         onFocus: (e) => {
-                            e.stopPropagation()
+                            stopAllPropagation(e)
                             // Keep cursor where the user clicked for textarea
                         },
                     }}
@@ -779,7 +767,9 @@ const InitiativeTrackerPage = () => {
             ) {
                 event.preventDefault()
                 event.stopPropagation()
-                event.stopImmediatePropagation()
+                if (event.stopImmediatePropagation) {
+                    event.stopImmediatePropagation()
+                }
                 return false
             }
         }
