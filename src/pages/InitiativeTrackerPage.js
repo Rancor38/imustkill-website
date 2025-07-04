@@ -924,12 +924,9 @@ const InitiativeTrackerPage = () => {
         }
     }, [])
 
-    // Scroll gravity effect for carousel
+    // Enhanced scroll gravity effect that works even when carousel is mounted later
     useEffect(() => {
-        if (!trackerRef.current) return
-
-        const carouselElement = trackerRef.current
-
+        // Set up a scroll handler that will work regardless of when the carousel appears
         const handleScroll = () => {
             // Clear any existing timeouts
             clearTimeout(scrollTimeoutRef.current)
@@ -937,6 +934,10 @@ const InitiativeTrackerPage = () => {
 
             // Set a timeout to detect when scrolling has stopped
             scrollTimeoutRef.current = setTimeout(() => {
+                // Check if the carousel element exists NOW (it might have been added since the effect ran)
+                const carouselElement = trackerRef.current
+                if (!carouselElement) return
+
                 // Apply gravity effect - check if carousel is roughly centered
                 const rect = carouselElement.getBoundingClientRect()
                 const viewportHeight = window.innerHeight
@@ -947,7 +948,7 @@ const InitiativeTrackerPage = () => {
                 const distanceFromCenter = Math.abs(
                     carouselCenter - viewportCenter
                 )
-                const threshold = viewportHeight * 0.18 // Increased to 18% of viewport height for stronger snap zone
+                const threshold = viewportHeight * 0.3 // Increased to 30% of viewport height for even stronger snap zone
 
                 // If carousel is close to center but not perfectly aligned, apply stronger "gravity"
                 if (distanceFromCenter < threshold && distanceFromCenter > 5) {
@@ -955,25 +956,41 @@ const InitiativeTrackerPage = () => {
                     gravityTimeoutRef.current = setTimeout(() => {
                         const targetScroll =
                             window.pageYOffset +
-                            (carouselCenter - viewportCenter) * 0.85 // Stronger pull, 85% of the way
+                            (carouselCenter - viewportCenter) * 0.9 // Even stronger pull, 90% of the way
 
                         window.scrollTo({
                             top: targetScroll,
                             behavior: "smooth",
                         })
-                    }, 200) // Reduced delay from 300ms to 200ms for faster response
+                    }, 100) // Reduced delay to 100ms for immediate response
                 }
-            }, 100) // Reduced detection time from 150ms to 100ms for quicker response
+            }, 80) // Reduced detection time to 80ms for faster response
         }
 
+        // Set up a mutation observer to detect when the carousel is added to the DOM
+        const observerTarget = document.body
+        const observerConfig = { childList: true, subtree: true }
+
+        const mutationObserver = new MutationObserver(() => {
+            // If the carousel ref exists after a DOM mutation, check if we need to apply gravity
+            if (trackerRef.current) {
+                handleScroll() // Check immediately when carousel appears
+            }
+        })
+
+        // Start observing for carousel element appearing
+        mutationObserver.observe(observerTarget, observerConfig)
+
+        // Also listen for scroll events
         window.addEventListener("scroll", handleScroll, { passive: true })
 
         return () => {
+            mutationObserver.disconnect()
             window.removeEventListener("scroll", handleScroll)
             clearTimeout(scrollTimeoutRef.current)
             clearTimeout(gravityTimeoutRef.current)
         }
-    }, [])
+    }, []) // No dependencies - this effect should only run once on component mount
 
     // Add debounced resize handler to prevent ResizeObserver issues
     useEffect(() => {
