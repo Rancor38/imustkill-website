@@ -23,6 +23,9 @@ import {
     Paper,
     Alert,
     Snackbar,
+    Tooltip,
+    InputAdornment,
+    CircularProgress,
 } from "@mui/material"
 import {
     Add as AddIcon,
@@ -33,7 +36,14 @@ import {
     Upload as UploadIcon,
     Refresh as RefreshIcon,
     Delete as DeleteIcon,
+    Share as ShareIcon,
+    ContentCopy as CopyIcon,
 } from "@mui/icons-material"
+import {
+    createInitiativeSession,
+    updateInitiativeSession,
+    deactivateInitiativeSession,
+} from "../utils/supabaseClient"
 import {
     DndContext,
     closestCenter,
@@ -1025,6 +1035,15 @@ const InitiativeTrackerPage = () => {
     const [alertMessage, setAlertMessage] = useState("")
     const [alertSeverity, setAlertSeverity] = useState("success")
 
+    // Liveshare state
+    const [liveshareDialogOpen, setLiveshareDialogOpen] = useState(false)
+    const [createShareDialogOpen, setCreateShareDialogOpen] = useState(false)
+    const [liveshareLink, setLiveshareLink] = useState("")
+    const [liveshareId, setLiveshareId] = useState("")
+    const [isLiveshareActive, setIsLiveshareActive] = useState(false)
+    const [liveshareLoading, setLiveshareLoading] = useState(false)
+    const [expirationTime, setExpirationTime] = useState(60) // Default: 60 minutes (1 hour)
+
     // Drag and drop state for loading
     const [isDragOver, setIsDragOver] = useState(false)
     const fileInputRef = useRef(null)
@@ -1716,6 +1735,196 @@ const InitiativeTrackerPage = () => {
 
     const orderedCombatants = getCombatantsInTurnOrder()
 
+    // Create and handle Liveshare functionality
+    const createLiveshare = async () => {
+        try {
+            setLiveshareLoading(true)
+            console.log("Starting Liveshare creation process...")
+
+            // Create data object that includes combatants and current turn
+            const combatData = {
+                combatants: combatants,
+                currentTurn: currentTurn,
+                orderedCombatants: getCombatantsInTurnOrder(),
+                lastUpdated: new Date().toISOString(),
+            }
+            console.log("Combat data prepared:", combatData)
+
+            // Create a new session in Supabase with optional expiration
+            const useExpiration = expirationTime > 0
+            console.log(
+                "Using expiration:",
+                useExpiration,
+                "minutes:",
+                useExpiration ? expirationTime : "none"
+            )
+
+            // Add detailed error handling with proper try/catch
+            try {
+                console.log("About to call createInitiativeSession...")
+                const sessionId = await createInitiativeSession(
+                    combatData,
+                    useExpiration ? expirationTime : null
+                )
+                console.log("Session created with ID:", sessionId)
+
+                // Set the liveshare link with the generated session ID
+                const baseUrl = window.location.origin
+                const shareLink = `${baseUrl}/live-game/${sessionId}`
+                console.log("Share link generated:", shareLink)
+
+                setLiveshareId(sessionId)
+                setLiveshareLink(shareLink)
+                setIsLiveshareActive(true)
+                setLiveshareDialogOpen(true)
+
+                // Show success alert with expiration info if applicable
+                if (useExpiration) {
+                    showAlert(
+                        `Live sharing session created! It will expire in ${expirationTime} minutes.`,
+                        "success"
+                    )
+                } else {
+                    showAlert(
+                        "Live sharing session created! You can share the link.",
+                        "success"
+                    )
+                }
+            } catch (innerError) {
+                console.error(
+                    "Detailed error in createInitiativeSession:",
+                    innerError
+                )
+                if (innerError.message)
+                    console.error("Error message:", innerError.message)
+                if (innerError.code)
+                    console.error("Error code:", innerError.code)
+                if (innerError.details)
+                    console.error("Error details:", innerError.details)
+                throw innerError // Re-throw for outer catch
+            }
+        } catch (error) {
+            console.error("Error creating Liveshare:", error)
+            showAlert(
+                `Failed to create live sharing session: ${
+                    error.message || error
+                }`,
+                "error"
+            )
+        } finally {
+            setLiveshareLoading(false)
+        }
+    }
+
+    // Deactivate Liveshare session
+    const deactivateSession = async () => {
+        try {
+            setLiveshareLoading(true)
+
+            if (liveshareId) {
+                await deactivateInitiativeSession(liveshareId)
+                setLiveshareId("")
+                setLiveshareLink("")
+                setIsLiveshareActive(false)
+                setLiveshareDialogOpen(false)
+                showAlert(
+                    "Liveshare session deactivated successfully.",
+                    "success"
+                )
+            }
+
+            setLiveshareLoading(false)
+        } catch (error) {
+            console.error("Error deactivating Liveshare session:", error)
+            setLiveshareLoading(false)
+            showAlert("Failed to deactivate Liveshare session.", "error")
+        }
+    }
+
+    // Update Supabase when combat state changes if Liveshare is active
+    useEffect(() => {
+        // Use the memoized getCombatantsInTurnOrder function for dependency safety
+        const orderedCombatants = getCombatantsInTurnOrder()
+
+        const updateLiveSession = async () => {
+            if (isLiveshareActive && liveshareId) {
+                try {
+                    const combatData = {
+                        combatants: combatants,
+                        currentTurn: currentTurn,
+                        orderedCombatants: orderedCombatants,
+                        lastUpdated: new Date().toISOString(),
+                    }
+
+                    await updateInitiativeSession(liveshareId, combatData)
+                } catch (error) {
+                    console.error("Error updating Liveshare session:", error)
+                }
+            }
+        }
+
+        // Only update after the component has mounted and when it's not the initial render
+        if (combatants.length > 0 || currentTurn > 0) {
+            updateLiveSession()
+        }
+    }, [
+        combatants,
+        currentTurn,
+        isLiveshareActive,
+        liveshareId,
+        getCombatantsInTurnOrder,
+    ])
+
+    // Add page refresh warning when liveshare is active
+    useEffect(() => {
+        const handleBeforeUnload = (event) => {
+            if (isLiveshareActive) {
+                // Standard way to show a confirmation dialog before page unload
+                const message =
+                    "Refreshing or closing this page will end your active live sharing session. Do you want to continue?"
+                event.preventDefault()
+                event.returnValue = message // Required for Chrome
+                return message // Required for other browsers
+            }
+        }
+
+        // Add the event listener if liveshare is active
+        if (isLiveshareActive) {
+            window.addEventListener("beforeunload", handleBeforeUnload)
+        }
+
+        // Clean up the event listener
+        return () => {
+            window.removeEventListener("beforeunload", handleBeforeUnload)
+        }
+    }, [isLiveshareActive])
+
+    // Handle actual page refresh/unload to deactivate the liveshare
+    useEffect(() => {
+        const handleUnload = async () => {
+            // Only attempt deactivation if liveshare is active
+            if (isLiveshareActive && liveshareId) {
+                try {
+                    await deactivateInitiativeSession(liveshareId)
+                    console.log("Liveshare session deactivated on page unload")
+                } catch (error) {
+                    console.error(
+                        "Error deactivating liveshare on unload:",
+                        error
+                    )
+                }
+            }
+        }
+
+        // Add the unload event listener
+        window.addEventListener("unload", handleUnload)
+
+        // Clean up
+        return () => {
+            window.removeEventListener("unload", handleUnload)
+        }
+    }, [isLiveshareActive, liveshareId])
+
     return (
         <>
             <Container
@@ -1849,6 +2058,44 @@ const InitiativeTrackerPage = () => {
                             }}
                         >
                             Load Combat
+                        </Button>
+
+                        <Button
+                            variant='contained'
+                            startIcon={
+                                liveshareLoading ? (
+                                    <CircularProgress
+                                        size={20}
+                                        color='inherit'
+                                    />
+                                ) : (
+                                    <ShareIcon />
+                                )
+                            }
+                            onClick={
+                                isLiveshareActive
+                                    ? () => setLiveshareDialogOpen(true)
+                                    : () => setCreateShareDialogOpen(true)
+                            }
+                            disabled={
+                                combatants.length === 0 || liveshareLoading
+                            }
+                            sx={{
+                                backgroundColor: isLiveshareActive
+                                    ? "#4caf50"
+                                    : "#673ab7",
+                                "&:hover": {
+                                    backgroundColor: isLiveshareActive
+                                        ? "#43a047"
+                                        : "#5e35b1",
+                                },
+                            }}
+                        >
+                            {liveshareLoading
+                                ? "Creating..."
+                                : isLiveshareActive
+                                ? "View Shared Link"
+                                : "Share Live"}
                         </Button>
 
                         <Button
@@ -2413,6 +2660,203 @@ const InitiativeTrackerPage = () => {
                             </Button>
                             <Button onClick={addCombatant} variant='contained'>
                                 Add & Continue
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+
+                    {/* Create Liveshare Configuration Dialog */}
+                    <Dialog
+                        open={createShareDialogOpen}
+                        onClose={() => setCreateShareDialogOpen(false)}
+                    >
+                        <DialogTitle
+                            sx={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                            }}
+                        >
+                            Configure Live Sharing
+                            <IconButton
+                                onClick={() => setCreateShareDialogOpen(false)}
+                                sx={{ color: "grey.500" }}
+                            >
+                                <CloseIcon />
+                            </IconButton>
+                        </DialogTitle>
+                        <DialogContent>
+                            <Typography
+                                variant='body1'
+                                gutterBottom
+                                sx={{ mt: 1 }}
+                            >
+                                Set sharing options before creating your live
+                                session:
+                            </Typography>
+
+                            <FormControl fullWidth sx={{ mt: 2 }}>
+                                <InputLabel id='expiration-select-label'>
+                                    Session Expiration
+                                </InputLabel>
+                                <Select
+                                    labelId='expiration-select-label'
+                                    value={expirationTime}
+                                    label='Session Expiration'
+                                    onChange={(e) =>
+                                        setExpirationTime(e.target.value)
+                                    }
+                                >
+                                    <MenuItem value={60}>1 hour</MenuItem>
+                                    <MenuItem value={120}>2 hours</MenuItem>
+                                    <MenuItem value={180}>3 hours</MenuItem>
+                                    <MenuItem value={240}>4 hours</MenuItem>
+                                </Select>
+                            </FormControl>
+
+                            <Typography
+                                variant='body2'
+                                sx={{ mt: 2, color: "text.secondary" }}
+                            >
+                                • Creating a session will generate a link others
+                                can use to view your combat
+                                <br />
+                                • You can stop sharing manually at any time
+                                <br />• The session will automatically expire
+                                after the selected time
+                            </Typography>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button
+                                onClick={() => setCreateShareDialogOpen(false)}
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                onClick={() => {
+                                    setCreateShareDialogOpen(false)
+                                    createLiveshare()
+                                }}
+                                variant='contained'
+                                color='primary'
+                                disabled={liveshareLoading}
+                                startIcon={
+                                    liveshareLoading ? (
+                                        <CircularProgress
+                                            size={20}
+                                            color='inherit'
+                                        />
+                                    ) : null
+                                }
+                            >
+                                Create Share Link
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+
+                    {/* Liveshare Dialog */}
+                    <Dialog
+                        open={liveshareDialogOpen}
+                        onClose={() => setLiveshareDialogOpen(false)}
+                    >
+                        <DialogTitle
+                            sx={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                            }}
+                        >
+                            Share Initiative Tracker
+                            <IconButton
+                                onClick={() => setLiveshareDialogOpen(false)}
+                                sx={{ color: "grey.500" }}
+                            >
+                                <CloseIcon />
+                            </IconButton>
+                        </DialogTitle>
+                        <DialogContent>
+                            <Typography variant='body1' gutterBottom>
+                                Share this link for others to view your combat
+                                in real-time:
+                            </Typography>
+
+                            <TextField
+                                fullWidth
+                                variant='outlined'
+                                value={liveshareLink}
+                                margin='dense'
+                                InputProps={{
+                                    readOnly: true,
+                                    endAdornment: (
+                                        <InputAdornment position='end'>
+                                            <Tooltip title='Copy to clipboard'>
+                                                <IconButton
+                                                    onClick={() => {
+                                                        navigator.clipboard.writeText(
+                                                            liveshareLink
+                                                        )
+                                                        showAlert(
+                                                            "Link copied to clipboard!",
+                                                            "success"
+                                                        )
+                                                    }}
+                                                    edge='end'
+                                                >
+                                                    <CopyIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                        </InputAdornment>
+                                    ),
+                                }}
+                            />
+
+                            <Typography
+                                variant='body2'
+                                sx={{ mt: 2, color: "text.secondary" }}
+                            >
+                                • Any changes you make will be visible to
+                                viewers in real-time
+                                <br />
+                                • Viewers cannot make changes to your combat
+                                tracker
+                                <br />
+                                {expirationTime > 0
+                                    ? `• The link will expire automatically in ${expirationTime} minutes`
+                                    : "• The link will remain active until you stop sharing manually"}
+                            </Typography>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button
+                                onClick={() =>
+                                    window.open(liveshareLink, "_blank")
+                                }
+                                variant='contained'
+                                color='primary'
+                            >
+                                Open in new tab
+                            </Button>
+                            <Button
+                                onClick={deactivateSession}
+                                color='error'
+                                disabled={liveshareLoading}
+                                startIcon={
+                                    liveshareLoading ? (
+                                        <CircularProgress
+                                            size={20}
+                                            color='inherit'
+                                        />
+                                    ) : (
+                                        <CloseIcon />
+                                    )
+                                }
+                            >
+                                {liveshareLoading
+                                    ? "Stopping..."
+                                    : "Stop Sharing"}
+                            </Button>
+                            <Button
+                                onClick={() => setLiveshareDialogOpen(false)}
+                            >
+                                Close
                             </Button>
                         </DialogActions>
                     </Dialog>

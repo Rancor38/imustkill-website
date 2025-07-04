@@ -19,6 +19,7 @@ This website includes comprehensive references for:
 -   **Character Creation** - Guide to creating your Hunter
 -   **Character Sheet** - Digital reference sheet for your character
 -   **Equipment Deck** - Browse and randomly generate equipment for your character
+-   **Initiative Tracker** - Track combat initiative with real-time sharing capability (Liveshare)
 -   **Combat Mechanics** - Rules for attacks, dodges, bracing, and more
 -   **Death and Resting** - How recovery and death work in the game
 -   **Progression** - Character advancement rules
@@ -26,6 +27,18 @@ This website includes comprehensive references for:
 -   **Spells** - Searchable database of spells by name, deck, and rarity
 -   **Running the Game** - Resources for Game Masters
 -   **Monsters** - Bestiary with detailed monster information (GM access only)
+
+## Liveshare Feature
+
+The Initiative Tracker includes a Liveshare feature that allows Game Masters to create a real-time view-only link to share with players:
+
+-   **Real-time Updates**: All changes made by the GM are instantly visible to viewers
+-   **View-Only Access**: Shared links provide read-only access to prevent unwanted changes
+-   **Expiration Controls**: Set automatic expiration times for shared links (30 minutes to 8 hours)
+-   **Manual Controls**: Stop sharing at any time with a single click
+-   **Easily Sharable**: Copy links to clipboard or open in a new tab directly from the interface
+
+For setup instructions, see [LIVESHARE_SETUP.md](./LIVESHARE_SETUP.md).
 
 ## Getting Started with Development
 
