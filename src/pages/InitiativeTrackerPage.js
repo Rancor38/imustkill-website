@@ -947,7 +947,7 @@ const InitiativeTrackerPage = () => {
                 const distanceFromCenter = Math.abs(
                     carouselCenter - viewportCenter
                 )
-                const threshold = viewportHeight * 0.15 // Increased to 25% of viewport height for stronger snap zone
+                const threshold = viewportHeight * 0.18 // Increased to 18% of viewport height for stronger snap zone
 
                 // If carousel is close to center but not perfectly aligned, apply stronger "gravity"
                 if (distanceFromCenter < threshold && distanceFromCenter > 5) {
@@ -1865,7 +1865,7 @@ const InitiativeTrackerPage = () => {
                     {/* Initiative order display */}
                     <Paper sx={{ padding: 2, marginBottom: 2 }}>
                         <Typography variant='h6' gutterBottom>
-                            Turn Order (following Combat Mechanics)
+                            Turn Order
                         </Typography>
                         <Box
                             sx={{
@@ -1903,7 +1903,7 @@ const InitiativeTrackerPage = () => {
                     {combatants.length > 0 && (
                         <Box sx={{ marginBottom: 3 }} ref={trackerRef}>
                             <Typography variant='h6' gutterBottom>
-                                Initiative Carousel (Use arrows to move
+                                Initiative (Use arrows to re-order move
                                 combatants within their type)
                             </Typography>
                             <DndContext

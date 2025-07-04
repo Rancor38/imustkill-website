@@ -6,10 +6,11 @@
                 "id": "turns",
                 "title": "Turn Order",
                 "rules": [
-                    "Monsters go first",
-                    "NPCs go next",
-                    "Danger is assessed and the GM tells players who is in danger",
-                    "Players go and then the round starts again"
+                    "Monsters",
+                    "NPCs",
+                    "Environmentals",
+                    "GM tells players who is in danger",
+                    "Players"
                 ],
                 "keywords": [
                     "turns",
@@ -17,7 +18,8 @@
                     "npcs",
                     "danger",
                     "players",
-                    "round"
+                    "round",
+                    "environmentals"
                 ]
             },
             {
