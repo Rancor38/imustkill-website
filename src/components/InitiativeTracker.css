@@ -29,6 +29,7 @@
 .active-card .MuiCard-root {
     backdrop-filter: none !important;
     transition: all 0.5s ease !important;
+    /* Remove any background color overrides - let the component handle it */
 }
 
 /* Round button styling for delete and move buttons */

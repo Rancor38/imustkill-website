@@ -59,6 +59,7 @@ const CombatantCard = ({
     onMoveUp,
     onMoveDown,
     onDelete,
+    combatantCount = 1, // Add combatantCount prop with default
 }) => {
     // Helper function to safely stop event propagation
     const stopAllPropagation = (e) => {
@@ -96,6 +97,67 @@ const CombatantCard = ({
         }
     }, [isActive, combatant.isDangerCard])
 
+    // Calculate dynamic card size based on number of combatants
+    // Carousel is 100vh, so cards should be much smaller to fit properly
+    const maxCarouselHeight = window.innerHeight * 0.9
+
+    // Calculate dynamic card height to ensure cards don't exceed carousel bounds
+    // Start with a reasonable base size and scale down for more combatants
+    let baseCardHeight
+    if (combatantCount === 1) {
+        baseCardHeight = maxCarouselHeight * 1 // Larger for single card
+    } else {
+        baseCardHeight = maxCarouselHeight * 0.65 // Smallest for 6+ cards
+    }
+
+    // Apply additional scaling for very large numbers of combatants
+    const scaleFactor = 0.8
+
+    const dynamicCardHeight = baseCardHeight * scaleFactor
+    const dynamicCardWidth = dynamicCardHeight * 0.67 // Maintain 2:3 aspect ratio
+
+    // Convert to vh units for consistent scaling across devices
+    const cardHeightVh = (dynamicCardHeight / window.innerHeight) * 100
+    const cardWidthVh = (dynamicCardWidth / window.innerHeight) * 100
+
+    // Special case for Spacer card (invisible)
+    if (combatant.isSpacerCard) {
+        return (
+            <Card
+                ref={setNodeRef}
+                style={style}
+                sx={{
+                    width: {
+                        xs: `${cardWidthVh}vh`,
+                        sm: `${cardWidthVh}vh`,
+                    }, // Dynamic width based on combatant count
+                    height: {
+                        xs: `${cardHeightVh}vh`,
+                        sm: `${cardHeightVh}vh`,
+                    }, // Dynamic height based on combatant count
+                    margin: 1,
+                    backgroundColor: "transparent",
+                    border: "none",
+                    borderRadius: 2,
+                    position: "relative",
+                    transition: "all 0.3s ease-in-out",
+                    cursor: "default",
+                    boxShadow: "none",
+                    pointerEvents: "none", // Make it completely uninteractive
+                    visibility: "hidden", // Make it invisible but maintain layout space
+                    contain: "layout style size",
+                    willChange: "auto",
+                    boxSizing: "border-box",
+                    overflow: "hidden",
+                    transform: "translateZ(0)",
+                    backfaceVisibility: "hidden",
+                }}
+            >
+                {/* Empty content - invisible spacer */}
+            </Card>
+        )
+    }
+
     // Special case for DANGER card
     if (combatant.isDangerCard) {
         return (
@@ -104,10 +166,13 @@ const CombatantCard = ({
                 style={style}
                 sx={{
                     width: {
-                        xs: "calc(62.5vh * 0.67)",
-                        sm: "calc(62.5vh * 0.67)",
-                    }, // 5/8 screen height * (2/3 aspect ratio) for width
-                    height: { xs: "62.5vh", sm: "62.5vh" }, // 5/8 screen height for height
+                        xs: `${cardWidthVh}vh`,
+                        sm: `${cardWidthVh}vh`,
+                    }, // Dynamic width based on combatant count
+                    height: {
+                        xs: `${cardHeightVh}vh`,
+                        sm: `${cardHeightVh}vh`,
+                    }, // Dynamic height based on combatant count
                     margin: 1,
                     backgroundColor: "rgba(244, 67, 54, 0.9)",
                     border: "3px solid #ff0000",
@@ -206,8 +271,6 @@ const CombatantCard = ({
         onUpdate(combatant.id, { name: newName })
     }
 
-    const cardOpacity = combatant.isDead ? 0.5 : 1
-
     // No duplicate useEffect here - it's been moved before the conditional return
 
     return (
@@ -220,22 +283,20 @@ const CombatantCard = ({
             style={style}
             className={isActive ? "active-card" : undefined}
             sx={{
-                width: { xs: "calc(62.5vh * 0.67)", sm: "calc(62.5vh * 0.67)" }, // 5/8 screen height * (2/3 aspect ratio) for width
-                height: { xs: "62.5vh", sm: "62.5vh" }, // 5/8 screen height for height
+                width: { xs: `${cardWidthVh}vh`, sm: `${cardWidthVh}vh` }, // Dynamic width based on combatant count
+                height: { xs: `${cardHeightVh}vh`, sm: `${cardHeightVh}vh` }, // Dynamic height based on combatant count
                 margin: 1,
-                opacity: cardOpacity,
                 border: `3px solid ${getBorderColor(combatant.type)}`,
                 borderRadius: 2,
                 position: "relative",
-                transition: "background-color 0.3s ease-in-out", // Only transition background
+                transition:
+                    "background-color 0.3s ease-in-out, width 0.3s ease-in-out, height 0.3s ease-in-out", // Add smooth resize transition
                 cursor: "default", // Always default cursor
                 boxShadow: "0 2px 8px rgba(0,0,0,0.1)", // Consistent shadow
-                backgroundColor: isActive
-                    ? (theme) =>
-                          theme.palette.mode === "dark"
-                              ? "#darkgrey" // Solid gray for dark theme
-                              : "#ffffff" // Solid white for light theme
-                    : "background.paper",
+                backgroundColor: (theme) =>
+                    theme.palette.mode === "dark"
+                        ? "#424242" // Consistent solid gray for dark theme
+                        : "#ffffff", // Consistent solid white for light theme
                 pointerEvents: "auto",
                 // Enhanced layout stability to prevent ResizeObserver issues
                 contain: "layout style size",
@@ -283,7 +344,7 @@ const CombatantCard = ({
                     zIndex: 1200,
                 }}
             >
-                {isActive ? (
+                {isActive && !combatant.isSpacerCard ? (
                     <IconButton
                         onClick={() => onDelete(combatant.id)}
                         size='small'
@@ -320,55 +381,57 @@ const CombatantCard = ({
             </Box>
 
             {/* Move back/forward buttons - positioned relative to Card */}
-            <Box
-                sx={{
-                    position: "absolute",
-                    top: 8,
-                    right: 8,
-                    display: "flex",
-                    flexDirection: "row",
-                    gap: "4px",
-                }}
-            >
-                <IconButton
-                    onClick={onMoveUp}
-                    size='small'
+            {!combatant.isSpacerCard && (
+                <Box
                     sx={{
-                        width: 28,
-                        height: 28,
-                        borderRadius: "50%", // Make it round to match delete button
-                        padding: 0,
-                        backgroundColor: "rgba(0,0,0,0.2)",
-                        border: "1px solid rgba(255, 255, 255, 0.3)",
-                        "&:hover": {
-                            backgroundColor: "rgba(0,0,0,0.4)",
-                            transform: "scale(1.1)",
-                        },
+                        position: "absolute",
+                        top: 8,
+                        right: 8,
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: "4px",
                     }}
-                    title='Move backward in initiative order'
                 >
-                    <ArrowBackIcon sx={{ fontSize: "0.8rem" }} />
-                </IconButton>
-                <IconButton
-                    onClick={onMoveDown}
-                    size='small'
-                    sx={{
-                        width: 28,
-                        height: 28,
-                        borderRadius: "50%", // Make it round to match delete button
-                        padding: 0,
-                        backgroundColor: "rgba(0,0,0,0.2)",
-                        border: "1px solid rgba(255, 255, 255, 0.3)",
-                        "&:hover": {
-                            backgroundColor: "rgba(0,0,0,0.4)",
-                            transform: "scale(1.1)",
-                        },
-                    }}
-                    title='Move forward in initiative order'
-                >
-                    <ArrowForwardIcon sx={{ fontSize: "0.8rem" }} />
-                </IconButton>
-            </Box>
+                    <IconButton
+                        onClick={onMoveUp}
+                        size='small'
+                        sx={{
+                            width: 28,
+                            height: 28,
+                            borderRadius: "50%", // Make it round to match delete button
+                            padding: 0,
+                            backgroundColor: "rgba(0,0,0,0.2)",
+                            border: "1px solid rgba(255, 255, 255, 0.3)",
+                            "&:hover": {
+                                backgroundColor: "rgba(0,0,0,0.4)",
+                                transform: "scale(1.1)",
+                            },
+                        }}
+                        title='Move backward in initiative order'
+                    >
+                        <ArrowBackIcon sx={{ fontSize: "0.8rem" }} />
+                    </IconButton>
+                    <IconButton
+                        onClick={onMoveDown}
+                        size='small'
+                        sx={{
+                            width: 28,
+                            height: 28,
+                            borderRadius: "50%", // Make it round to match delete button
+                            padding: 0,
+                            backgroundColor: "rgba(0,0,0,0.2)",
+                            border: "1px solid rgba(255, 255, 255, 0.3)",
+                            "&:hover": {
+                                backgroundColor: "rgba(0,0,0,0.4)",
+                                transform: "scale(1.1)",
+                            },
+                        }}
+                        title='Move forward in initiative order'
+                    >
+                        <ArrowForwardIcon sx={{ fontSize: "0.8rem" }} />
+                    </IconButton>
+                </Box>
+            )}
 
             <CardContent
                 sx={{
@@ -388,6 +451,7 @@ const CombatantCard = ({
                         justifyContent: "center",
                         marginBottom: 2,
                         marginTop: 1, // Reduced margin since no delete button
+                        position: "relative", // For positioning the X overlay
                     }}
                 >
                     <img
@@ -397,10 +461,27 @@ const CombatantCard = ({
                             width: 48,
                             height: 48,
                             objectFit: "contain",
-                            opacity: combatant.isDead ? 0.3 : 1,
-                            transition: "opacity 0.3s ease",
+                            transition: "filter 0.3s ease",
                         }}
                     />
+                    {/* Red X overlay when dead */}
+                    {combatant.isDead && (
+                        <Box
+                            sx={{
+                                position: "absolute",
+                                top: "50%",
+                                left: "50%",
+                                transform: "translate(-50%, -50%)",
+                                fontSize: "36px",
+                                color: "#ff0000",
+                                textShadow: "2px 2px 4px rgba(0,0,0,0.8)",
+                                pointerEvents: "none",
+                                zIndex: 10,
+                            }}
+                        >
+                            ❌
+                        </Box>
+                    )}
                 </Box>
 
                 {/* Name input */}
@@ -884,7 +965,17 @@ const InitiativeTrackerPage = () => {
     // Add keyboard event listener for '+' key to open add dialog
     useEffect(() => {
         const handleKeyPress = (event) => {
-            if (event.key === "+" && !addDialogOpen) {
+            // Only handle if no input is focused and dialog is not already open
+            const activeElement = document.activeElement
+            const isInputFocused =
+                activeElement &&
+                (activeElement.tagName === "INPUT" ||
+                    activeElement.tagName === "TEXTAREA" ||
+                    activeElement.contentEditable === "true")
+
+            if (event.key === "+" && !addDialogOpen && !isInputFocused) {
+                event.preventDefault() // Prevent the "+" from being typed
+                event.stopPropagation() // Stop the event from propagating
                 setAddDialogOpen(true)
             }
         }
@@ -894,72 +985,6 @@ const InitiativeTrackerPage = () => {
             document.removeEventListener("keydown", handleKeyPress)
         }
     }, [addDialogOpen])
-
-    // Add keyboard navigation for left/right arrow keys to navigate carousel
-    useEffect(() => {
-        const handleArrowNavigation = (event) => {
-            // Only handle arrow keys when no input/textarea is focused and no dialog is open
-            const activeElement = document.activeElement
-            const isInputFocused =
-                activeElement &&
-                (activeElement.tagName === "INPUT" ||
-                    activeElement.tagName === "TEXTAREA" ||
-                    activeElement.contentEditable === "true")
-
-            if (isInputFocused || addDialogOpen) {
-                return // Don't interfere with text input or dialog interaction
-            }
-
-            // Get current combatants count directly from state
-            const monsters = combatants.filter((c) => c.type === "Monster")
-            const npcs = combatants.filter((c) => c.type === "NPC")
-            const environment = combatants.filter(
-                (c) => c.type === "Environment"
-            )
-            const players = combatants.filter(
-                (c) => c.type === "Player Character"
-            )
-
-            // Add DANGER card before players if there are any players
-            const orderedList = [...monsters, ...npcs, ...environment]
-            if (players.length > 0) {
-                const dangerCard = {
-                    id: "danger-card",
-                    name: "DANGER!",
-                    type: "DANGER",
-                    statuses: [],
-                    isDead: false,
-                    notes: "Remind players they are in danger",
-                    isDangerCard: true,
-                }
-                orderedList.push(dangerCard)
-            }
-            const orderedCombatants = [...orderedList, ...players]
-
-            if (event.key === "ArrowLeft") {
-                event.preventDefault()
-                // Navigate to previous combatant (same logic as left arrow button)
-                const prevIndex =
-                    currentTurn === 0
-                        ? orderedCombatants.length - 1
-                        : currentTurn - 1
-                setCurrentTurn(prevIndex)
-            } else if (event.key === "ArrowRight") {
-                event.preventDefault()
-                // Navigate to next combatant (same logic as right arrow button)
-                const nextIndex =
-                    currentTurn === orderedCombatants.length - 1
-                        ? 0
-                        : currentTurn + 1
-                setCurrentTurn(nextIndex)
-            }
-        }
-
-        document.addEventListener("keydown", handleArrowNavigation)
-        return () => {
-            document.removeEventListener("keydown", handleArrowNavigation)
-        }
-    }, [currentTurn, addDialogOpen, combatants])
 
     // Get combatants in turn order
     const getCombatantsInTurnOrder = useCallback(() => {
@@ -985,8 +1010,206 @@ const InitiativeTrackerPage = () => {
             orderedList.push(dangerCard)
         }
 
-        return [...orderedList, ...players]
+        const finalList = [...orderedList, ...players]
+
+        // Add spacer cards if we have 2 or 3 total cards to maintain proper spacing
+        if (finalList.length >= 2 && finalList.length <= 3) {
+            const spacersNeeded = 4 - finalList.length
+
+            for (let i = 0; i < spacersNeeded; i++) {
+                const spacerCard = {
+                    id: `spacer-card-${i}`, // Unique ID for each spacer
+                    name: "Spacer",
+                    type: "SPACER",
+                    statuses: [],
+                    isDead: false,
+                    notes: "",
+                    isSpacerCard: true, // Flag to identify spacer cards
+                }
+
+                // Insert spacers between existing cards for better distribution
+                if (finalList.length === 2) {
+                    // For 2 cards, add spacers: Card1, Spacer1, Card2, Spacer2
+                    if (i === 0) {
+                        finalList.splice(1, 0, spacerCard) // Insert after first card
+                    } else {
+                        finalList.push(spacerCard) // Add at end
+                    }
+                } else if (finalList.length === 3) {
+                    // For 3 cards, add 1 spacer: Card1, Card2, Spacer1, Card3
+                    finalList.splice(2, 0, spacerCard) // Insert before last card
+                }
+            }
+        }
+
+        return finalList
     }, [combatants])
+
+    // Helper function to get combatants in turn order from any combatants array
+    const getCombatantsInTurnOrderFromArray = useCallback((combatantsArray) => {
+        const monsters = combatantsArray.filter((c) => c.type === "Monster")
+        const npcs = combatantsArray.filter((c) => c.type === "NPC")
+        const environment = combatantsArray.filter(
+            (c) => c.type === "Environment"
+        )
+        const players = combatantsArray.filter(
+            (c) => c.type === "Player Character"
+        )
+
+        // Add a DANGER card before player characters if there are any players
+        const orderedList = [...monsters, ...npcs, ...environment]
+
+        if (players.length > 0) {
+            // Add a special DANGER card that will be rendered differently
+            const dangerCard = {
+                id: "danger-card", // Unique ID that won't conflict
+                name: "DANGER!",
+                type: "DANGER", // Special type to handle differently
+                statuses: [],
+                isDead: false,
+                notes: "Remind players they are in danger",
+                isDangerCard: true, // Flag to identify this special card
+            }
+            orderedList.push(dangerCard)
+        }
+
+        const finalList = [...orderedList, ...players]
+
+        // Add spacer cards if we have 2 or 3 total cards to maintain proper spacing
+        if (finalList.length >= 2 && finalList.length <= 3) {
+            const spacersNeeded = 4 - finalList.length
+
+            for (let i = 0; i < spacersNeeded; i++) {
+                const spacerCard = {
+                    id: `spacer-card-${i}`, // Unique ID for each spacer
+                    name: "Spacer",
+                    type: "SPACER",
+                    statuses: [],
+                    isDead: false,
+                    notes: "",
+                    isSpacerCard: true, // Flag to identify spacer cards
+                }
+
+                // Insert spacers between existing cards for better distribution
+                if (finalList.length === 2) {
+                    // For 2 cards, add spacers: Card1, Spacer1, Card2, Spacer2
+                    if (i === 0) {
+                        finalList.splice(1, 0, spacerCard) // Insert after first card
+                    } else {
+                        finalList.push(spacerCard) // Add at end
+                    }
+                } else if (finalList.length === 3) {
+                    // For 3 cards, add 1 spacer: Card1, Card2, Spacer1, Card3
+                    finalList.splice(2, 0, spacerCard) // Insert before last card
+                }
+            }
+        }
+
+        return finalList
+    }, [])
+
+    // Add keyboard navigation for left/right arrow keys to navigate carousel
+    useEffect(() => {
+        const handleArrowNavigation = (event) => {
+            // Only handle arrow keys when no input/textarea is focused and no dialog is open
+            const activeElement = document.activeElement
+            const isInputFocused =
+                activeElement &&
+                (activeElement.tagName === "INPUT" ||
+                    activeElement.tagName === "TEXTAREA" ||
+                    activeElement.contentEditable === "true")
+
+            if (isInputFocused || addDialogOpen) {
+                return // Don't interfere with text input or dialog interaction
+            }
+
+            // Use the same logic as getCombatantsInTurnOrder
+            const orderedCombatants = getCombatantsInTurnOrder()
+
+            // Helper function to find next non-spacer card (DANGER cards are OK)
+            const findNextNonSpacerIndex = (startIndex, direction) => {
+                let nextIndex = startIndex
+                const length = orderedCombatants.length
+                let attempts = 0
+                const maxAttempts = length // Prevent infinite loops
+
+                do {
+                    if (direction === "left") {
+                        nextIndex = nextIndex === 0 ? length - 1 : nextIndex - 1
+                    } else {
+                        nextIndex = nextIndex === length - 1 ? 0 : nextIndex + 1
+                    }
+
+                    attempts++
+
+                    // If we've gone full circle or made too many attempts, break
+                    if (attempts >= maxAttempts) {
+                        // If all cards are spacers, return original index
+                        return startIndex
+                    }
+                } while (orderedCombatants[nextIndex]?.isSpacerCard) // Only skip spacers, allow DANGER cards
+
+                return nextIndex
+            }
+
+            if (event.key === "ArrowLeft") {
+                event.preventDefault()
+                if (orderedCombatants.length === 0) return
+                const prevIndex = findNextNonSpacerIndex(currentTurn, "left")
+                setCurrentTurn(prevIndex)
+            } else if (event.key === "ArrowRight") {
+                event.preventDefault()
+                if (orderedCombatants.length === 0) return
+                const nextIndex = findNextNonSpacerIndex(currentTurn, "right")
+                setCurrentTurn(nextIndex)
+            }
+        }
+
+        document.addEventListener("keydown", handleArrowNavigation)
+        return () => {
+            document.removeEventListener("keydown", handleArrowNavigation)
+        }
+    }, [currentTurn, addDialogOpen, combatants, getCombatantsInTurnOrder])
+
+    // Ensure currentTurn always points to a valid (non-spacer) card - DANGER cards are allowed
+    useEffect(() => {
+        const orderedCombatants = getCombatantsInTurnOrder()
+
+        if (orderedCombatants.length === 0) {
+            setCurrentTurn(0)
+            return
+        }
+
+        const currentCombatant = orderedCombatants[currentTurn]
+
+        // If current turn is pointing to a spacer card, find the next valid card (DANGER cards are OK)
+        if (currentCombatant?.isSpacerCard) {
+            let validIndex = 0
+
+            // Find the first non-spacer card (allow DANGER cards)
+            for (let i = 0; i < orderedCombatants.length; i++) {
+                if (!orderedCombatants[i].isSpacerCard) {
+                    validIndex = i
+                    break
+                }
+            }
+
+            setCurrentTurn(validIndex)
+        } else if (currentTurn >= orderedCombatants.length) {
+            // If current turn is out of bounds, reset to a valid index
+            let validIndex = Math.max(0, orderedCombatants.length - 1)
+
+            // Make sure it's not a spacer card (DANGER cards are OK)
+            while (
+                validIndex >= 0 &&
+                orderedCombatants[validIndex]?.isSpacerCard
+            ) {
+                validIndex--
+            }
+
+            setCurrentTurn(Math.max(0, validIndex))
+        }
+    }, [combatants, getCombatantsInTurnOrder, currentTurn])
 
     // Add new combatant
     const addCombatant = () => {
@@ -1018,68 +1241,124 @@ const InitiativeTrackerPage = () => {
 
     // Delete combatant
     const deleteCombatant = (id) => {
-        setCombatants((prev) => prev.filter((combatant) => combatant.id !== id))
-        // Reset turn if we're past the new length
-        const orderedCombatants = getCombatantsInTurnOrder()
-        if (currentTurn >= orderedCombatants.length) {
-            setCurrentTurn(0)
-        }
+        setCombatants((prev) => {
+            const newCombatants = prev.filter(
+                (combatant) => combatant.id !== id
+            )
+
+            // Use helper function to get ordered combatants with spacers
+            const newOrderedCombatants =
+                getCombatantsInTurnOrderFromArray(newCombatants)
+
+            // Reset turn if we're past the new length or if no combatants left
+            if (newOrderedCombatants.length === 0) {
+                setCurrentTurn(0)
+            } else if (currentTurn >= newOrderedCombatants.length) {
+                setCurrentTurn(Math.max(0, newOrderedCombatants.length - 1))
+            }
+
+            return newCombatants
+        })
     }
 
     // Move combatant backward in initiative order (within their type)
     const moveCombatantUp = (id) => {
+        // Don't allow moving spacer cards or danger cards
+        const combatant = combatants.find((c) => c.id === id)
+        if (!combatant) return // Spacer or danger cards aren't in the real combatants array
+
         const orderedList = getCombatantsInTurnOrder()
         const index = orderedList.findIndex((c) => c.id === id)
 
         if (index <= 0) return // Already at the beginning
 
-        const combatant = orderedList[index]
-        const prevCombatant = orderedList[index - 1]
+        // Skip spacer cards and danger cards when finding previous combatant
+        let prevIndex = index - 1
+        while (
+            prevIndex >= 0 &&
+            (orderedList[prevIndex].isSpacerCard ||
+                orderedList[prevIndex].isDangerCard)
+        ) {
+            prevIndex--
+        }
+
+        if (prevIndex < 0) return // No valid previous combatant
+        const realPrevCombatant = orderedList[prevIndex]
 
         // Only allow movement within the same type
-        if (combatant.type !== prevCombatant.type) return
+        if (combatant.type !== realPrevCombatant.type) return
 
-        // Swap positions
-        const newList = [...orderedList]
-        newList[index] = prevCombatant
-        newList[index - 1] = combatant
+        // Find positions in the real combatants array
+        const combatantRealIndex = combatants.findIndex((c) => c.id === id)
+        const prevCombatantRealIndex = combatants.findIndex(
+            (c) => c.id === realPrevCombatant.id
+        )
+
+        if (combatantRealIndex === -1 || prevCombatantRealIndex === -1) return
+
+        // Swap positions in the real combatants array
+        const newCombatants = [...combatants]
+        newCombatants[combatantRealIndex] = realPrevCombatant
+        newCombatants[prevCombatantRealIndex] = combatant
 
         // Update state
-        setCombatants(newList)
+        setCombatants(newCombatants)
 
         // Update current turn if needed
         if (currentTurn === index) {
-            setCurrentTurn(index - 1)
-        } else if (currentTurn === index - 1) {
+            setCurrentTurn(prevIndex)
+        } else if (currentTurn === prevIndex) {
             setCurrentTurn(index)
         }
     }
 
     // Move combatant forward in initiative order (within their type)
     const moveCombatantDown = (id) => {
+        // Don't allow moving spacer cards or danger cards
+        const combatant = combatants.find((c) => c.id === id)
+        if (!combatant) return // Spacer or danger cards aren't in the real combatants array
+
         const orderedList = getCombatantsInTurnOrder()
         const index = orderedList.findIndex((c) => c.id === id)
 
         if (index === -1 || index >= orderedList.length - 1) return // Already at the end
 
-        const combatant = orderedList[index]
-        const nextCombatant = orderedList[index + 1]
+        // Skip spacer cards and danger cards when finding next combatant
+        let nextIndex = index + 1
+        while (
+            nextIndex < orderedList.length &&
+            (orderedList[nextIndex].isSpacerCard ||
+                orderedList[nextIndex].isDangerCard)
+        ) {
+            nextIndex++
+        }
+
+        if (nextIndex >= orderedList.length) return // No valid next combatant
+        const realNextCombatant = orderedList[nextIndex]
 
         // Only allow movement within the same type
-        if (combatant.type !== nextCombatant.type) return
+        if (combatant.type !== realNextCombatant.type) return
 
-        // Swap positions
-        const newList = [...orderedList]
-        newList[index] = nextCombatant
-        newList[index + 1] = combatant
+        // Find positions in the real combatants array
+        const combatantRealIndex = combatants.findIndex((c) => c.id === id)
+        const nextCombatantRealIndex = combatants.findIndex(
+            (c) => c.id === realNextCombatant.id
+        )
+
+        if (combatantRealIndex === -1 || nextCombatantRealIndex === -1) return
+
+        // Swap positions in the real combatants array
+        const newCombatants = [...combatants]
+        newCombatants[combatantRealIndex] = realNextCombatant
+        newCombatants[nextCombatantRealIndex] = combatant
 
         // Update state
-        setCombatants(newList)
+        setCombatants(newCombatants)
 
         // Update current turn if needed
         if (currentTurn === index) {
-            setCurrentTurn(index + 1)
-        } else if (currentTurn === index + 1) {
+            setCurrentTurn(nextIndex)
+        } else if (currentTurn === nextIndex) {
             setCurrentTurn(index)
         }
     }
@@ -1566,8 +1845,8 @@ const InitiativeTrackerPage = () => {
                                     sx={{
                                         position: "relative",
                                         height: "100vh",
-                                        width: "100vw",
-                                        marginLeft: "-50vw",
+                                        width: "100vw", // Increased width to allow for more spread
+                                        marginLeft: "-50vw", // Adjusted to center the wider area
                                         left: "50%",
                                         border: "2px solid",
                                         borderColor: (theme) =>
@@ -1579,11 +1858,11 @@ const InitiativeTrackerPage = () => {
                                             theme.palette.mode === "dark"
                                                 ? "#1a1a1a"
                                                 : "#f9f9f9",
-                                        overflow: "hidden",
+                                        overflow: "visible", // Allow cards to extend beyond edges
                                         display: "flex",
                                         alignItems: "center",
                                         justifyContent: "center",
-                                        perspective: "1200px",
+                                        perspective: "2000px", // Increased perspective for better 3D effect
                                     }}
                                 >
                                     <SortableContext
@@ -1622,17 +1901,23 @@ const InitiativeTrackerPage = () => {
                                                         totalCombatants
                                                 }
 
-                                                // Calculate carousel positioning (returning to the circular carousel)
+                                                // Calculate carousel positioning with increased radius for better spacing
                                                 const angle =
                                                     (relativePosition /
                                                         totalCombatants) *
                                                     360
+                                                // Increased radius calculation for more spread-out layout
+                                                const baseRadius = Math.max(
+                                                    350,
+                                                    totalCombatants * 50
+                                                ) // Increased base radius and multiplier
+                                                const maxRadius = Math.min(
+                                                    600,
+                                                    totalCombatants * 120
+                                                ) // Allow much larger radius
                                                 const radius = Math.min(
-                                                    400,
-                                                    Math.max(
-                                                        250,
-                                                        totalCombatants * 50
-                                                    )
+                                                    maxRadius,
+                                                    baseRadius
                                                 )
                                                 const x =
                                                     Math.sin(
@@ -1643,24 +1928,24 @@ const InitiativeTrackerPage = () => {
                                                         (angle * Math.PI) / 180
                                                     ) * radius
 
-                                                // Scale and opacity based on position
+                                                // Scale and opacity based on position - adjusted for wider spacing
                                                 const scale = Math.max(
-                                                    0.6,
+                                                    0.5, // Increased minimum scale
                                                     1 -
                                                         Math.abs(
                                                             relativePosition
                                                         ) *
-                                                            0.1
+                                                            0.08 // Reduced scale reduction rate
                                                 )
                                                 const opacity = combatant.isDead
                                                     ? 0.3
                                                     : Math.max(
-                                                          0.4,
+                                                          0.5, // Increased minimum opacity
                                                           1 -
                                                               Math.abs(
                                                                   relativePosition
                                                               ) *
-                                                                  0.15
+                                                                  0.12 // Reduced opacity reduction rate
                                                       )
 
                                                 // Set z-index based on position
@@ -1679,11 +1964,11 @@ const InitiativeTrackerPage = () => {
                                                             transformStyle:
                                                                 "preserve-3d",
                                                             transition:
-                                                                "all 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
+                                                                "all 0.8s cubic-bezier(0.4, 0, 0.2, 1)", // Slightly longer transition for smoother movement
                                                             opacity: opacity,
                                                             zIndex: zIndex,
                                                             pointerEvents:
-                                                                opacity > 0.5 ||
+                                                                opacity > 0.4 || // Adjusted threshold for better interaction
                                                                 isActive
                                                                     ? "auto"
                                                                     : "none",
@@ -1717,6 +2002,9 @@ const InitiativeTrackerPage = () => {
                                                                 deleteCombatant
                                                             }
                                                             isActive={isActive}
+                                                            combatantCount={
+                                                                totalCombatants
+                                                            }
                                                             onMoveUp={() =>
                                                                 moveCombatantUp(
                                                                     combatant.id
@@ -1818,13 +2106,59 @@ const InitiativeTrackerPage = () => {
                                     {/* Navigation arrows */}
                                     <IconButton
                                         onClick={() => {
+                                            if (orderedCombatants.length === 0)
+                                                return
+
+                                            // Helper function to find next non-spacer card (DANGER cards are OK)
+                                            const findNextNonSpacerIndex = (
+                                                startIndex,
+                                                direction
+                                            ) => {
+                                                let nextIndex = startIndex
+                                                const length =
+                                                    orderedCombatants.length
+                                                let attempts = 0
+                                                const maxAttempts = length
+
+                                                do {
+                                                    if (direction === "left") {
+                                                        nextIndex =
+                                                            nextIndex === 0
+                                                                ? length - 1
+                                                                : nextIndex - 1
+                                                    } else {
+                                                        nextIndex =
+                                                            nextIndex ===
+                                                            length - 1
+                                                                ? 0
+                                                                : nextIndex + 1
+                                                    }
+
+                                                    attempts++
+
+                                                    if (
+                                                        attempts >= maxAttempts
+                                                    ) {
+                                                        return startIndex
+                                                    }
+                                                } while (
+                                                    orderedCombatants[nextIndex]
+                                                        ?.isSpacerCard
+                                                )
+
+                                                return nextIndex
+                                            }
+
                                             const prevIndex =
-                                                currentTurn === 0
-                                                    ? orderedCombatants.length -
-                                                      1
-                                                    : currentTurn - 1
+                                                findNextNonSpacerIndex(
+                                                    currentTurn,
+                                                    "left"
+                                                )
                                             setCurrentTurn(prevIndex)
                                         }}
+                                        disabled={
+                                            orderedCombatants.length === 0
+                                        }
                                         sx={{
                                             position: "absolute",
                                             left: 20,
@@ -1837,6 +2171,11 @@ const InitiativeTrackerPage = () => {
                                                 backgroundColor:
                                                     "rgba(0,0,0,0.7)",
                                             },
+                                            "&:disabled": {
+                                                backgroundColor:
+                                                    "rgba(0,0,0,0.2)",
+                                                color: "rgba(255,255,255,0.3)",
+                                            },
                                         }}
                                     >
                                         <ArrowBackIcon />
@@ -1844,13 +2183,59 @@ const InitiativeTrackerPage = () => {
 
                                     <IconButton
                                         onClick={() => {
+                                            if (orderedCombatants.length === 0)
+                                                return
+
+                                            // Helper function to find next non-spacer card (DANGER cards are OK)
+                                            const findNextNonSpacerIndex = (
+                                                startIndex,
+                                                direction
+                                            ) => {
+                                                let nextIndex = startIndex
+                                                const length =
+                                                    orderedCombatants.length
+                                                let attempts = 0
+                                                const maxAttempts = length
+
+                                                do {
+                                                    if (direction === "left") {
+                                                        nextIndex =
+                                                            nextIndex === 0
+                                                                ? length - 1
+                                                                : nextIndex - 1
+                                                    } else {
+                                                        nextIndex =
+                                                            nextIndex ===
+                                                            length - 1
+                                                                ? 0
+                                                                : nextIndex + 1
+                                                    }
+
+                                                    attempts++
+
+                                                    if (
+                                                        attempts >= maxAttempts
+                                                    ) {
+                                                        return startIndex
+                                                    }
+                                                } while (
+                                                    orderedCombatants[nextIndex]
+                                                        ?.isSpacerCard
+                                                )
+
+                                                return nextIndex
+                                            }
+
                                             const nextIndex =
-                                                currentTurn ===
-                                                orderedCombatants.length - 1
-                                                    ? 0
-                                                    : currentTurn + 1
+                                                findNextNonSpacerIndex(
+                                                    currentTurn,
+                                                    "right"
+                                                )
                                             setCurrentTurn(nextIndex)
                                         }}
+                                        disabled={
+                                            orderedCombatants.length === 0
+                                        }
                                         sx={{
                                             position: "absolute",
                                             right: 20,
@@ -1862,6 +2247,11 @@ const InitiativeTrackerPage = () => {
                                             "&:hover": {
                                                 backgroundColor:
                                                     "rgba(0,0,0,0.7)",
+                                            },
+                                            "&:disabled": {
+                                                backgroundColor:
+                                                    "rgba(0,0,0,0.2)",
+                                                color: "rgba(255,255,255,0.3)",
                                             },
                                         }}
                                     >
@@ -1894,7 +2284,6 @@ const InitiativeTrackerPage = () => {
                         </DialogTitle>
                         <DialogContent>
                             <TextField
-                                autoFocus
                                 margin='dense'
                                 label='Name'
                                 fullWidth
@@ -1912,6 +2301,14 @@ const InitiativeTrackerPage = () => {
                                     }
                                 }}
                                 sx={{ marginBottom: 2 }}
+                                inputRef={(input) => {
+                                    // Delay focus to avoid capturing the "+" keypress
+                                    if (input && addDialogOpen) {
+                                        setTimeout(() => {
+                                            input.focus()
+                                        }, 100)
+                                    }
+                                }}
                             />
                             <FormControl fullWidth>
                                 <InputLabel>Type</InputLabel>
