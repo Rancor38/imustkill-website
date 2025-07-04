@@ -214,7 +214,7 @@ const CombatantCard = ({
                         textAlign='center'
                         sx={{ mt: 2 }}
                     >
-                        Remind players they are in danger
+                        GM tells players which of them are in danger (if any).
                     </Typography>
                 </CardContent>
             </Card>
@@ -342,6 +342,10 @@ const CombatantCard = ({
                     height: 28,
                     borderRadius: "50%",
                     zIndex: 1200,
+                    // Ensure consistent positioning regardless of parent scaling
+                    transformOrigin: "top left",
+                    // Add transition to smooth any position changes
+                    transition: "all 0.8s cubic-bezier(0.4, 0, 0.2, 1)",
                 }}
             >
                 {isActive && !combatant.isSpacerCard ? (
@@ -356,9 +360,11 @@ const CombatantCard = ({
                             backgroundColor: "rgba(244, 67, 54, 0.9)",
                             color: "white",
                             border: "1px solid rgba(255, 255, 255, 0.3)",
+                            transition: "all 0.8s cubic-bezier(0.4, 0, 0.2, 1)", // Match carousel timing
                             "&:hover": {
                                 backgroundColor: "rgba(244, 67, 54, 1)",
                                 transform: "scale(1.1)",
+                                transition: "all 0.3s ease",
                             },
                         }}
                         title='Delete combatant'
@@ -390,6 +396,10 @@ const CombatantCard = ({
                         display: "flex",
                         flexDirection: "row",
                         gap: "4px",
+                        // Ensure consistent positioning regardless of parent scaling
+                        transformOrigin: "top right",
+                        // Add transition to smooth any position changes
+                        transition: "all 0.8s cubic-bezier(0.4, 0, 0.2, 1)",
                     }}
                 >
                     <IconButton
@@ -402,9 +412,11 @@ const CombatantCard = ({
                             padding: 0,
                             backgroundColor: "rgba(0,0,0,0.2)",
                             border: "1px solid rgba(255, 255, 255, 0.3)",
+                            transition: "all 0.8s cubic-bezier(0.4, 0, 0.2, 1)", // Match carousel timing
                             "&:hover": {
                                 backgroundColor: "rgba(0,0,0,0.4)",
                                 transform: "scale(1.1)",
+                                transition: "all 0.3s ease",
                             },
                         }}
                         title='Move backward in initiative order'
@@ -421,9 +433,11 @@ const CombatantCard = ({
                             padding: 0,
                             backgroundColor: "rgba(0,0,0,0.2)",
                             border: "1px solid rgba(255, 255, 255, 0.3)",
+                            transition: "all 0.8s cubic-bezier(0.4, 0, 0.2, 1)", // Match carousel timing
                             "&:hover": {
                                 backgroundColor: "rgba(0,0,0,0.4)",
                                 transform: "scale(1.1)",
+                                transition: "all 0.3s ease",
                             },
                         }}
                         title='Move forward in initiative order'
@@ -450,7 +464,7 @@ const CombatantCard = ({
                         display: "flex",
                         justifyContent: "center",
                         marginBottom: 2,
-                        marginTop: 1, // Reduced margin since no delete button
+                        marginTop: 0, // Reduced margin since no delete button
                         position: "relative", // For positioning the X overlay
                     }}
                 >
@@ -1004,7 +1018,7 @@ const InitiativeTrackerPage = () => {
                 type: "DANGER", // Special type to handle differently
                 statuses: [],
                 isDead: false,
-                notes: "Remind players they are in danger",
+                notes: "GM tells players which of them are in danger (if any).",
                 isDangerCard: true, // Flag to identify this special card
             }
             orderedList.push(dangerCard)
@@ -1067,7 +1081,7 @@ const InitiativeTrackerPage = () => {
                 type: "DANGER", // Special type to handle differently
                 statuses: [],
                 isDead: false,
-                notes: "Remind players they are in danger",
+                notes: "GM tells players which of them are in danger (if any).",
                 isDangerCard: true, // Flag to identify this special card
             }
             orderedList.push(dangerCard)
@@ -1937,16 +1951,6 @@ const InitiativeTrackerPage = () => {
                                                         ) *
                                                             0.08 // Reduced scale reduction rate
                                                 )
-                                                const opacity = combatant.isDead
-                                                    ? 0.3
-                                                    : Math.max(
-                                                          0.5, // Increased minimum opacity
-                                                          1 -
-                                                              Math.abs(
-                                                                  relativePosition
-                                                              ) *
-                                                                  0.12 // Reduced opacity reduction rate
-                                                      )
 
                                                 // Set z-index based on position
                                                 const zIndex = isActive
@@ -1965,10 +1969,8 @@ const InitiativeTrackerPage = () => {
                                                                 "preserve-3d",
                                                             transition:
                                                                 "all 0.8s cubic-bezier(0.4, 0, 0.2, 1)", // Slightly longer transition for smoother movement
-                                                            opacity: opacity,
                                                             zIndex: zIndex,
                                                             pointerEvents:
-                                                                opacity > 0.4 || // Adjusted threshold for better interaction
                                                                 isActive
                                                                     ? "auto"
                                                                     : "none",

@@ -16,7 +16,7 @@
 
 @keyframes activeCardFadeIn {
     from {
-        opacity: 0.7;
+        opacity: 1;
         transform: translateZ(0) scale(0.98);
     }
     to {
@@ -35,20 +35,8 @@
 /* Round button styling for delete and move buttons */
 .active-card .MuiIconButton-root {
     border-radius: 50% !important;
-    transition: all 0.5s ease !important;
-    opacity: 0;
-    animation: fadeIn 0.5s ease forwards !important;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: scale(0.8);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    opacity: 1;
 }
 
 /* Smooth transitions for all interactive elements */
@@ -71,20 +59,8 @@
 .active-card .MuiButton-root,
 .active-card .MuiToggleButton-root,
 .active-card .MuiCheckbox-root {
-    transition: all 0.5s ease !important;
-    opacity: 0;
-    animation: fadeInDelayed 0.5s ease 0.1s forwards !important;
-}
-
-@keyframes fadeInDelayed {
-    from {
-        opacity: 0;
-        transform: translateY(5px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    opacity: 1;
 }
 
 /* Specific styling for delete button */
@@ -92,26 +68,26 @@
     background-color: rgba(244, 67, 54, 0.9) !important;
     color: white !important;
     border: 1px solid rgba(255, 255, 255, 0.3) !important;
-    transition: all 0.5s ease !important;
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 .active-card .MuiIconButton-root[title*="Delete"]:hover {
     background-color: rgba(244, 67, 54, 1) !important;
     transform: scale(1.1) !important;
-    transition: all 0.2s ease !important;
+    transition: all 0.3s ease !important;
 }
 
 /* Specific styling for move buttons */
 .active-card .MuiIconButton-root[title*="Move"] {
     background-color: rgba(0, 0, 0, 0.2) !important;
     border: 1px solid rgba(255, 255, 255, 0.3) !important;
-    transition: all 0.5s ease !important;
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 .active-card .MuiIconButton-root[title*="Move"]:hover {
     background-color: rgba(0, 0, 0, 0.4) !important;
     transform: scale(1.1) !important;
-    transition: all 0.2s ease !important;
+    transition: all 0.3s ease !important;
 }
 
 /* Ensure all inputs in active cards are interactive */
@@ -339,8 +315,7 @@
 .active-card .MuiCard-root .MuiIconButton-root[title*="Delete"],
 .active-card .MuiIconButton-root[title*="Delete"],
 .active-card [title*="Delete combatant"] {
-    transition: all 0.5s ease !important;
-    animation: fadeIn 0.5s ease forwards !important;
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 /* Placeholder for delete button positioning - maintains consistent spacing */
@@ -356,7 +331,7 @@
 /* Smooth transition for delete button container */
 .active-card > Box[sx*="position: absolute; top: 8"],
 .active-card .MuiCard-root > Box[sx*="position: absolute; top: 8"] {
-    transition: all 0.5s ease !important;
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 /* Ensure invisible placeholder doesn't interfere with layout */
