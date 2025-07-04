@@ -924,6 +924,57 @@ const InitiativeTrackerPage = () => {
         }
     }, [])
 
+    // Scroll gravity effect for carousel
+    useEffect(() => {
+        if (!trackerRef.current) return
+
+        const carouselElement = trackerRef.current
+
+        const handleScroll = () => {
+            // Clear any existing timeouts
+            clearTimeout(scrollTimeoutRef.current)
+            clearTimeout(gravityTimeoutRef.current)
+
+            // Set a timeout to detect when scrolling has stopped
+            scrollTimeoutRef.current = setTimeout(() => {
+                // Apply gravity effect - check if carousel is roughly centered
+                const rect = carouselElement.getBoundingClientRect()
+                const viewportHeight = window.innerHeight
+                const carouselCenter = rect.top + rect.height / 1.9 // Adjusted to 1.9 for more precise centering
+                const viewportCenter = viewportHeight / 2
+
+                // Calculate distance from center
+                const distanceFromCenter = Math.abs(
+                    carouselCenter - viewportCenter
+                )
+                const threshold = viewportHeight * 0.15 // Increased to 25% of viewport height for stronger snap zone
+
+                // If carousel is close to center but not perfectly aligned, apply stronger "gravity"
+                if (distanceFromCenter < threshold && distanceFromCenter > 5) {
+                    // Reduced minimum distance from 10 to 5
+                    gravityTimeoutRef.current = setTimeout(() => {
+                        const targetScroll =
+                            window.pageYOffset +
+                            (carouselCenter - viewportCenter) * 0.85 // Stronger pull, 85% of the way
+
+                        window.scrollTo({
+                            top: targetScroll,
+                            behavior: "smooth",
+                        })
+                    }, 200) // Reduced delay from 300ms to 200ms for faster response
+                }
+            }, 100) // Reduced detection time from 150ms to 100ms for quicker response
+        }
+
+        window.addEventListener("scroll", handleScroll, { passive: true })
+
+        return () => {
+            window.removeEventListener("scroll", handleScroll)
+            clearTimeout(scrollTimeoutRef.current)
+            clearTimeout(gravityTimeoutRef.current)
+        }
+    }, [])
+
     // Add debounced resize handler to prevent ResizeObserver issues
     useEffect(() => {
         let resizeTimeout
@@ -961,6 +1012,10 @@ const InitiativeTrackerPage = () => {
     const [isDragOver, setIsDragOver] = useState(false)
     const fileInputRef = useRef(null)
     const trackerRef = useRef(null)
+
+    // Scroll gravity state for carousel
+    const scrollTimeoutRef = useRef(null)
+    const gravityTimeoutRef = useRef(null)
 
     // Completely disable drag sensors to prevent ResizeObserver issues
     const sensors = useSensors(
