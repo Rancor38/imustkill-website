@@ -785,7 +785,7 @@ const LiveGameView = () => {
             sx={{
                 display: "flex",
                 flexDirection: "column",
-                minHeight: "100vh",
+                minHeight: "101vh",
                 color: (theme) =>
                     theme.palette.mode === "dark" ? "#e0e0e0" : "#121212",
                 padding: { xs: "10px", sm: "20px", md: 3 },
@@ -865,7 +865,7 @@ const LiveGameView = () => {
                                     theme.palette.mode === "dark"
                                         ? "#1a1a1a"
                                         : "#f9f9f9",
-                                overflow: "visible",
+                                overflow: "hidden",
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
