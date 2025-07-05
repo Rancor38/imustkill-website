@@ -60,9 +60,9 @@ ALTER PUBLICATION supabase_realtime ADD TABLE public.initiative_sessions;
 
 ## Important Notes About the Schema
 
-- The column name is `combat_state` (not `data`) for storing the JSON data
-- We don't use a `last_updated` column as Supabase handles timestamps automatically
-- The schema is kept minimal to avoid naming conflicts
+-   The column name is `combat_state` (not `data`) for storing the JSON data
+-   We don't use a `last_updated` column as Supabase handles timestamps automatically
+-   The schema is kept minimal to avoid naming conflicts
 
 ## Implemented Features
 

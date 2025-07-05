@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect, useRef, useCallback } from "react"
 import { useParams } from "react-router-dom"
 import {
     Box,
@@ -10,12 +10,481 @@ import {
     Card,
     CardContent,
     Chip,
+    TextField,
+    Checkbox,
+    FormControlLabel,
+    IconButton,
 } from "@mui/material"
+import {
+    Delete as DeleteIcon,
+    ArrowBack as ArrowBackIcon,
+    ArrowForward as ArrowForwardIcon,
+} from "@mui/icons-material"
 import {
     subscribeToInitiativeSession,
     getInitiativeSession,
 } from "../utils/supabaseClient"
 import "../components/InitiativeTracker.css" // Import the same styles used in the tracker
+
+// Read-only version of the CombatantCard that looks identical but is non-interactive
+const ReadOnlyCombatantCard = ({ combatant, isActive, combatantCount = 1 }) => {
+    // Calculate dynamic card size (same as InitiativeTrackerPage)
+    const maxCarouselHeight = window.innerHeight * 0.9
+    let baseCardHeight
+    if (combatantCount === 1) {
+        baseCardHeight = maxCarouselHeight * 1
+    } else {
+        baseCardHeight = maxCarouselHeight * 0.65
+    }
+
+    const scaleFactor = 0.8
+    const dynamicCardHeight = baseCardHeight * scaleFactor
+    const dynamicCardWidth = dynamicCardHeight * 0.67
+
+    const cardHeightVh = (dynamicCardHeight / window.innerHeight) * 100
+    const cardWidthVh = (dynamicCardWidth / window.innerHeight) * 100
+
+    // Special case for Spacer card (invisible)
+    if (combatant.isSpacerCard) {
+        return (
+            <Card
+                sx={{
+                    width: {
+                        xs: `${cardWidthVh}vh`,
+                        sm: `${cardWidthVh}vh`,
+                    },
+                    height: {
+                        xs: `${cardHeightVh}vh`,
+                        sm: `${cardHeightVh}vh`,
+                    },
+                    margin: 1,
+                    backgroundColor: "transparent",
+                    border: "none",
+                    borderRadius: 2,
+                    position: "relative",
+                    transition: "all 0.3s ease-in-out",
+                    cursor: "default",
+                    boxShadow: "none",
+                    pointerEvents: "none",
+                    visibility: "hidden",
+                    contain: "layout style size",
+                    willChange: "auto",
+                    boxSizing: "border-box",
+                    overflow: "hidden",
+                    transform: "translateZ(0)",
+                    backfaceVisibility: "hidden",
+                }}
+            >
+                {/* Empty content - invisible spacer */}
+            </Card>
+        )
+    }
+
+    // Special case for DANGER card
+    if (combatant.isDangerCard) {
+        return (
+            <Card
+                sx={{
+                    width: {
+                        xs: `${cardWidthVh}vh`,
+                        sm: `${cardWidthVh}vh`,
+                    },
+                    height: {
+                        xs: `${cardHeightVh}vh`,
+                        sm: `${cardHeightVh}vh`,
+                    },
+                    margin: 1,
+                    backgroundColor: "rgba(244, 67, 54, 0.9)",
+                    border: "3px solid #ff0000",
+                    borderRadius: 2,
+                    position: "relative",
+                    transition: "all 0.3s ease-in-out",
+                    cursor: "default",
+                    boxShadow: isActive
+                        ? "0 8px 24px rgba(0,0,0,0.5)"
+                        : "0 2px 8px rgba(0,0,0,0.3)",
+                    pointerEvents: "none",
+                    contain: "layout style size",
+                    willChange: "background-color",
+                    boxSizing: "border-box",
+                    overflow: "hidden",
+                    transform: "translateZ(0)",
+                    backfaceVisibility: "hidden",
+                }}
+            >
+                <CardContent sx={{ padding: 2, color: "white" }}>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            marginY: 3,
+                        }}
+                    >
+                        <Typography variant='h4' fontWeight='bold'>
+                            DANGER!
+                        </Typography>
+                    </Box>
+
+                    <Typography
+                        variant='body1'
+                        textAlign='center'
+                        sx={{ mt: 2 }}
+                    >
+                        GM tells players which of them are in danger (if any).
+                    </Typography>
+                </CardContent>
+            </Card>
+        )
+    }
+
+    const getBorderColor = (type) => {
+        switch (type) {
+            case "Monster":
+                return "#f44336" // Red
+            case "Player Character":
+                return "#4caf50" // Green
+            case "NPC":
+                return "#ff9800" // Orange/Yellow
+            case "Environment":
+                return "#9c27b0" // Purple
+            case "DANGER":
+                return "#ff0000" // Bright Red for DANGER card
+            default:
+                return "#757575" // Gray
+        }
+    }
+
+    const getImageSource = (type) => {
+        switch (type) {
+            case "Monster":
+                return "/monster.png"
+            case "Player Character":
+                return "/player.png"
+            case "NPC":
+                return "/player.png"
+            case "Environment":
+                return "/environment.png"
+            case "DANGER":
+                return "/monster.png"
+            default:
+                return "/player.png"
+        }
+    }
+
+    return (
+        <Card
+            className={isActive ? "active-card" : undefined}
+            sx={{
+                width: { xs: `${cardWidthVh}vh`, sm: `${cardWidthVh}vh` },
+                height: { xs: `${cardHeightVh}vh`, sm: `${cardHeightVh}vh` },
+                margin: 1,
+                border: `3px solid ${getBorderColor(combatant.type)}`,
+                borderRadius: 2,
+                position: "relative",
+                transition:
+                    "background-color 0.3s ease-in-out, width 0.3s ease-in-out, height 0.3s ease-in-out",
+                cursor: "default",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                backgroundColor: (theme) =>
+                    theme.palette.mode === "dark" ? "#424242" : "#ffffff",
+                pointerEvents: "none", // Make the whole card non-interactive
+                contain: "layout style size",
+                willChange: "background-color",
+                boxSizing: "border-box",
+                overflow: "hidden",
+                transform: "translateZ(0)",
+                backfaceVisibility: "hidden",
+            }}
+        >
+            {/* Delete button - visible but non-interactive */}
+            <Box
+                sx={{
+                    position: "absolute",
+                    top: 8,
+                    left: 8,
+                    width: 28,
+                    height: 28,
+                    borderRadius: "50%",
+                    zIndex: 1200,
+                    transformOrigin: "top left",
+                    transition: "all 0.8s cubic-bezier(0.4, 0, 0.2, 1)",
+                }}
+            >
+                {isActive && !combatant.isSpacerCard ? (
+                    <IconButton
+                        disabled
+                        size='small'
+                        sx={{
+                            width: "100%",
+                            height: "100%",
+                            borderRadius: "50%",
+                            padding: 0,
+                            backgroundColor: "rgba(244, 67, 54, 0.4)", // Dimmed to show it's disabled
+                            color: "white",
+                            border: "1px solid rgba(255, 255, 255, 0.3)",
+                            transition: "all 0.8s cubic-bezier(0.4, 0, 0.2, 1)",
+                            cursor: "not-allowed",
+                        }}
+                        title='Delete combatant (disabled in view-only mode)'
+                    >
+                        <DeleteIcon sx={{ fontSize: "0.8rem" }} />
+                    </IconButton>
+                ) : (
+                    <Box
+                        sx={{
+                            width: "100%",
+                            height: "100%",
+                            borderRadius: "50%",
+                            backgroundColor: "transparent",
+                            pointerEvents: "none",
+                            opacity: 0,
+                        }}
+                    />
+                )}
+            </Box>
+
+            {/* Move back/forward buttons - visible but non-interactive */}
+            {!combatant.isSpacerCard && (
+                <Box
+                    sx={{
+                        position: "absolute",
+                        top: 8,
+                        right: 8,
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: "4px",
+                        transformOrigin: "top right",
+                        transition: "all 0.8s cubic-bezier(0.4, 0, 0.2, 1)",
+                    }}
+                >
+                    <IconButton
+                        disabled
+                        size='small'
+                        sx={{
+                            width: 28,
+                            height: 28,
+                            borderRadius: "50%",
+                            padding: 0,
+                            backgroundColor: "rgba(0,0,0,0.1)", // Dimmed
+                            border: "1px solid rgba(255, 255, 255, 0.3)",
+                            transition: "all 0.8s cubic-bezier(0.4, 0, 0.2, 1)",
+                            cursor: "not-allowed",
+                        }}
+                        title='Move backward in initiative order (disabled in view-only mode)'
+                    >
+                        <ArrowBackIcon sx={{ fontSize: "0.8rem" }} />
+                    </IconButton>
+                    <IconButton
+                        disabled
+                        size='small'
+                        sx={{
+                            width: 28,
+                            height: 28,
+                            borderRadius: "50%",
+                            padding: 0,
+                            backgroundColor: "rgba(0,0,0,0.1)", // Dimmed
+                            border: "1px solid rgba(255, 255, 255, 0.3)",
+                            transition: "all 0.8s cubic-bezier(0.4, 0, 0.2, 1)",
+                            cursor: "not-allowed",
+                        }}
+                        title='Move forward in initiative order (disabled in view-only mode)'
+                    >
+                        <ArrowForwardIcon sx={{ fontSize: "0.8rem" }} />
+                    </IconButton>
+                </Box>
+            )}
+
+            <CardContent
+                sx={{
+                    padding: 2,
+                    position: "relative",
+                    boxSizing: "border-box",
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                }}
+            >
+                {/* Main character image */}
+                <Box
+                    sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        marginBottom: 2,
+                        marginTop: 0,
+                        position: "relative",
+                    }}
+                >
+                    <img
+                        src={getImageSource(combatant.type)}
+                        alt={combatant.type}
+                        style={{
+                            width: 48,
+                            height: 48,
+                            objectFit: "contain",
+                            transition: "filter 0.3s ease",
+                        }}
+                    />
+                    {/* Red X overlay when dead */}
+                    {combatant.isDead && (
+                        <Box
+                            sx={{
+                                position: "absolute",
+                                top: "50%",
+                                left: "50%",
+                                transform: "translate(-50%, -50%)",
+                                fontSize: "36px",
+                                color: "#ff0000",
+                                textShadow: "2px 2px 4px rgba(0,0,0,0.8)",
+                                pointerEvents: "none",
+                                zIndex: 10,
+                            }}
+                        >
+                            ❌
+                        </Box>
+                    )}
+                </Box>
+
+                {/* Name input - visible but disabled */}
+                <TextField
+                    value={combatant.name}
+                    placeholder='Combatant Name'
+                    variant='outlined'
+                    size='small'
+                    disabled
+                    sx={{
+                        width: "100%",
+                        marginBottom: 1,
+                        "& .MuiOutlinedInput-root": {
+                            fontSize: "0.9rem",
+                            cursor: "not-allowed",
+                        },
+                        "& .Mui-disabled": {
+                            color: (theme) => theme.palette.text.primary,
+                            WebkitTextFillColor: (theme) =>
+                                theme.palette.text.primary,
+                        },
+                    }}
+                />
+
+                {/* Type chip */}
+                <Box
+                    sx={{
+                        marginBottom: 1,
+                    }}
+                >
+                    <Chip
+                        label={combatant.type}
+                        size='small'
+                        sx={{
+                            backgroundColor: getBorderColor(combatant.type),
+                            color: "white",
+                            fontSize: "0.75rem",
+                            width: "100%",
+                        }}
+                    />
+                </Box>
+
+                {/* Dead checkbox - visible but disabled */}
+                {combatant.type !== "Environment" && (
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={combatant.isDead}
+                                disabled
+                                size='small'
+                                sx={{ cursor: "not-allowed" }}
+                            />
+                        }
+                        label='Dead'
+                        sx={{
+                            width: "100%",
+                            marginBottom: 1,
+                            "& .MuiFormControlLabel-label": {
+                                fontSize: "0.8rem",
+                                color: (theme) => theme.palette.text.primary,
+                            },
+                            cursor: "not-allowed",
+                        }}
+                    />
+                )}
+
+                {/* Status checkboxes - visible but disabled */}
+                {combatant.type !== "Environment" && (
+                    <Box
+                        sx={{
+                            display: "grid",
+                            gridTemplateColumns: "1fr 1fr",
+                            gap: 0.25,
+                            marginBottom: 1,
+                        }}
+                    >
+                        {[
+                            "Frightened",
+                            "Unconscious",
+                            "Diseased",
+                            "Poisoned",
+                        ].map((status) => (
+                            <FormControlLabel
+                                key={status}
+                                control={
+                                    <Checkbox
+                                        checked={
+                                            combatant.statuses?.includes(
+                                                status
+                                            ) || false
+                                        }
+                                        disabled
+                                        size='small'
+                                        sx={{
+                                            cursor: "not-allowed",
+                                            padding: "2px",
+                                        }}
+                                    />
+                                }
+                                label={status}
+                                sx={{
+                                    margin: 0,
+                                    cursor: "not-allowed",
+                                    "& .MuiFormControlLabel-label": {
+                                        fontSize: "0.65rem",
+                                        color: (theme) =>
+                                            theme.palette.text.primary,
+                                    },
+                                }}
+                            />
+                        ))}
+                    </Box>
+                )}
+
+                {/* Notes field - visible but disabled */}
+                <TextField
+                    value={combatant.notes || ""}
+                    placeholder='Notes...'
+                    variant='outlined'
+                    size='small'
+                    multiline
+                    rows={2}
+                    disabled
+                    sx={{
+                        width: "100%",
+                        marginTop: 1,
+                        cursor: "not-allowed",
+                        "& .MuiOutlinedInput-root": {
+                            cursor: "not-allowed",
+                            fontSize: "0.8rem",
+                        },
+                        "& .Mui-disabled": {
+                            color: (theme) => theme.palette.text.primary,
+                            WebkitTextFillColor: (theme) =>
+                                theme.palette.text.primary,
+                        },
+                    }}
+                />
+            </CardContent>
+        </Card>
+    )
+}
 
 // This component is the view-only version of the Initiative Tracker
 // It displays the current state of a shared initiative tracker session
@@ -90,6 +559,67 @@ const LiveGameView = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sessionId])
 
+    // Function to get combatants in turn order with DANGER card (same logic as InitiativeTrackerPage)
+    const getCombatantsInTurnOrder = useCallback(() => {
+        if (!sessionData || !sessionData.combatants) return []
+
+        const combatants = sessionData.combatants
+        const monsters = combatants.filter((c) => c.type === "Monster")
+        const npcs = combatants.filter((c) => c.type === "NPC")
+        const environment = combatants.filter((c) => c.type === "Environment")
+        const players = combatants.filter((c) => c.type === "Player Character")
+
+        // Add a DANGER card before player characters if there are any players
+        const orderedList = [...monsters, ...npcs, ...environment]
+
+        if (players.length > 0) {
+            // Add a special DANGER card that will be rendered differently
+            const dangerCard = {
+                id: "danger-card", // Unique ID that won't conflict
+                name: "DANGER!",
+                type: "DANGER", // Special type to handle differently
+                statuses: [],
+                isDead: false,
+                notes: "GM tells players which of them are in danger (if any).",
+                isDangerCard: true, // Flag to identify this special card
+            }
+            orderedList.push(dangerCard)
+        }
+
+        const finalList = [...orderedList, ...players]
+
+        // Add spacer cards if we have 2 or 3 total cards to maintain proper spacing
+        if (finalList.length >= 2 && finalList.length <= 3) {
+            const spacersNeeded = 4 - finalList.length
+
+            for (let i = 0; i < spacersNeeded; i++) {
+                const spacerCard = {
+                    id: `spacer-card-${i}`, // Unique ID for each spacer
+                    name: "Spacer",
+                    type: "Spacer",
+                    statuses: [],
+                    isDead: false,
+                    notes: "",
+                    isSpacerCard: true, // Flag to identify spacer cards
+                }
+
+                if (finalList.length === 2) {
+                    // For 2 cards, add spacers: Card1, Spacer1, Spacer2, Card2
+                    if (i === 0) {
+                        finalList.splice(1, 0, spacerCard) // Insert after first card
+                    } else {
+                        finalList.splice(2, 0, spacerCard) // Insert after first spacer
+                    }
+                } else if (finalList.length === 3) {
+                    // For 3 cards, add 1 spacer: Card1, Card2, Spacer1, Card3
+                    finalList.splice(2, 0, spacerCard) // Insert before last card
+                }
+            }
+        }
+
+        return finalList
+    }, [sessionData])
+
     // Effect to center the carousel and handle scrolling
     useEffect(() => {
         if (!sessionData || !trackerRef.current) return
@@ -100,7 +630,10 @@ const LiveGameView = () => {
                 const rect = trackerRef.current.getBoundingClientRect()
                 const viewportHeight = window.innerHeight
                 const scrollY =
-                    rect.top + rect.height / 2 - viewportHeight / 2 + window.scrollY
+                    rect.top +
+                    rect.height / 2 -
+                    viewportHeight / 2 +
+                    window.scrollY
                 window.scrollTo({ top: scrollY, behavior: "smooth" })
             }
         }
@@ -150,6 +683,9 @@ const LiveGameView = () => {
             </Container>
         )
     }
+
+    // Get the combatants in turn order (including DANGER card and spacers)
+    const orderedCombatants = getCombatantsInTurnOrder()
 
     // Render the view-only initiative tracker
 
@@ -249,7 +785,7 @@ const LiveGameView = () => {
             </Box>
 
             {/* Combat tracker carousel */}
-            {sessionData.combatants && sessionData.combatants.length > 0 && (
+            {orderedCombatants && orderedCombatants.length > 0 && (
                 <Box sx={{ padding: 2 }}>
                     <Paper sx={{ padding: 2, marginBottom: 2 }}>
                         <Typography variant='h6' gutterBottom>
@@ -264,7 +800,7 @@ const LiveGameView = () => {
                                 justifyContent: "center",
                             }}
                         >
-                            {/* Turn order display */}
+                            {/* Turn order display - only show real combatants, not spacers or DANGER */}
                             {sessionData.combatants.map((combatant, index) => (
                                 <Box
                                     key={combatant.id}
@@ -293,10 +829,10 @@ const LiveGameView = () => {
                         </Box>
                     </Paper>
 
-                    {/* Carousel view similar to InitiativeTrackerPage */}
+                    {/* Carousel view matching InitiativeTrackerPage exactly */}
                     <Box sx={{ marginBottom: 3 }} ref={trackerRef}>
                         <Typography variant='h6' gutterBottom>
-                            Initiative Tracker (View Only)
+                            Initiative (View Only)
                         </Typography>
                         <Box
                             sx={{
@@ -322,33 +858,53 @@ const LiveGameView = () => {
                                 perspective: "2000px",
                             }}
                         >
-                            {sessionData.combatants.map((combatant, index) => {
-                                const totalCombatants = sessionData.combatants.length;
-                                const isActive = index === currentTurn;
+                            {orderedCombatants.map((combatant, index) => {
+                                const totalCombatants = orderedCombatants.length
+                                const isActive = index === currentTurn
 
-                                // Calculate relative position - correct the offset here
-                                let relativePosition = index - currentTurn;
+                                // Calculate relative position (same as InitiativeTrackerPage)
+                                let relativePosition = index - currentTurn
 
                                 // Handle wrap-around for circular navigation
-                                if (relativePosition < -Math.floor(totalCombatants / 2)) {
-                                    relativePosition += totalCombatants;
-                                } else if (relativePosition > Math.floor(totalCombatants / 2)) {
-                                    relativePosition -= totalCombatants;
+                                if (
+                                    relativePosition <
+                                    -Math.floor(totalCombatants / 2)
+                                ) {
+                                    relativePosition += totalCombatants
+                                } else if (
+                                    relativePosition >
+                                    Math.floor(totalCombatants / 2)
+                                ) {
+                                    relativePosition -= totalCombatants
                                 }
 
-                                // Calculate carousel positioning
-                                const angle = (relativePosition / totalCombatants) * 360;
-                                const baseRadius = Math.max(350, totalCombatants * 50);
-                                const maxRadius = Math.min(600, totalCombatants * 120);
-                                const radius = Math.min(maxRadius, baseRadius);
-                                const x = Math.sin((angle * Math.PI) / 180) * radius;
-                                const z = Math.cos((angle * Math.PI) / 180) * radius;
+                                // Calculate carousel positioning (same as InitiativeTrackerPage)
+                                const angle =
+                                    (relativePosition / totalCombatants) * 360
+                                const baseRadius = Math.max(
+                                    350,
+                                    totalCombatants * 50
+                                )
+                                const maxRadius = Math.min(
+                                    600,
+                                    totalCombatants * 120
+                                )
+                                const radius = Math.min(maxRadius, baseRadius)
+                                const x =
+                                    Math.sin((angle * Math.PI) / 180) * radius
+                                const z =
+                                    Math.cos((angle * Math.PI) / 180) * radius
 
-                                // Scale and opacity based on position
-                                const scale = Math.max(0.5, 1 - Math.abs(relativePosition) * 0.08);
+                                // Scale and opacity based on position (same as InitiativeTrackerPage)
+                                const scale = Math.max(
+                                    0.5,
+                                    1 - Math.abs(relativePosition) * 0.08
+                                )
 
-                                // Set z-index based on position
-                                const zIndex = isActive ? 100 : 50 - Math.abs(relativePosition);
+                                // Set z-index based on position (same as InitiativeTrackerPage)
+                                const zIndex = isActive
+                                    ? 100
+                                    : 50 - Math.abs(relativePosition)
 
                                 return (
                                     <Box
@@ -357,115 +913,22 @@ const LiveGameView = () => {
                                             position: "absolute",
                                             transform: `translateX(${x}px) translateZ(${z}px) scale(${scale})`,
                                             transformStyle: "preserve-3d",
-                                            transition: "all 0.8s cubic-bezier(0.4, 0, 0.2, 1)",
+                                            transition:
+                                                "all 0.8s cubic-bezier(0.4, 0, 0.2, 1)",
                                             zIndex: zIndex,
+                                            pointerEvents: "none", // Disable all interactions
                                         }}
                                     >
-                                        {/* Combatant Card */}
-                                        <Card
-                                            className={isActive ? "active-card" : ""}
-                                            sx={{
-                                                width: {
-                                                    xs: "250px",
-                                                    sm: "300px",
-                                                },
-                                                minHeight: {
-                                                    xs: "300px",
-                                                    sm: "400px",
-                                                },
-                                                borderRadius: 2,
-                                                boxShadow: isActive ? 8 : 3,
-                                                backgroundColor: (theme) =>
-                                                    isActive
-                                                        ? theme.palette.mode === "dark"
-                                                            ? "#2e7d32"
-                                                            : "#81c784"
-                                                        : theme.palette.background.paper,
-                                                transform: isActive ? "scale(1.05)" : "scale(1)",
-                                                transition: "transform 0.3s ease",
-                                                opacity: combatant.isDead ? 0.6 : 1,
-                                                position: "relative",
-                                            }}
-                                        >
-                                            <CardContent>
-                                                <Box sx={{ textAlign: "center", mb: 2 }}>
-                                                    <Typography
-                                                        variant="h5"
-                                                        component="div"
-                                                        sx={{
-                                                            fontWeight: "bold",
-                                                            textDecoration: combatant.isDead
-                                                                ? "line-through"
-                                                                : "none",
-                                                        }}
-                                                    >
-                                                        {combatant.name}
-                                                    </Typography>
-                                                    <Typography color="textSecondary">
-                                                        {combatant.type}
-                                                    </Typography>
-                                                </Box>
-
-                                                {/* Status effects */}
-                                                {combatant.statuses && combatant.statuses.length > 0 && (
-                                                    <Box sx={{ mb: 2 }}>
-                                                        <Typography variant="body2" sx={{ fontWeight: "bold", mb: 1 }}>
-                                                            Status Effects:
-                                                        </Typography>
-                                                        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                                                            {combatant.statuses.map((status, i) => (
-                                                                <Chip
-                                                                    key={i}
-                                                                    label={status}
-                                                                    size="small"
-                                                                    color="primary"
-                                                                    sx={{ margin: 0.5 }}
-                                                                />
-                                                            ))}
-                                                        </Box>
-                                                    </Box>
-                                                )}
-
-                                                {/* Notes */}
-                                                {combatant.notes && (
-                                                    <Box sx={{ mt: 2 }}>
-                                                        <Typography variant="body2" sx={{ fontWeight: "bold" }}>
-                                                            Notes:
-                                                        </Typography>
-                                                        <Typography variant="body2" sx={{ fontStyle: "italic" }}>
-                                                            {combatant.notes}
-                                                        </Typography>
-                                                    </Box>
-                                                )}
-
-                                                {/* Dead indicator */}
-                                                {combatant.isDead && (
-                                                    <Box
-                                                        sx={{
-                                                            position: "absolute",
-                                                            top: 15,
-                                                            right: 15,
-                                                            color: "error.main",
-                                                            fontWeight: "bold",
-                                                            border: "2px solid",
-                                                            borderColor: "error.main",
-                                                            borderRadius: 1,
-                                                            padding: "2px 8px",
-                                                            transform: "rotate(15deg)",
-                                                        }}
-                                                    >
-                                                        <Typography variant="body2" sx={{ fontWeight: "bold" }}>
-                                                            DEAD
-                                                        </Typography>
-                                                    </Box>
-                                                )}
-                                            </CardContent>
-                                        </Card>
+                                        <ReadOnlyCombatantCard
+                                            combatant={combatant}
+                                            isActive={isActive}
+                                            combatantCount={totalCombatants}
+                                        />
                                     </Box>
-                                );
+                                )
                             })}
 
-                            {/* Navigation dots */}
+                            {/* Navigation dots (same as InitiativeTrackerPage but non-interactive) */}
                             <Box
                                 sx={{
                                     position: "absolute",
@@ -474,19 +937,38 @@ const LiveGameView = () => {
                                     transform: "translateX(-50%)",
                                     display: "flex",
                                     gap: 1,
+                                    zIndex: 200,
                                 }}
                             >
-                                {sessionData.combatants.map((_, index) => (
+                                {orderedCombatants.map((combatant, index) => (
                                     <Box
-                                        key={index}
+                                        key={`dot-${combatant.id}`}
                                         sx={{
-                                            width: 10,
-                                            height: 10,
+                                            width: 12,
+                                            height: 12,
                                             borderRadius: "50%",
                                             backgroundColor:
-                                                currentTurn === index
+                                                index === currentTurn
                                                     ? "#4caf50"
-                                                    : "#bdbdbd",
+                                                    : "rgba(255,255,255,0.3)",
+                                            cursor: "default", // Not clickable in view-only mode
+                                            transition: "all 0.3s ease",
+                                            border: `2px solid ${(() => {
+                                                switch (combatant.type) {
+                                                    case "Monster":
+                                                        return "#f44336"
+                                                    case "Player Character":
+                                                        return "#4caf50"
+                                                    case "NPC":
+                                                        return "#ff9800"
+                                                    case "Environment":
+                                                        return "#9c27b0"
+                                                    case "DANGER":
+                                                        return "#ff0000"
+                                                    default:
+                                                        return "#757575"
+                                                }
+                                            })()}`,
                                         }}
                                     />
                                 ))}
@@ -496,12 +978,18 @@ const LiveGameView = () => {
 
                     {/* Current turn summary */}
                     <Paper sx={{ padding: 3, marginTop: 2 }}>
-                        <Typography variant="h6" align="center" gutterBottom>
+                        <Typography variant='h6' align='center' gutterBottom>
                             Current Turn Summary
                         </Typography>
-                        <Typography variant="body1">
-                            <strong>{sessionData.combatants[currentTurn]?.name || "Unknown"}</strong> is currently active
-                            {sessionData.combatants[currentTurn]?.isDead ? " (DEAD)" : ""}
+                        <Typography variant='body1'>
+                            <strong>
+                                {orderedCombatants[currentTurn]?.name ||
+                                    "Unknown"}
+                            </strong>{" "}
+                            is currently active
+                            {orderedCombatants[currentTurn]?.isDead
+                                ? " (DEAD)"
+                                : ""}
                         </Typography>
                     </Paper>
                 </Box>
