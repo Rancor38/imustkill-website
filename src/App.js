@@ -20,6 +20,7 @@ import DigitalTools from "./pages/DigitalTools.js"
 import GMTools from "./pages/GMTools.js"
 import DigitalCharacterSheet from "./pages/DigitalCharacterSheet.js"
 import InitiativeTracker from "./pages/InitiativeTrackerPage.js"
+import CampaignManager from "./pages/CampaignManager.js"
 import LiveGameView from "./pages/LiveGameView.js"
 import Sparks from "./components/Sparks/Sparks.jsx"
 import BackButton from "./components/BackButton/BackButton.js"
@@ -80,6 +81,10 @@ function App() {
                     <Route
                         path='initiative-tracker'
                         element={<InitiativeTracker />}
+                    />
+                    <Route
+                        path='campaign-manager'
+                        element={<CampaignManager />}
                     />
                     <Route
                         path='live-game/:sessionId'

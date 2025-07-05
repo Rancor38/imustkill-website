@@ -10,7 +10,7 @@ import {
     CardContent,
     CardActions,
 } from "@mui/material"
-import { MoreHoriz, MenuBook, Pets, Casino } from "@mui/icons-material"
+import { MoreHoriz, MenuBook, Pets, Casino, Groups } from "@mui/icons-material"
 import HomeButton from "../components/HomeButton.js"
 
 const GMTools = () => {
@@ -71,6 +71,14 @@ const GMTools = () => {
                 "Track combat initiative order with drag-and-drop support for monsters, NPCs, players, and environmental hazards.",
             icon: <Casino sx={{ fontSize: 40 }} />,
             path: "/initiative-tracker",
+            available: true,
+        },
+        {
+            title: "Campaign Manager",
+            description:
+                "Manage multiple character sheets in one place with GM notes, party file saving, and combat preparation.",
+            icon: <Groups sx={{ fontSize: 40 }} />,
+            path: "/campaign-manager",
             available: true,
         },
         {

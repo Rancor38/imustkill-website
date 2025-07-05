@@ -1478,6 +1478,65 @@ const InitiativeTrackerPage = () => {
         setAlertOpen(true)
     }
 
+    // Load combat data from sessionStorage if opened from Campaign Manager
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search)
+        const combatParam = urlParams.get("combat")
+
+        if (combatParam && combatants.length === 0) {
+            // Only load if no current combatants
+            try {
+                const combatDataString = sessionStorage.getItem(combatParam)
+                if (combatDataString) {
+                    const combatData = JSON.parse(combatDataString)
+
+                    // Load the character data into combatants
+                    if (
+                        combatData.characters &&
+                        Array.isArray(combatData.characters)
+                    ) {
+                        const loadedCombatants = combatData.characters.map(
+                            (character, index) => ({
+                                id: `character-${index}-${Date.now()}`,
+                                name:
+                                    character.name || `Character ${index + 1}`,
+                                type: "Player Character",
+                                statuses: [],
+                                isDead: false,
+                                notes: character.gmNotes || "",
+                                // Store additional character data for reference
+                                characterData: character,
+                            })
+                        )
+
+                        setCombatants(loadedCombatants)
+                        setCurrentTurn(0)
+                        showAlert(
+                            `Loaded ${loadedCombatants.length} characters from Campaign Manager!`,
+                            "success"
+                        )
+
+                        // Clean up the sessionStorage data after loading
+                        sessionStorage.removeItem(combatParam)
+                    } else {
+                        showAlert(
+                            "No character data found in combat session",
+                            "warning"
+                        )
+                    }
+                } else {
+                    showAlert("Combat session data not found", "error")
+                }
+            } catch (error) {
+                console.error(
+                    "Error loading combat data from sessionStorage:",
+                    error
+                )
+                showAlert("Error loading combat data", "error")
+            }
+        }
+    }, [combatants.length]) // Depend on combatants.length to avoid infinite loops
+
     // Simple CRC32 implementation for PNG chunks
     const calculateCRC32 = (data) => {
         const crcTable = []
@@ -2012,6 +2071,35 @@ const InitiativeTrackerPage = () => {
         }, 10 * 60 * 1000) // 10 minutes
 
         return () => clearInterval(cleanupInterval)
+    }, [])
+
+    // Handle URL parameter for loading combat data from sessionStorage when opened from Campaign Manager
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search)
+        const sessionId = urlParams.get("session_id")
+
+        if (sessionId) {
+            // Try to load from sessionStorage first
+            const storedData = sessionStorage.getItem(
+                `combat_data_${sessionId}`
+            )
+            if (storedData) {
+                try {
+                    const combatData = JSON.parse(storedData)
+                    setCombatants(combatData.combatants || [])
+                    setCurrentTurn(combatData.currentTurn || 0)
+                    showAlert("Combat loaded from Campaign Manager!")
+                } catch (error) {
+                    console.error(
+                        "Error parsing combat data from sessionStorage:",
+                        error
+                    )
+                }
+            } else {
+                // If not found in sessionStorage, attempt to load from Supabase
+                // (This part is now handled in the Liveshare functionality)
+            }
+        }
     }, [])
 
     return (
