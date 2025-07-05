@@ -497,7 +497,6 @@ const LiveGameView = () => {
     const [sessionData, setSessionData] = useState(null)
     const [subscription, setSubscription] = useState(null)
     const [currentTurn, setCurrentTurn] = useState(0)
-    const [isUpdating, setIsUpdating] = useState(false) // For showing update animation
     const trackerRef = useRef(null) // Reference for the carousel element
 
     // Scroll gravity state for carousel
@@ -542,13 +541,8 @@ const LiveGameView = () => {
                 const subscription = subscribeToInitiativeSession(
                     sessionId,
                     (updatedData) => {
-                        // Show brief update indicator
-                        setIsUpdating(true)
                         setSessionData(updatedData)
                         setCurrentTurn(updatedData.currentTurn || 0)
-
-                        // After a short delay, hide update indicator
-                        setTimeout(() => setIsUpdating(false), 600)
                     }
                 )
 
@@ -799,38 +793,6 @@ const LiveGameView = () => {
                 position: "relative",
             }}
         >
-            {/* Update indicator */}
-            {isUpdating && (
-                <Box
-                    sx={{
-                        position: "fixed",
-                        top: 16,
-                        right: 16,
-                        padding: "8px 16px",
-                        backgroundColor: "primary.main",
-                        color: "white",
-                        borderRadius: 2,
-                        zIndex: 1000,
-                        boxShadow: 3,
-                        animation: "fadeInOut 0.6s ease",
-                        "@keyframes fadeInOut": {
-                            "0%": { opacity: 0 },
-                            "20%": { opacity: 1 },
-                            "80%": { opacity: 1 },
-                            "100%": { opacity: 0 },
-                        },
-                    }}
-                >
-                    <Typography
-                        variant='body2'
-                        sx={{ display: "flex", alignItems: "center", gap: 1 }}
-                    >
-                        <CircularProgress size={16} color='inherit' />
-                        Updating...
-                    </Typography>
-                </Box>
-            )}
-
             <Box
                 sx={{
                     textAlign: "center",

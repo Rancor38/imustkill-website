@@ -19,8 +19,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 import useRulesEngine from "../../hooks/useRulesEngine"
 
 const RuleCategorizer = () => {
-    const { rulesData, getSourceMap, loading, error } =
-        useRulesEngine()
+    const { rulesData, getSourceMap, loading, error } = useRulesEngine()
     const [analysisResults, setAnalysisResults] = useState(null)
 
     // Analysis function to scan all content for potential @RuleName usage
