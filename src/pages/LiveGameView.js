@@ -599,7 +599,7 @@ const LiveGameView = () => {
                 // Apply gravity effect - check if carousel is roughly centered
                 const rect = carouselElement.getBoundingClientRect()
                 const viewportHeight = window.innerHeight
-                const carouselCenter = rect.top + rect.height / 1.9 // Adjusted to 1.9 for more precise centering
+                const carouselCenter = rect.top + rect.height / 2 // Adjusted to 2 for more precise centering
                 const viewportCenter = viewportHeight / 2
 
                 // Calculate distance from center
@@ -785,7 +785,7 @@ const LiveGameView = () => {
             sx={{
                 display: "flex",
                 flexDirection: "column",
-                minHeight: "101vh",
+                minHeight: "100vh",
                 color: (theme) =>
                     theme.palette.mode === "dark" ? "#e0e0e0" : "#121212",
                 padding: { xs: "10px", sm: "20px", md: 3 },
