@@ -113,6 +113,7 @@ export const updateInitiativeSession = async (sessionId, data) => {
  */
 export const getInitiativeSession = async (sessionId) => {
     try {
+        console.log(`Getting session ${sessionId}...`)
         const { data, error } = await supabase
             .from("initiative_sessions")
             .select("*")
@@ -120,8 +121,37 @@ export const getInitiativeSession = async (sessionId) => {
             .single()
 
         if (error) throw error
+
+        console.log("Raw session data:", data)
+
+        // Check if the session has expired (only if expires_at is set)
+        if (data && data.expires_at) {
+            const expirationTime = new Date(data.expires_at)
+            const currentTime = new Date()
+
+            console.log("Expiration time:", expirationTime)
+            console.log("Current time:", currentTime)
+            console.log("Is expired?", currentTime > expirationTime)
+
+            if (currentTime > expirationTime) {
+                console.log(`Session ${sessionId} has expired, cleaning up...`)
+                // Clean up the expired session
+                await deactivateInitiativeSession(sessionId)
+                // Return null to indicate session not found/expired
+                return null
+            }
+        } else {
+            console.log("Session has no expiration time or data is null")
+        }
+
+        console.log("Returning session data:", data)
         return data
     } catch (error) {
+        if (error.code === "PGRST116") {
+            // Session not found - this is expected for expired/deleted sessions
+            console.log(`Session ${sessionId} not found in database`)
+            return null
+        }
         console.error("Error getting initiative session:", error)
         throw error
     }
@@ -166,6 +196,30 @@ export const deactivateInitiativeSession = async (sessionId) => {
         if (error) throw error
     } catch (error) {
         console.error("Error deactivating initiative session:", error)
+        throw error
+    }
+}
+
+/**
+ * Clean up expired initiative sessions
+ * This function removes sessions that have passed their expiration time
+ * @returns {Promise<number>} Number of sessions cleaned up
+ */
+export const cleanupExpiredSessions = async () => {
+    try {
+        const { data, error } = await supabase
+            .from("initiative_sessions")
+            .delete()
+            .lt("expires_at", new Date().toISOString())
+            .select("id")
+
+        if (error) throw error
+
+        const cleanedCount = data ? data.length : 0
+        console.log(`Cleaned up ${cleanedCount} expired sessions`)
+        return cleanedCount
+    } catch (error) {
+        console.error("Error cleaning up expired sessions:", error)
         throw error
     }
 }

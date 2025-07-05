@@ -23,6 +23,7 @@ import {
 import {
     subscribeToInitiativeSession,
     getInitiativeSession,
+    cleanupExpiredSessions,
 } from "../utils/supabaseClient"
 import "../components/InitiativeTracker.css" // Import the same styles used in the tracker
 
@@ -499,14 +500,29 @@ const LiveGameView = () => {
     const [isUpdating, setIsUpdating] = useState(false) // For showing update animation
     const trackerRef = useRef(null) // Reference for the carousel element
 
+    // Scroll gravity state for carousel
+    const scrollTimeoutRef = useRef(null)
+    const gravityTimeoutRef = useRef(null)
+
     // Load initial session data and subscribe to updates
     useEffect(() => {
         const loadSession = async () => {
             try {
                 setLoading(true)
+
+                // Clean up expired sessions first
+                try {
+                    await cleanupExpiredSessions()
+                } catch (cleanupError) {
+                    console.warn(
+                        "Could not clean up expired sessions:",
+                        cleanupError
+                    )
+                }
+
                 // Get initial data
                 const data = await getInitiativeSession(sessionId)
-                if (!data) throw new Error("Session not found")
+                if (!data) throw new Error("Session not found or expired")
 
                 console.log("Session data received:", data)
 
@@ -558,6 +574,87 @@ const LiveGameView = () => {
         // We deliberately exclude subscription from deps as it's created within this hook
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sessionId])
+
+    // Periodic cleanup of expired sessions every 5 minutes
+    useEffect(() => {
+        const cleanupInterval = setInterval(async () => {
+            try {
+                await cleanupExpiredSessions()
+            } catch (error) {
+                console.warn("Periodic cleanup failed:", error)
+            }
+        }, 5 * 60 * 1000) // 5 minutes
+
+        return () => clearInterval(cleanupInterval)
+    }, [])
+
+    // Enhanced scroll gravity effect that works even when carousel is mounted later
+    useEffect(() => {
+        // Set up a scroll handler that will work regardless of when the carousel appears
+        const handleScroll = () => {
+            // Clear any existing timeouts
+            clearTimeout(scrollTimeoutRef.current)
+            clearTimeout(gravityTimeoutRef.current)
+
+            // Set a timeout to detect when scrolling has stopped
+            scrollTimeoutRef.current = setTimeout(() => {
+                // Check if the carousel element exists NOW (it might have been added since the effect ran)
+                const carouselElement = trackerRef.current
+                if (!carouselElement) return
+
+                // Apply gravity effect - check if carousel is roughly centered
+                const rect = carouselElement.getBoundingClientRect()
+                const viewportHeight = window.innerHeight
+                const carouselCenter = rect.top + rect.height / 1.9 // Adjusted to 1.9 for more precise centering
+                const viewportCenter = viewportHeight / 2
+
+                // Calculate distance from center
+                const distanceFromCenter = Math.abs(
+                    carouselCenter - viewportCenter
+                )
+                const threshold = viewportHeight * 0.3 // Increased to 30% of viewport height for even stronger snap zone
+
+                // If carousel is close to center but not perfectly aligned, apply stronger "gravity"
+                if (distanceFromCenter < threshold && distanceFromCenter > 5) {
+                    // Reduced minimum distance from 10 to 5
+                    gravityTimeoutRef.current = setTimeout(() => {
+                        const targetScroll =
+                            window.pageYOffset +
+                            (carouselCenter - viewportCenter) * 0.9 // Even stronger pull, 90% of the way
+
+                        window.scrollTo({
+                            top: targetScroll,
+                            behavior: "smooth",
+                        })
+                    }, 100) // Reduced delay to 100ms for immediate response
+                }
+            }, 80) // Reduced detection time to 80ms for faster response
+        }
+
+        // Set up a mutation observer to detect when the carousel is added to the DOM
+        const observerTarget = document.body
+        const observerConfig = { childList: true, subtree: true }
+
+        const mutationObserver = new MutationObserver(() => {
+            // If the carousel ref exists after a DOM mutation, check if we need to apply gravity
+            if (trackerRef.current) {
+                handleScroll() // Check immediately when carousel appears
+            }
+        })
+
+        // Start observing for carousel element appearing
+        mutationObserver.observe(observerTarget, observerConfig)
+
+        // Also listen for scroll events
+        window.addEventListener("scroll", handleScroll, { passive: true })
+
+        return () => {
+            mutationObserver.disconnect()
+            window.removeEventListener("scroll", handleScroll)
+            clearTimeout(scrollTimeoutRef.current)
+            clearTimeout(gravityTimeoutRef.current)
+        }
+    }, []) // No dependencies - this effect should only run once on component mount
 
     // Function to get combatants in turn order with DANGER card (same logic as InitiativeTrackerPage)
     const getCombatantsInTurnOrder = useCallback(() => {
@@ -772,10 +869,10 @@ const LiveGameView = () => {
                 <Paper
                     sx={{
                         padding: 2,
-                        marginBottom: 2,
+                        margin: "0 auto",
+                        marginBottom: 5,
                         marginTop: 3,
                         maxWidth: "500px",
-                        margin: "0 auto",
                     }}
                 >
                     <Typography variant='body1' align='center'>
@@ -787,53 +884,8 @@ const LiveGameView = () => {
             {/* Combat tracker carousel */}
             {orderedCombatants && orderedCombatants.length > 0 && (
                 <Box sx={{ padding: 2 }}>
-                    <Paper sx={{ padding: 2, marginBottom: 2 }}>
-                        <Typography variant='h6' gutterBottom>
-                            Turn Order
-                        </Typography>
-                        <Box
-                            sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 1,
-                                flexWrap: "wrap",
-                                justifyContent: "center",
-                            }}
-                        >
-                            {/* Turn order display - only show real combatants, not spacers or DANGER */}
-                            {sessionData.combatants.map((combatant, index) => (
-                                <Box
-                                    key={combatant.id}
-                                    sx={{
-                                        backgroundColor:
-                                            currentTurn === index
-                                                ? "#4caf50"
-                                                : "#e0e0e0",
-                                        color:
-                                            currentTurn === index
-                                                ? "white"
-                                                : "black",
-                                        padding: "4px 12px",
-                                        borderRadius: "16px",
-                                        margin: "4px",
-                                        border: "1px solid #ccc",
-                                        fontWeight:
-                                            currentTurn === index
-                                                ? "bold"
-                                                : "normal",
-                                    }}
-                                >
-                                    {combatant.name}
-                                </Box>
-                            ))}
-                        </Box>
-                    </Paper>
-
                     {/* Carousel view matching InitiativeTrackerPage exactly */}
                     <Box sx={{ marginBottom: 3 }} ref={trackerRef}>
-                        <Typography variant='h6' gutterBottom>
-                            Initiative (View Only)
-                        </Typography>
                         <Box
                             sx={{
                                 position: "relative",
@@ -975,23 +1027,6 @@ const LiveGameView = () => {
                             </Box>
                         </Box>
                     </Box>
-
-                    {/* Current turn summary */}
-                    <Paper sx={{ padding: 3, marginTop: 2 }}>
-                        <Typography variant='h6' align='center' gutterBottom>
-                            Current Turn Summary
-                        </Typography>
-                        <Typography variant='body1'>
-                            <strong>
-                                {orderedCombatants[currentTurn]?.name ||
-                                    "Unknown"}
-                            </strong>{" "}
-                            is currently active
-                            {orderedCombatants[currentTurn]?.isDead
-                                ? " (DEAD)"
-                                : ""}
-                        </Typography>
-                    </Paper>
                 </Box>
             )}
         </Container>

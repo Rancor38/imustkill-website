@@ -43,6 +43,7 @@ import {
     createInitiativeSession,
     updateInitiativeSession,
     deactivateInitiativeSession,
+    cleanupExpiredSessions,
 } from "../utils/supabaseClient"
 import {
     DndContext,
@@ -1841,6 +1842,11 @@ const InitiativeTrackerPage = () => {
         }
     }
 
+    // Handle manual stop sharing
+    const handleStopSharing = () => {
+        deactivateSession()
+    }
+
     // Update Supabase when combat state changes if Liveshare is active
     useEffect(() => {
         // Use the memoized getCombatantsInTurnOrder function for dependency safety
@@ -1901,29 +1907,112 @@ const InitiativeTrackerPage = () => {
 
     // Handle actual page refresh/unload to deactivate the liveshare
     useEffect(() => {
-        const handleUnload = async () => {
-            // Only attempt deactivation if liveshare is active
-            if (isLiveshareActive && liveshareId) {
+        let isPageClosing = false
+
+        const handleBeforeUnload = () => {
+            // Mark that the page is closing so visibility change knows to deactivate
+            isPageClosing = true
+        }
+
+        const handleVisibilityChange = () => {
+            // Only deactivate if the page is actually closing, not just switching tabs
+            if (
+                document.hidden &&
+                isLiveshareActive &&
+                liveshareId &&
+                isPageClosing
+            ) {
+                // Use fetch with keepalive for reliable delivery even when page is closing
+                const deactivateUrl = `${process.env.REACT_APP_SUPABASE_URL}/rest/v1/initiative_sessions?id=eq.${liveshareId}`
+
                 try {
-                    await deactivateInitiativeSession(liveshareId)
-                    console.log("Liveshare session deactivated on page unload")
+                    const headers = {
+                        "Content-Type": "application/json",
+                        apikey: process.env.REACT_APP_SUPABASE_ANON_KEY,
+                        Authorization: `Bearer ${process.env.REACT_APP_SUPABASE_ANON_KEY}`,
+                    }
+
+                    // Use fetch with keepalive to ensure the request completes
+                    fetch(deactivateUrl, {
+                        method: "DELETE",
+                        headers: headers,
+                        keepalive: true, // This ensures the request completes even if page closes
+                    }).catch((error) => {
+                        console.error(
+                            "Error deactivating liveshare on visibility change:",
+                            error
+                        )
+                    })
+
+                    console.log(
+                        "Liveshare session deactivation requested on page close"
+                    )
                 } catch (error) {
                     console.error(
-                        "Error deactivating liveshare on unload:",
+                        "Error deactivating liveshare on visibility change:",
                         error
                     )
                 }
             }
         }
 
-        // Add the unload event listener
+        const handleUnload = () => {
+            // Final attempt - this may not always work but provides a fallback
+            if (isLiveshareActive && liveshareId) {
+                try {
+                    // Try to make a synchronous request as a last resort
+                    const deactivateUrl = `${process.env.REACT_APP_SUPABASE_URL}/rest/v1/initiative_sessions?id=eq.${liveshareId}`
+                    const headers = {
+                        "Content-Type": "application/json",
+                        apikey: process.env.REACT_APP_SUPABASE_ANON_KEY,
+                        Authorization: `Bearer ${process.env.REACT_APP_SUPABASE_ANON_KEY}`,
+                    }
+
+                    // Use fetch with keepalive as a final attempt
+                    fetch(deactivateUrl, {
+                        method: "DELETE",
+                        headers: headers,
+                        keepalive: true,
+                    }).catch(() => {
+                        // Silently fail - the session will expire naturally
+                    })
+
+                    console.log("Final liveshare deactivation attempt")
+                } catch (error) {
+                    // Silently fail - the session will expire naturally
+                    console.error("Error in final deactivation attempt:", error)
+                }
+            }
+        }
+
+        // Add event listeners
+        window.addEventListener("beforeunload", handleBeforeUnload)
+        document.addEventListener("visibilitychange", handleVisibilityChange)
         window.addEventListener("unload", handleUnload)
 
         // Clean up
         return () => {
+            window.removeEventListener("beforeunload", handleBeforeUnload)
+            document.removeEventListener(
+                "visibilitychange",
+                handleVisibilityChange
+            )
             window.removeEventListener("unload", handleUnload)
         }
     }, [isLiveshareActive, liveshareId])
+
+    // Periodic cleanup of expired sessions every 10 minutes
+    useEffect(() => {
+        const cleanupInterval = setInterval(async () => {
+            try {
+                await cleanupExpiredSessions()
+            } catch (error) {
+                console.warn("Periodic cleanup failed:", error)
+            }
+        }, 10 * 60 * 1000) // 10 minutes
+
+        return () => clearInterval(cleanupInterval)
+    }, [])
 
     return (
         <>
@@ -2097,6 +2186,28 @@ const InitiativeTrackerPage = () => {
                                 ? "View Shared Link"
                                 : "Share Live"}
                         </Button>
+
+                        {/* Stop Sharing button - only visible when liveshare is active */}
+                        {isLiveshareActive && (
+                            <Button
+                                variant='outlined'
+                                startIcon={<CloseIcon />}
+                                onClick={handleStopSharing}
+                                disabled={liveshareLoading}
+                                sx={{
+                                    borderColor: "#ff9800",
+                                    color: "#ff9800",
+                                    "&:hover": {
+                                        borderColor: "#f57c00",
+                                        color: "#f57c00",
+                                        backgroundColor:
+                                            "rgba(255, 152, 0, 0.04)",
+                                    },
+                                }}
+                            >
+                                Stop Sharing
+                            </Button>
+                        )}
 
                         <Button
                             variant='outlined'
