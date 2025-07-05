@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useCallback } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
 import "./BackButton.css"
 
@@ -9,11 +9,11 @@ function BackButton() {
     const [isVisible, setIsVisible] = useState(false)
 
     // Check if the screen width is greater than 1100px and not on the homepage
-    const checkVisibility = () => {
+    const checkVisibility = useCallback(() => {
         const isDesktop = window.innerWidth > 1100
         const isNotHomePage = location.pathname !== "/"
         setIsVisible(isDesktop && isNotHomePage)
-    }
+    }, [location.pathname])
 
     // Adjust opacity based on scroll position
     useEffect(() => {
@@ -37,7 +37,7 @@ function BackButton() {
             window.removeEventListener("scroll", handleScroll)
             window.removeEventListener("resize", handleResize)
         }
-    }, [location])
+    }, [location, checkVisibility])
 
     if (!isVisible) return null
 

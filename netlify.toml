@@ -1,0 +1,25 @@
+[build]
+  publish = "build"
+  command = "npm run build"
+
+[build.environment]
+  # Environment variables for build
+  CI = "false"
+  
+# Configure secrets scanning
+[secrets]
+  # Disable secrets scanning for environment variables that are meant to be public
+  # These are public Supabase keys that are safe to expose
+  omit_keys = ["REACT_APP_SUPABASE_URL", "REACT_APP_SUPABASE_ANON_KEY"]
+  
+  # Alternative: You can also omit specific paths
+  # omit_paths = [".env", "build/**/*"]
+
+# Build command treats warnings as errors, we want to allow warnings
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

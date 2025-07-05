@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import {
     Container,
     Typography,
@@ -11,22 +11,17 @@ import {
     Chip,
     List,
     ListItem,
-    ListItemText,
     Accordion,
     AccordionSummary,
     AccordionDetails,
-    TextField,
-    FormControlLabel,
-    Checkbox,
 } from "@mui/material"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 import useRulesEngine from "../../hooks/useRulesEngine"
 
 const RuleCategorizer = () => {
-    const { rulesData, getSourceMap, getUncategorizedRules, loading, error } =
+    const { rulesData, getSourceMap, loading, error } =
         useRulesEngine()
     const [analysisResults, setAnalysisResults] = useState(null)
-    const [selectedCategories, setSelectedCategories] = useState(new Set())
 
     // Analysis function to scan all content for potential @RuleName usage
     const analyzeContent = () => {
