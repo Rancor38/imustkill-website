@@ -168,5 +168,27 @@
         "Focus": "5",
         "Fate": "4",
         "Insight": "1"
+    },
+    {
+        "Name": "Mapinguari",
+        "Description": "Humans transformed by evil spirits into monstrous creatures with backwards feet, a mouth in their stomach, and one fused eye in their face. These large, powerful beasts retain a twisted remnant of their human intelligence while possessing supernatural strength and an insatiable hunger.",
+        "Guise": "A large furry animal like a ground-sloth or bear",
+        "Attack": "7",
+        "Damage": "2",
+        "Hit Points Multiplier": "4",
+        "Bloodied": "2",
+        "Buffs": "Their backwards feet make them impossible to track properly, confusing pursuers about their direction of travel.",
+        "Crit": "The Mapinguari's stomach mouth devours the victim whole, killing them instantly.",
+        "Immunities": "None",
+        "Special Weaknesses": [
+            "The single eye is a critical weakness - bright lights directed at it blind the creature for 2 turns.",
+            "Religious symbols or prayers cause the trapped human soul to struggle against the evil spirits, stunning the creature for 1 turn.",
+            "Fire terrifies the creature due to its thick fur, causing it to flee for 3 turns."
+        ],
+        "Body": "9",
+        "Agility": "5",
+        "Focus": "6",
+        "Fate": "3",
+        "Insight": "2"
     }
 ]
