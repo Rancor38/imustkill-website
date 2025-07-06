@@ -8,7 +8,7 @@
         "Hit Points Multiplier": "3",
         "Bloodied": "1",
         "Buffs": "None",
-        "Crit fail": "The Man-Eating Grizzly Bear bites them and shakes them violently, reducing them to 0 hit points.",
+        "Crit": "The Man-Eating Grizzly Bear bites them and shakes them violently, reducing them to 0 hit points.",
         "Immunities": "Spiritual",
         "Special Weaknesses": [
             "Loud, sustained noises (bells, horns, gunshots) cause the bear to flee in terror.",
@@ -30,7 +30,7 @@
         "Hit Points Multiplier": "0 + 1",
         "Bloodied": "0",
         "Buffs": "Immune to all mind altering affects.",
-        "Crit Fail": "The Skeleton Imp bites the victim making them Blind for 1 turn.",
+        "Crit": "The Skeleton Imp bites the victim making them Blind for 1 turn.",
         "Immunities": "None",
         "Special Weaknesses": [],
         "Body": "2",
@@ -48,7 +48,7 @@
         "Hit Points Multiplier": "0 + 1",
         "Bloodied": "0",
         "Buffs": "Immune to all mind altering affects.",
-        "Crit Fail": "The Agent's shot strikes a limb, and this wound will keep that limb out of commission for the next month. Count up the limbs and roll a die to choose which one randomly.",
+        "Crit": "The Agent's shot strikes a limb, and this wound will keep that limb out of commission for the next month. Count up the limbs and roll a die to choose which one randomly.",
         "Immunities": "None",
         "Special Weaknesses": [
             "Reminders of their former life (like a badge or photograph) can temporarily stun them for 1 turn if they fail a Focus test."
@@ -68,7 +68,7 @@
         "Hit Points Multiplier": "5",
         "Bloodied": "2",
         "Buffs": "The Banshee can fly, pass through walls and objects, and step in and out of mirrors.",
-        "Crit Fail": "Banshee's Wails infect the mind and the creature drops to 0 hit points.",
+        "Crit": "Banshee's Wails infect the mind and the creature drops to 0 hit points.",
         "Immunities": "Physical",
         "Special Weaknesses": [
             "Iron bells rung continuously force the Banshee to flee and cannot return for 24 hours.",
@@ -90,7 +90,7 @@
         "Hit Points Multiplier": "5",
         "Bloodied": "1",
         "Buffs": "Cannot die unless their body (or remains) are fully baptized. They will always revive with 1 hit point in 24 hours.\nAdditionally, they regain 5 hit points every turn they have at least 1 hit point.",
-        "Crit fail": "The Vampire kills their victim.",
+        "Crit": "The Vampire kills their victim.",
         "Immunities": "None",
         "Special Weaknesses": [
             "Baptism of the Vampire's body in a body of running water washes away all Sin and destroys the monster entirely.",
@@ -112,7 +112,7 @@
         "Hit Points Multiplier": "3",
         "Bloodied": "1",
         "Buffs": "Can disguise as a villager for years, remaining undetected.",
-        "Crit Fail": "The Insectoid devours the victim's family members one by one.",
+        "Crit": "The Insectoid devours the victim's whole over the next 3 seconds.",
         "Immunities": "None",
         "Special Weaknesses": [
             "Bright lights cause the disguise to flicker and fail, revealing its true form and reducing its attack by 3.",
@@ -134,7 +134,7 @@
         "Hit Points Multiplier": "2",
         "Bloodied": "1",
         "Buffs": "Can mimic the sounds of loved ones to lure victims.",
-        "Crit Fail": "The Ravenwolf's mimicry becomes permanently etched in the victim's mind, causing madness.",
+        "Crit": "The Ravenwolf's mimicry becomes permanently etched in the victim's mind, causing madness.",
         "Immunities": "None",
         "Special Weaknesses": [
             "Loud, conflicting sounds (multiple voices talking at once) confuse its mimicry ability and prevent it from speaking.",
@@ -146,5 +146,27 @@
         "Focus": "3",
         "Fate": "2",
         "Insight": "0"
+    },
+    {
+        "Name": "Poltermen",
+        "Description": "Humans who drink vampire blood and die by having their entire bodies consumed by the vampire, blood, flesh and bone, leaving behind only a spirit cursed with vampirism. These semi-corporeal spirits appear as twisted simulacra of who they were in life, with no eyes they walk with hands outstretched trying to dig their claws into living beings to drink from their souls.",
+        "Guise": "Invisible besides a green blob in the dark",
+        "Attack": "5",
+        "Damage": "1",
+        "Hit Points Multiplier": "2",
+        "Bloodied": "1",
+        "Buffs": "Semi-corporeal nature allows them to phase through walls and physical barriers.",
+        "Crit": "The Poltermen's soul drain reduces the victim's Focus score by 1 permanently.",
+        "Immunities": "Physical",
+        "Special Weaknesses": [
+            "Bright light brings them pain and increases their attack by 2.",
+            "Holy water or contact with blessed objects cause them to flee for 3 turns.",
+            "Salt circles or barriers prevent them from passing through."
+        ],
+        "Body": "3",
+        "Agility": "6",
+        "Focus": "5",
+        "Fate": "4",
+        "Insight": "1"
     }
 ]

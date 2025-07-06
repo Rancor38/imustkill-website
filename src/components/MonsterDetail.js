@@ -449,8 +449,7 @@ const MonsterDetail = () => {
                                     Crit
                                 </TableCell>
                                 <TableCell sx={{ whiteSpace: "pre-line" }}>
-                                    {monster["Crit fail"] ||
-                                        monster["Crit Fail"]}
+                                    {monster["Crit"]}
                                 </TableCell>
                             </TableRow>
                             <TableRow>

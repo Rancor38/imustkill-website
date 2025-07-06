@@ -1335,7 +1335,8 @@ const CampaignManager = () => {
                                                 fullWidth
                                                 placeholder='Add combat notes (these will appear in initiative tracker)...'
                                                 value={
-                                                    combatNotes[character.id] || ""
+                                                    combatNotes[character.id] ||
+                                                    ""
                                                 }
                                                 onChange={(e) =>
                                                     handleCombatNotesChange(
