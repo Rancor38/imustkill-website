@@ -8,7 +8,7 @@
                 "%Source": ["@GatherSpells"],
                 "description": "Test @Focus to gather a spell. If you succeed, you can draw a spell card from your spell deck and keep this card until your next @NightsRest.",
                 "mechanics": "Roll 1d10 against @Focus. If the roll is equal to or less than your @Focus score, draw one spell from your deck. If you fail, take 1 damage and discard your current cards",
-                "limits": "You can only have 3 spells gathered at one time. If you want to discard a spell to replace it, you must discard all in your hand",
+                "limits": "You can only have 3 spells gathered at one time. If you want to discard a spell to replace it, you must discard all in your hand.",
                 "recovery": "When you @Gritteeth, you automatically gather 3 spells without needing to test @Focus.",
                 "keywords": [
                     "gathering spells",
