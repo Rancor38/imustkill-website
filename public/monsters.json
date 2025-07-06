@@ -155,7 +155,7 @@
         "Damage": "1",
         "Hit Points Multiplier": "2",
         "Bloodied": "1",
-        "Buffs": "Semi-corporeal nature allows them to phase through walls and physical barriers.",
+        "Buffs": "Semi-corporeal nature allows them to phase through walls and physical barriers. The monster gains 1 HP when it successfully hits a target.",
         "Crit": "The Poltermen's soul drain reduces the victim's Focus score by 1 permanently.",
         "Immunities": "Physical",
         "Special Weaknesses": [
