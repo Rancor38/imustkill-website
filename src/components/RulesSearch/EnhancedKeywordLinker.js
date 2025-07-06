@@ -158,12 +158,43 @@ const EnhancedKeywordLinker = ({
             return match
         })
 
-        // Split text while preserving spaces, punctuation, and our special reference tags
-        const parts = processedText.split(
-            /(\s+|[.,!?;:()[\]{}'""-]|<REFERENCE_LINK>.*?<\/REFERENCE_LINK>)/g
+        // Handle ***bold italic***, **bold**, and *italic* markdown (replace with special tags)
+        let mdProcessed = processedText
+            .replace(/\*\*\*(.+?)\*\*\*/g, "<BOLDITALIC>$1</BOLDITALIC>")
+            .replace(/\*\*(.+?)\*\*/g, "<BOLD>$1</BOLD>")
+            .replace(/\*(.+?)\*/g, "<ITALIC>$1</ITALIC>")
+
+        // Split text while preserving spaces, punctuation, special reference tags, and markdown tags
+        const parts = mdProcessed.split(
+            /(\s+|[.,!?;:()[\]{}'""-]|<REFERENCE_LINK>.*?<\/REFERENCE_LINK>|<BOLDITALIC>.*?<\/BOLDITALIC>|<BOLD>.*?<\/BOLD>|<ITALIC>.*?<\/ITALIC>)/g
         )
 
         return parts.map((part, index) => {
+            // Handle <BOLDITALIC> tags
+            const boldItalicMatch = part.match(
+                /<BOLDITALIC>(.*?)<\/BOLDITALIC>/
+            )
+            if (boldItalicMatch) {
+                return (
+                    <span
+                        key={index}
+                        style={{ fontWeight: "bold", fontStyle: "italic" }}
+                    >
+                        {boldItalicMatch[1]}
+                    </span>
+                )
+            }
+            // Handle <BOLD> tags
+            const boldMatch = part.match(/<BOLD>(.*?)<\/BOLD>/)
+            if (boldMatch) {
+                return <strong key={index}>{boldMatch[1]}</strong>
+            }
+            // Handle <ITALIC> tags
+            const italicMatch = part.match(/<ITALIC>(.*?)<\/ITALIC>/)
+            if (italicMatch) {
+                return <em key={index}>{italicMatch[1]}</em>
+            }
+
             // Handle reference links
             const refMatch = part.match(
                 /<REFERENCE_LINK>(.*?)<\/REFERENCE_LINK>/
