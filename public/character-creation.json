@@ -9,6 +9,7 @@
                 "content": [
                     {
                         "name": "Body",
+                        "id": "body",
                         "description": "Physical strength and endurance. Use Body for actions like lifting, pushing, climbing, dragging, grappling, jumping, and swimming.",
                         "keywords": [
                             "strength",
@@ -21,6 +22,7 @@
                     },
                     {
                         "name": "Agility",
+                        "id": "agility",
                         "description": "Speed and dexterity. Use Agility for actions like catching, squeezing through spaces, picking locks, escaping manacles, and @Dodge actions in combat.",
                         "keywords": [
                             "dexterity",
@@ -32,6 +34,7 @@
                     },
                     {
                         "name": "Focus",
+                        "id": "focus",
                         "description": "Mental concentration and magical ability. Use Focus for perceiving, listening, conjuring magic with @GatherSpells, tracking prey, controlling will, and resisting enchantment.",
                         "keywords": [
                             "perception",
@@ -44,6 +47,7 @@
                     },
                     {
                         "name": "Fate",
+                        "id": "fate",
                         "description": "Luck, life force, and destiny. Fate determines your @HitPoints and influences survival during @Death situations.",
                         "keywords": [
                             "luck",

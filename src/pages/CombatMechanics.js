@@ -352,7 +352,17 @@ const CombatMechanics = () => {
                                                     : "1px solid #ddd",
                                         }}
                                     >
-                                        <Typography variant='h4' gutterBottom>
+                                        <Typography
+                                            variant='h4'
+                                            gutterBottom
+                                            id={
+                                                action.id ||
+                                                action.name
+                                                    .toLowerCase()
+                                                    .replace(/[^a-z0-9]+/g, "-")
+                                                    .replace(/^-+|-+$/g, "")
+                                            }
+                                        >
                                             {action.name}:
                                         </Typography>
                                         <Typography variant='body1' paragraph>

@@ -154,6 +154,13 @@ const CharacterCreation = () => {
                                 >
                                     <Typography
                                         variant='h5'
+                                        id={
+                                            stat.id ||
+                                            stat.name
+                                                .toLowerCase()
+                                                .replace(/[^a-z0-9]+/g, "-")
+                                                .replace(/^-+|-+$/g, "")
+                                        }
                                         sx={{
                                             fontWeight: "bold",
                                             mb: 1,

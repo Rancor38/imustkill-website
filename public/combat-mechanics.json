@@ -36,6 +36,7 @@
                 "actions": [
                     {
                         "name": "Attack",
+                        "id": "attack",
                         "description": "Roll 1d10 against @AttackStat. If the roll is lower, deal 1 @PhysicalDamage (2 for a natural 1, aka a crit). If your @Insight is too low to perceive a monster as it is, they take -1 damage from your attacks.",
                         "keywords": [
                             "attack",
@@ -48,6 +49,7 @@
                     },
                     {
                         "name": "Dodge",
+                        "id": "dodge",
                         "description": "Roll 1d10 against @Agility. If the roll is lower, immune to dodgeable attacks until next turn and regain 1 @HitPoints. If you roll a 10 and the monster successfully attacks you on this turn, the GM checks the Crit Fail column on the Monster Stats.",
                         "keywords": [
                             "dodge",
@@ -59,6 +61,7 @@
                     },
                     {
                         "name": "Brace",
+                        "id": "brace",
                         "description": "Roll 1d10 against @Body. If the roll is lower and you have a weapon, armor, or shield, you are immune to braceable attacks until next turn and regain 1 @HitPoints. If you roll a 10 and the monster successfully attacks you on this turn, the GM checks the Crit Fail column on the Monster Stats.",
                         "keywords": [
                             "brace",
@@ -72,6 +75,7 @@
                     },
                     {
                         "name": "Gather a Spell",
+                        "id": "gather-a-spell",
                         "description": "Roll 1d10 against @Focus. If the roll is lower, draw 1 @Spell from your @Spell deck. If you roll a 10 you lose 1 @HitPoints, and discard all held @Spell cards.",
                         "keywords": [
                             "gather spell",
@@ -82,11 +86,13 @@
                     },
                     {
                         "name": "Flee",
+                        "id": "flee",
                         "description": "Roll 1d10 against @Agility. If the roll is lower, you can successfully exit the combat and cannot be in danger for the next round. If the roll fails, you remain in combat.",
                         "keywords": ["flee", "agility", "exit combat", "escape"]
                     },
                     {
                         "name": "Negotiate",
+                        "id": "negotiate",
                         "description": "Roll 1d10 against @Focus. If the roll is lower, combat will end momentarily to present the opportunity to negotiate with a monster that can understand you. If combat resumes after negotiations fail, the monster(s) go first.",
                         "keywords": [
                             "negotiate",
