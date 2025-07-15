@@ -66,6 +66,14 @@ const GMTools = () => {
 
     const tools = [
         {
+            title: "Running the Game",
+            description:
+                "Comprehensive guide for Game Masters on running sessions, managing monsters, and creating engaging hunts.",
+            icon: <MenuBook sx={{ fontSize: 40 }} />,
+            path: "/running-the-game",
+            available: true,
+        },
+        {
             title: "Initiative Tracker",
             description:
                 "Track combat initiative order with drag-and-drop support for monsters, NPCs, players, and environmental hazards.",
@@ -79,14 +87,6 @@ const GMTools = () => {
                 "Manage multiple character sheets in one place with GM notes, party file saving, and combat preparation.",
             icon: <Groups sx={{ fontSize: 40 }} />,
             path: "/campaign-manager",
-            available: true,
-        },
-        {
-            title: "Running the Game",
-            description:
-                "Comprehensive guide for Game Masters on running sessions, managing monsters, and creating engaging hunts.",
-            icon: <MenuBook sx={{ fontSize: 40 }} />,
-            path: "/running-the-game",
             available: true,
         },
         {

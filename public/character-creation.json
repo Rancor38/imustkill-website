@@ -77,7 +77,7 @@
                     {
                         "id": "rolling-stats",
                         "title": "Rolling Stats",
-                        "description": "Roll 4d10s for character creation and assign values to @Body, @Agility, @Focus, @Fate. Maximum stat value is 10, minimum is 2.",
+                        "description": "Roll 4d10s for character creation and assign values to @Body, @Agility, @Focus, @Fate. Maximum stat value is 9, minimum is 2.",
                         "keywords": ["random", "dice", "roll", "4d10"]
                     }
                 ]
