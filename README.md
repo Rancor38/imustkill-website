@@ -8,7 +8,7 @@ This website serves as a digital reference for the "I Must Kill" tabletop role-p
 
 -   **Simple but deadly combat mechanics** where every decision matters
 -   **Stat-based character creation** focusing on Body, Agility, Focus, and Fate
--   **Equipment and spell decks** that provide players with tools and abilities
+-   **Equipment and power decks** that provide players with tools and abilities
 -   **Monster hunting adventures** that test players' skills and strategy
 -   **Insight mechanics** where greater perception reveals the true nature of threats
 
@@ -23,8 +23,8 @@ This website includes comprehensive references for:
 -   **Combat Mechanics** - Rules for attacks, dodges, bracing, and more
 -   **Death and Resting** - How recovery and death work in the game
 -   **Progression** - Character advancement rules
--   **Spellcasting** - Magic system rules and mechanics
--   **Spells** - Searchable database of spells by name, deck, and rarity
+-   **Casting** - Magic system rules and mechanics
+-   **Powers** - Searchable database of powers by name, deck, and rarity
 -   **Running the Game** - Resources for Game Masters
 -   **Monsters** - Bestiary with detailed monster information (GM access only)
 
@@ -84,15 +84,15 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 2. **Combat System**:
 
-    - Players choose one of several actions each turn: Attack, Dodge, Brace, Gather a Spell, Flee, or Negotiate
+    - Players choose one of several actions each turn: Attack, Dodge, Brace, gather a Power, Flee, or Negotiate
     - Roll 1d10 against your relevant stat; if the roll is lower, your action succeeds
     - Combat is deadly and strategic, with minimal hit points
 
 3. **Magic System**:
 
-    - Hunters can gather and cast spells through testing Focus
-    - Spells are organized in decks and by rarity
-    - Players can hold up to 3 spells at a time
+    - Hunters can gather and cast powers through testing Focus
+    - Powers are organized in decks and by rarity
+    - Players can hold up to 3 powers at a time
 
 4. **Equipment**:
 
@@ -126,13 +126,13 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 ### Data Architecture
 
--   Game data (monsters, spells, equipment) stored in JSON format
+-   Game data (monsters, powers, equipment) stored in JSON format
 -   Responsive design for mobile and desktop access
 -   Dark/light theme toggle for accessibility
 
 ### Key Components
 
--   **Search & Filter System** for spells and equipment
+-   **Search & Filter System** for powers and equipment
 -   **Interactive Character Sheet**
 -   **Downloadable Game Resources**
 -   **Random Equipment Generator**

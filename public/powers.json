@@ -1,5 +1,5 @@
 {
-    "spells": [
+    "powers": [
         {
             "name": "Magic Missile",
             "rarity": "common",
@@ -52,7 +52,7 @@
             "name": "Charm Persons",
             "rarity": "uncommon",
             "deck": "Ancient Spells",
-            "description": "You seem irresistibly charismatic to those you meet for the first time while under this spell's effect. This will not change people's behavior towards you if they have reason to dislike you or know you well. You automatically pass test Focus for negotiating payments. Discard this at the end of your next night's rest."
+            "description": "You seem irresistibly charismatic to those you meet for the first time while under this power's effect. This will not change people's behavior towards you if they have reason to dislike you or know you well. You automatically pass test Focus for negotiating payments. Discard this at the end of your next night's rest."
         },
         {
             "name": "Bless",
@@ -82,7 +82,7 @@
             "name": "Invisibility",
             "rarity": "rare",
             "deck": "Ancient Spells",
-            "description": "You or one creature you touch becomes invisible for 10 minutes or until they attack or cast a spell. Discard this card when it ends."
+            "description": "You or one creature you touch becomes invisible for 10 minutes or until they attack or cast a power. Discard this card when it ends."
         },
         {
             "name": "Flame Strike",
@@ -268,7 +268,7 @@
             "name": "Bat Form",
             "rarity": "uncommon",
             "deck": "Vampire",
-            "description": "Transform into a bat for up to 1 hour. You can fly but cannot attack or cast spells in this form. Discard this card."
+            "description": "Transform into a bat for up to 1 hour. You can fly but cannot attack or cast powers in this form. Discard this card."
         },
         {
             "name": "Mesmerizing Gaze",
@@ -340,7 +340,7 @@
             "name": "Shape of the Beast",
             "rarity": "rare",
             "deck": "Vampire",
-            "description": "Transform into a wolf for 1 hour. Gain heightened senses, increased movement, and may attack with fangs. Cannot speak or use spells in this form. Discard this card after the effect ends."
+            "description": "Transform into a wolf for 1 hour. Gain heightened senses, increased movement, and may attack with fangs. Cannot speak or use powers in this form. Discard this card after the effect ends."
         },
         {
             "name": "Sanguine Shield",
@@ -352,7 +352,7 @@
             "name": "Vitae Frenzy",
             "rarity": "rare",
             "deck": "Vampire",
-            "description": "Enter a controlled frenzy. For the next 2 turns, you deal 2 damage per hit with your claws and fangs and heal 1 HP each time you land a melee hit. You cannot use spells or talk. Discard this card."
+            "description": "Enter a controlled frenzy. For the next 2 turns, you deal 2 damage per hit with your claws and fangs and heal 1 HP each time you land a melee hit. You cannot use powers or talk. Discard this card."
         },
         {
             "name": "The Beast Unleashed",

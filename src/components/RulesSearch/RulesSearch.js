@@ -65,7 +65,7 @@ const RulesSearch = () => {
                     {
                         title: "Actions in Combat",
                         content:
-                            "Attack Dodge Brace Gather a Spell Flee Negotiate",
+                            "Attack Dodge Brace Draw a Power Flee Negotiate",
                     },
                     {
                         title: "Attack",
@@ -140,7 +140,7 @@ const RulesSearch = () => {
                     {
                         title: "Night's Rest",
                         content:
-                            "Comfortable place to sleep inn farmer's barn full hit points regain all gathered spells recharge abilities gain rerolls from insight",
+                            "Comfortable place to sleep inn farmer's barn full hit points regain all gathered powers recharge abilities gain rerolls from insight",
                     },
                 ],
             },
@@ -166,18 +166,18 @@ const RulesSearch = () => {
                 ],
             },
             {
-                page: "Spellcasting",
-                path: "/spellcasting",
+                page: "Casting",
+                path: "/casting",
                 sections: [
                     {
-                        title: "Gathering Spells",
+                        title: "Drawing Powers",
                         content:
-                            "Test Focus to gather spell from deck hold up to 3 spells at time",
+                            "Test Focus to gather power from deck hold up to 3 powers at time",
                     },
                     {
-                        title: "Casting Spells",
+                        title: "Casting Powers",
                         content:
-                            "Cast gathered spell follow description discard after use or keep if specified",
+                            "Cast gathered power follow description discard after use or keep if specified",
                     },
                 ],
             },
@@ -211,30 +211,30 @@ const RulesSearch = () => {
         []
     )
 
-    // Load dynamic content (spells, equipment, monsters)
+    // Load dynamic content (powers, equipment, monsters)
     useEffect(() => {
         const loadDynamicContent = async () => {
             try {
-                const [spellsResponse, equipmentResponse, monstersResponse] =
+                const [powersResponse, equipmentResponse, monstersResponse] =
                     await Promise.all([
-                        fetch("/spells.json"),
+                        fetch("/powers.json"),
                         fetch("/equipment.json"),
                         fetch("/monsters.json"),
                     ])
 
-                const spellsData = await spellsResponse.json()
+                const powersData = await powersResponse.json()
                 const equipmentData = await equipmentResponse.json()
                 const monstersData = await monstersResponse.json()
 
                 const dynamicContent = [
                     {
-                        page: "Spells",
-                        path: "/spells",
+                        page: "Powers",
+                        path: "/powers",
                         sections:
-                            spellsData.spells?.map((spell) => ({
-                                title: spell.name,
-                                content: `${spell.deck} ${spell.rarity} ${spell.description}`,
-                                type: "spell",
+                            powersData.powers?.map((power) => ({
+                                title: power.name,
+                                content: `${power.deck} ${power.rarity} ${power.description}`,
+                                type: "power",
                             })) || [],
                     },
                     {
@@ -376,7 +376,7 @@ const RulesSearch = () => {
     // Get chip color based on type
     const getChipColor = (type) => {
         switch (type) {
-            case "spell":
+            case "power":
                 return "secondary"
             case "equipment":
                 return "primary"
@@ -399,7 +399,7 @@ const RulesSearch = () => {
             <TextField
                 fullWidth
                 variant='outlined'
-                placeholder='Search rules, spells, equipment, monsters...'
+                placeholder='Search rules, powers, equipment, monsters...'
                 value={searchQuery}
                 onChange={handleSearchChange}
                 sx={{

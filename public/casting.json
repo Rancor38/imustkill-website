@@ -1,0 +1,42 @@
+{
+    "casting": {
+        "title": "Casting",
+        "sections": [
+            {
+                "id": "gathering-powers",
+                "title": "Gathering Powers",
+                "%Source": ["@GatherPowers"],
+                "description": "Test @Focus to gather a power. If you succeed, you can gather a power card from your power deck and keep this card until your next @NightsRest.",
+                "mechanics": "Roll 1d10 against @Focus. If the roll is equal to or less than your @Focus score, gather one power from your deck. If you fail, take 1 damage and discard your current cards",
+                "limits": "You can only have 3 powers gathered at one time. If you want to discard a power to replace it, you must discard all in your hand.",
+                "recovery": "When you @Gritteeth, you automatically gather 3 powers without needing to test @Focus.",
+                "keywords": [
+                    "gathering powers",
+                    "test focus",
+                    "power deck",
+                    "3 powers",
+                    "night's rest",
+                    "automatic gathering",
+                    "rest recovery"
+                ]
+            },
+            {
+                "id": "casting-powers",
+                "title": "Casting Powers",
+                "%Source": ["@CastPowers"],
+                "description": "You can play power cards at any time, triggering their effect. Follow the instructions on the power card.",
+                "targeting": "You cannot target something with a power if you cannot perceive it, although you might still be able to harm it. You cannot select a target without a clear unbroken line from you to the location of it.",
+                "recovery": "Discarded powers can be returned to your power deck when you complete a @NightsRest.",
+                "keywords": [
+                    "casting powers",
+                    "any time",
+                    "power cards",
+                    "perceive",
+                    "target",
+                    "line of sight",
+                    "discarded"
+                ]
+            }
+        ]
+    }
+}

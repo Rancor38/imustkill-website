@@ -9,30 +9,30 @@ const EnhancedKeywordLinker = ({
     referencesOnly = false,
 }) => {
     const [allContent, setAllContent] = useState({
-        spells: [],
+        powers: [],
         equipment: [],
         monsters: [],
     })
 
     const { searchableContent, rulesData } = useRulesEngine()
 
-    // Load dynamic content for spell/equipment/monster references
+    // Load dynamic content for power/equipment/monster references
     useEffect(() => {
         const loadDynamicContent = async () => {
             try {
-                const [spellsResponse, equipmentResponse, monstersResponse] =
+                const [powersResponse, equipmentResponse, monstersResponse] =
                     await Promise.all([
-                        fetch("/spells.json"),
+                        fetch("/powers.json"),
                         fetch("/equipment.json"),
                         fetch("/monsters.json"),
                     ])
 
-                const spellsData = await spellsResponse.json()
+                const powersData = await powersResponse.json()
                 const equipmentData = await equipmentResponse.json()
                 const monstersData = await monstersResponse.json()
 
                 setAllContent({
-                    spells: spellsData.spells || [],
+                    powers: powersData.powers || [],
                     equipment: equipmentData.equipment || [],
                     monsters: monstersData || [],
                 })
@@ -71,14 +71,14 @@ const EnhancedKeywordLinker = ({
             })
         })
 
-        // Add spell names
-        allContent.spells?.forEach((spell) => {
-            mappings.set(spell.name.toLowerCase(), {
-                page: "Spells",
-                path: "/spells",
-                section: spell.name,
-                description: `${spell.deck} spell - ${spell.description}`,
-                type: "spell",
+        // Add power names
+        allContent.powers?.forEach((power) => {
+            mappings.set(power.name.toLowerCase(), {
+                page: "Powers",
+                path: "/powers",
+                section: power.name,
+                description: `${power.deck} power - ${power.description}`,
+                type: "power",
             })
         })
 

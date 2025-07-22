@@ -35,7 +35,7 @@
                     {
                         "name": "Focus",
                         "id": "focus",
-                        "description": "Mental concentration and magical ability. Use Focus for perceiving, listening, conjuring magic with @GatherSpells, tracking prey, controlling will, and resisting enchantment.",
+                        "description": "Mental concentration and magical ability. Use Focus for perceiving, listening, gathering powers with @GatherPowers, tracking prey, controlling will, and resisting enchantment.",
                         "keywords": [
                             "perception",
                             "magic",

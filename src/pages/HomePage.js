@@ -196,19 +196,19 @@ const HomePage = () => {
                     </Button>
                     <Button
                         component={Link}
-                        to='/spellcasting'
+                        to='/casting'
                         variant='contained'
                         sx={getButtonStyles()}
                     >
-                        Spellcasting
+                        Casting
                     </Button>
                     <Button
                         component={Link}
-                        to='/spells'
+                        to='/powers'
                         variant='contained'
                         sx={getButtonStyles()}
                     >
-                        Spells
+                        Powers
                     </Button>
                     <Button
                         component={Link}

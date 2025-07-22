@@ -69,17 +69,17 @@
                 "section": "insight",
                 "description": "A token gathered to see hidden things and reroll tests"
             },
-            "@GatherSpells": {
-                "title": "Gathering Spells",
-                "category": "spellcasting",
-                "section": "gathering-spells",
-                "description": "Focus test to draw spells from deck"
+            "@GatherPowers": {
+                "title": "Drawing Powers",
+                "category": "casting",
+                "section": "gathering-powers",
+                "description": "Focus test to gather powers from deck"
             },
-            "@CastSpells": {
-                "title": "Casting Spells",
-                "category": "spellcasting",
-                "section": "casting-spells",
-                "description": "Playing spell cards to trigger effects"
+            "@CastPowers": {
+                "title": "Casting Powers",
+                "category": "casting",
+                "section": "casting-powers",
+                "description": "Playing power cards to trigger effects"
             },
             "@Death": {
                 "title": "Death Mechanics",
@@ -157,7 +157,7 @@
                 "title": "Gather Action",
                 "category": "combat-mechanics",
                 "section": "actions",
-                "description": "Combat action to gather spells using Focus"
+                "description": "Combat action to gather powers using Focus"
             },
             "@Flee": {
                 "title": "Flee Action",
@@ -207,10 +207,10 @@
                 "section": "damage-types",
                 "description": "Harm dealt to creatures, can be Physical, Spiritual, or Hybrid"
             },
-            "@Spell": {
-                "title": "Spell",
-                "category": "spellcasting",
-                "section": "gathering-spells",
+            "@Power": {
+                "title": "Power",
+                "category": "casting",
+                "section": "casting-powers",
                 "description": "Magical effects that can be gathered and cast"
             },
             "@Rest": {
@@ -367,14 +367,14 @@
                 ]
             },
             "spellcasting": {
-                "title": "Spellcasting",
-                "description": "Magic system and spell mechanics",
-                "file": "spellcasting.json",
+                "title": "Casting",
+                "description": "Magic system and power mechanics",
+                "file": "casting.json",
                 "keywords": [
-                    "spellcasting",
+                    "casting",
                     "magic",
                     "focus",
-                    "spell deck",
+                    "power deck",
                     "gathering",
                     "casting"
                 ]
@@ -405,11 +405,11 @@
                 ]
             },
             "spells": {
-                "title": "Spells",
-                "description": "Spell database with all available spells",
-                "file": "spells.json",
+                "title": "Powers",
+                "description": "Power database with all available powers",
+                "file": "powers.json",
                 "keywords": [
-                    "spells",
+                    "powers",
                     "magic",
                     "ancient spells",
                     "common",
@@ -500,11 +500,11 @@
                     "description": "Mental concentration and magical ability. See @Focus for full details.",
                     "uses": [
                         "@AttackStat option",
-                        "@GatherSpells",
+                        "@GatherPowers",
                         "@Negotiate",
                         "Mental activities"
                     ],
-                    "keywords": ["focus", "mental", "spells", "negotiate"]
+                    "keywords": ["focus", "mental", "powers", "negotiate"]
                 },
                 {
                     "stat": "Fate",

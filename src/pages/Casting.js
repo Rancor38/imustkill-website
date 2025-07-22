@@ -12,21 +12,21 @@ import useRulesEngine from "../hooks/useRulesEngine"
 import EnhancedKeywordLinker from "../components/RulesSearch/EnhancedKeywordLinker"
 import { scrollToAnchor } from "../utils/scrollToAnchor"
 
-const Spellcasting = () => {
+const Casting = () => {
     const { getCategoryRules, loading, error } = useRulesEngine()
-    const [spellcastingData, setSpellcastingData] = useState(null)
+    const [castingData, setCastingData] = useState(null)
     const location = useLocation()
 
     useEffect(() => {
         if (!loading && !error) {
             const data = getCategoryRules("spellcasting")
-            setSpellcastingData(data)
+            setCastingData(data)
         }
     }, [loading, error, getCategoryRules])
 
     // Handle scrolling to anchor sections
     useEffect(() => {
-        if (spellcastingData && location.hash) {
+        if (castingData && location.hash) {
             const timer = setTimeout(() => {
                 const elementId = location.hash.substring(1)
                 scrollToAnchor(elementId)
@@ -34,7 +34,7 @@ const Spellcasting = () => {
 
             return () => clearTimeout(timer)
         }
-    }, [spellcastingData, location.hash])
+    }, [castingData, location.hash])
 
     if (loading) {
         return (
@@ -50,16 +50,16 @@ const Spellcasting = () => {
         return (
             <Container sx={{ py: 4 }}>
                 <Alert severity='error'>
-                    Error loading spellcasting rules: {error}
+                    Error loading casting rules: {error}
                 </Alert>
             </Container>
         )
     }
 
-    if (!spellcastingData) {
+    if (!castingData) {
         return (
             <Container sx={{ py: 4 }}>
-                <Alert severity='warning'>No spellcasting data found</Alert>
+                <Alert severity='warning'>No casting data found</Alert>
             </Container>
         )
     }
@@ -87,11 +87,11 @@ const Spellcasting = () => {
                                 : "#121212",
                     }}
                 >
-                    {spellcastingData.title}
+                    {castingData.title}
                 </Typography>
 
                 {/* Render all sections dynamically */}
-                {spellcastingData.sections.map((section) => (
+                {castingData.sections.map((section) => (
                     <Paper
                         key={section.id}
                         id={section.id} // anchor link id
@@ -171,4 +171,4 @@ const Spellcasting = () => {
     )
 }
 
-export default Spellcasting
+export default Casting

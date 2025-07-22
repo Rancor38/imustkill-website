@@ -6,9 +6,9 @@ import CharacterCreation from "./pages/CharacterCreation.js"
 import Equipment from "./pages/Equipment.js"
 import CombatMechanics from "./pages/CombatMechanics.js"
 import DeathAndResting from "./pages/DeathAndResting.js"
-import Spellcasting from "./pages/Spellcasting.js"
+import Casting from "./pages/Casting.js"
 import Progression from "./pages/Progression.js"
-import Spells from "./pages/Spells.js"
+import Powers from "./pages/Powers.js"
 import RunningTheGame from "./pages/RunningTheGame.js"
 import Monsters from "./pages/Monsters.js"
 import MonsterDetail from "./components/MonsterDetail.js"
@@ -54,8 +54,8 @@ function App() {
                         path='death-and-resting'
                         element={<DeathAndResting />}
                     />
-                    <Route path='spellcasting' element={<Spellcasting />} />
-                    <Route path='spells' element={<Spells />} />
+                    <Route path='casting' element={<Casting />} />
+                    <Route path='powers' element={<Powers />} />
                     <Route path='progression' element={<Progression />} />
                     <Route
                         path='running-the-game'

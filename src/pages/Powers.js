@@ -20,10 +20,10 @@ import ReplayIcon from "@mui/icons-material/Replay"
 import HomeButton from "../components/HomeButton"
 import Section from "../components/Section"
 
-const Spells = () => {
+const Powers = () => {
     // eslint-disable-next-line no-unused-vars
     const location = useLocation()
-    const [spells, setSpells] = useState([])
+    const [powers, setPowers] = useState([])
     const [searchQuery, setSearchQuery] = useState("")
     const [selectedDecks, setSelectedDecks] = useState(["All"])
     const [selectedRarities, setSelectedRarities] = useState(["All"])
@@ -37,8 +37,8 @@ const Spells = () => {
 
     // On first mount, check if we should load from localStorage
     useEffect(() => {
-        const savedSelections = localStorage.getItem("spellDeckSelections")
-        const savedRarities = localStorage.getItem("spellRaritySelections")
+        const savedSelections = localStorage.getItem("powerDeckSelections")
+        const savedRarities = localStorage.getItem("powerRaritySelections")
 
         if (savedSelections) {
             try {
@@ -68,27 +68,27 @@ const Spells = () => {
     // Save selections to localStorage whenever they change
     useEffect(() => {
         localStorage.setItem(
-            "spellDeckSelections",
+            "powerDeckSelections",
             JSON.stringify(selectedDecks)
         )
         localStorage.setItem(
-            "spellRaritySelections",
+            "powerRaritySelections",
             JSON.stringify(selectedRarities)
         )
     }, [selectedDecks, selectedRarities])
 
     useEffect(() => {
-        const fetchSpells = async () => {
+        const fetchPowers = async () => {
             try {
-                const response = await fetch("/spells.json")
+                const response = await fetch("/powers.json")
                 const data = await response.json()
-                setSpells(data.spells)
+                setPowers(data.powers)
 
                 // Extract unique deck and rarity names
                 const decks = [
                     "All",
                     ...new Set(
-                        data.spells.map((spell) => spell.deck || "Unknown")
+                        data.powers.map((power) => power.deck || "Unknown")
                     ),
                 ]
                 setAvailableDecks(decks)
@@ -96,16 +96,16 @@ const Spells = () => {
                 const rarities = [
                     "All",
                     ...new Set(
-                        data.spells.map((spell) => spell.rarity || "Unknown")
+                        data.powers.map((power) => power.rarity || "Unknown")
                     ),
                 ]
                 setAvailableRarities(rarities)
             } catch (error) {
-                console.error("Error fetching spells data:", error)
+                console.error("Error fetching powers data:", error)
             }
         }
 
-        fetchSpells()
+        fetchPowers()
     }, [])
 
     const handleSearchInputChange = (event) => {
@@ -210,14 +210,14 @@ const Spells = () => {
         setRarityAccordionExpanded(isExpanded)
     }
 
-    const filteredSpells = spells
+    const filteredPowers = powers
         .filter(
-            (spell) =>
-                spell.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+            (power) =>
+                power.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
                 (selectedDecks.includes("All") ||
-                    selectedDecks.includes(spell.deck)) &&
+                    selectedDecks.includes(power.deck)) &&
                 (selectedRarities.includes("All") ||
-                    selectedRarities.includes(spell.rarity))
+                    selectedRarities.includes(power.rarity))
         )
         .sort((a, b) => a.name.localeCompare(b.name)) // Sort alphabetically by name
 
@@ -245,7 +245,7 @@ const Spells = () => {
                                 : "#121212",
                     }}
                 >
-                    Spells
+                    Powers
                 </Typography>
 
                 <Box
@@ -620,7 +620,7 @@ const Spells = () => {
                                     variant='body2'
                                     sx={{ color: "#999" }}
                                 >
-                                    Search spells:
+                                    Search powers:
                                 </Typography>
                                 {searchQuery && (
                                     <Button
@@ -641,7 +641,7 @@ const Spells = () => {
                             </Box>
                             <TextField
                                 variant='outlined'
-                                placeholder='Enter spell name...'
+                                placeholder='Enter power name...'
                                 value={searchQuery}
                                 onChange={handleSearchInputChange}
                                 sx={{
@@ -677,8 +677,8 @@ const Spells = () => {
                     }}
                 >
                     <Typography variant='body2' sx={{ color: "#999" }}>
-                        <strong>{filteredSpells.length}</strong> spell
-                        {filteredSpells.length !== 1 ? "s" : ""} found
+                        <strong>{filteredPowers.length}</strong> power
+                        {filteredPowers.length !== 1 ? "s" : ""} found
                     </Typography>
                 </Box>
 
@@ -691,7 +691,7 @@ const Spells = () => {
                         padding: "10px",
                     }}
                 >
-                    {filteredSpells.map((spell, index) => (
+                    {filteredPowers.map((power, index) => (
                         <ListItem
                             key={index}
                             sx={{
@@ -709,17 +709,17 @@ const Spells = () => {
                                 }}
                             >
                                 <Typography variant='h2' gutterBottom>
-                                    {spell.name}
+                                    {power.name}
                                 </Typography>
                                 <Typography variant='body1' paragraph>
-                                    <strong>Rarity:</strong> {spell.rarity}
+                                    <strong>Rarity:</strong> {power.rarity}
                                 </Typography>
                                 <Typography variant='body1' paragraph>
                                     <strong>Deck:</strong>{" "}
-                                    {spell.deck || "Unknown"}
+                                    {power.deck || "Unknown"}
                                 </Typography>
                                 <Typography variant='body1' paragraph>
-                                    {spell.description}
+                                    {power.description}
                                 </Typography>
                             </Section>
                         </ListItem>
@@ -732,4 +732,4 @@ const Spells = () => {
     )
 }
 
-export default Spells
+export default Powers

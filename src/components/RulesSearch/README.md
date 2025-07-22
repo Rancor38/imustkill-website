@@ -19,7 +19,7 @@ import KeywordLinker from "../components/RulesSearch/KeywordLinker"
 <Typography paragraph>
     <KeywordLinker>
         You can use Grit Teeth once per Night's Rest to regain 1 hit point.
-        This requires Focus to gather a spell from your spell deck.
+        This requires Focus to gather a power from your power deck.
     </KeywordLinker>
 </Typography>
 
@@ -42,7 +42,7 @@ The component automatically recognizes and links the following types of keywords
 ### Combat Actions
 
 -   **Attack**, **Dodge**, **Brace** - Links to Combat Mechanics sections
--   **Gather a Spell**, **Flee**, **Negotiate** - Links to Combat Mechanics
+-   **Draw a Power**, **Flee**, **Negotiate** - Links to Combat Mechanics
 -   **Crit**, **Crit Fail** - Links to combat rules
 
 ### Damage Types
@@ -68,9 +68,9 @@ The component automatically recognizes and links the following types of keywords
 
 -   **Leveling Up**, **Ascendant** - Links to Progression sections
 
-### Spellcasting
+### Casting
 
--   **Spellcasting**, **Gathering Spells**, **Casting Spells**, **Spell Deck** - Links to Spellcasting sections
+-   **Casting**, **Drawing Powers**, **Casting Powers**, **Power Deck** - Links to Casting sections
 
 ### Game Master Content
 
@@ -89,7 +89,7 @@ The component automatically recognizes and links the following types of keywords
 
 The component also automatically links:
 
--   **Spell names** (loaded from spells.json) - Links to Spells page
+-   **Power names** (loaded from powers.json) - Links to Powers page
 -   **Equipment names** (loaded from equipment.json) - Links to Equipment page
 -   **Monster names** (loaded from monsters.json) - Links to individual Monster pages
 
@@ -100,12 +100,12 @@ The component also automatically links:
 -   Hover over any linked keyword to see a tooltip with:
     -   Rule description
     -   Source page information
-    -   Chip indicating content type (rule, spell, equipment, monster)
+    -   Chip indicating content type (rule, power, equipment, monster)
     -   Click icon to navigate to full rule page
 
 ### Multi-word Phrase Detection
 
--   Supports phrases like "Gather a Spell", "Night's Rest", "Physical Damage"
+-   Supports phrases like "Draw a Power", "Night's Rest", "Physical Damage"
 -   Intelligently matches longest phrases first
 
 ### Theme-Aware Styling

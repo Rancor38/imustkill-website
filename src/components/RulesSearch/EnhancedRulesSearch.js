@@ -87,7 +87,7 @@ const EnhancedRulesSearch = () => {
             case "combat-action":
             case "damage-type":
                 return <Shield fontSize='small' />
-            case "spell":
+            case "power":
                 return <LocalFireDepartment fontSize='small' />
             case "rule-section":
             case "rule-subsection":
@@ -105,7 +105,7 @@ const EnhancedRulesSearch = () => {
                 return "error"
             case "damage-type":
                 return "warning"
-            case "spell":
+            case "power":
                 return "secondary"
             case "equipment-rule":
                 return "info"
@@ -159,7 +159,7 @@ const EnhancedRulesSearch = () => {
                         {...params}
                         fullWidth
                         variant='outlined'
-                        placeholder='Search rules, spells, equipment, monsters...'
+                        placeholder='Search rules, powers, equipment, monsters...'
                         sx={{
                             bgcolor: (theme) =>
                                 theme.palette.mode === "dark"

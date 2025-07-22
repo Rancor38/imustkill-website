@@ -207,7 +207,7 @@ const RuleCategorizer = () => {
                             "advantage",
                             "disadvantage",
                             "insight",
-                            "spell",
+                            "power",
                             "cast",
                             "gather",
                             "hit points",

@@ -172,7 +172,7 @@ body.light-theme .MuiGrid-item .MuiPaper-root {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
 }
 
-/* Fix Spells page special elements */
+/* Fix Powers page special elements */
 body.light-theme [style*="backgroundColor: '#1f1f1f'"] {
     background-color: #eaeaea !important;
 }

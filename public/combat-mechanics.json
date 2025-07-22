@@ -74,13 +74,13 @@
                         ]
                     },
                     {
-                        "name": "Gather a Spell",
-                        "id": "gather-a-spell",
-                        "description": "Roll 1d10 against @Focus. If the roll is lower, draw 1 @Spell from your @Spell deck. If you roll a 10 you lose 1 @HitPoints, and discard all held @Spell cards.",
+                        "name": "Draw a Power",
+                        "id": "gather-a-power",
+                        "description": "Roll 1d10 against @Focus. If the roll is lower, gather 1 @Power from your @Power deck. If you roll a 10 you lose 1 @HitPoints, and discard all held @Power cards.",
                         "keywords": [
-                            "gather spell",
+                            "gather power",
                             "focus",
-                            "spell deck",
+                            "power deck",
                             "discard"
                         ]
                     },
@@ -132,7 +132,7 @@
                             "Using specialized weapons (two-weapons, polearms, ranged weapons)",
                             "Fighting without armor while dodging",
                             "Attacking from a position of superiority (flanking, high ground)",
-                            "Using equipment or spells that grant benefits",
+                            "Using equipment or powers that grant benefits",
                             "Favorable environmental conditions"
                         ]
                     },

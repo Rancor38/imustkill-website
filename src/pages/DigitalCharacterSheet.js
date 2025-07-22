@@ -41,7 +41,7 @@ const DigitalCharacterSheet = () => {
         // Action Rolls
         brace: "",
         dodge: "",
-        castSpell: "",
+        drawPower: "",
         dying: "",
 
         // Equipment
@@ -492,7 +492,7 @@ const DigitalCharacterSheet = () => {
             yPos -= 75
 
             // Action Rolls Section
-            const actionLabels = ["BRACE", "DODGE", "CAST SPELL", "DYING"]
+            const actionLabels = ["BRACE", "DODGE", "DRAW POWER", "DYING"]
             for (let i = 0; i < actionLabels.length; i++) {
                 const x = margin + i * statWidth
                 page.drawRectangle({
@@ -855,7 +855,7 @@ const DigitalCharacterSheet = () => {
             // Placeholder text (drawn, not part of field)
             if (!characterData.notes) {
                 page.drawText(
-                    "Character notes, backstory, equipment details, spells, etc...",
+                    "Character notes, backstory, equipment details, powers, etc...",
                     {
                         x: margin + 18,
                         y: margin + 80 + (yPos - margin - 70) - 24,
@@ -1064,7 +1064,7 @@ const DigitalCharacterSheet = () => {
             focusAtkChecked: false,
             brace: "",
             dodge: "",
-            castSpell: "",
+            gatherPower: "",
             dying: "",
             shield: false,
             armor: false,
@@ -1560,7 +1560,7 @@ const DigitalCharacterSheet = () => {
                             {[
                                 { label: "BRACE" },
                                 { label: "DODGE" },
-                                { label: "CAST SPELL" },
+                                { label: "DRAW POWER" },
                                 { label: "DYING" },
                             ].map(({ label }) => (
                                 <Grid item xs={6} sm={3} key={label}>
@@ -2028,7 +2028,7 @@ const DigitalCharacterSheet = () => {
                             variant='outlined'
                             multiline
                             fullWidth
-                            placeholder='Character notes, backstory, equipment details, spells, etc...'
+                            placeholder='Character notes, backstory, equipment details, powers, etc...'
                             sx={{
                                 flex: 1,
                                 "& .MuiOutlinedInput-root": {
