@@ -423,17 +423,22 @@ export const useRulesEngine = () => {
     )
 
     /* ───────────────── Helpers (unchanged) ─────────────────────── */
-    const getRule = (cat, id) =>
-        rulesData[cat]?.[Object.keys(rulesData[cat])[0]]?.sections?.find(
-            (s) => s.id === id
-        ) || null
+    const getRule = useCallback(
+        (cat, id) =>
+            rulesData[cat]?.[Object.keys(rulesData[cat])[0]]?.sections?.find(
+                (s) => s.id === id
+            ) || null,
+        [rulesData]
+    )
 
-    const getCategoryRules = (cat) =>
-        rulesData[cat] && Object.values(rulesData[cat])[0]
+    const getCategoryRules = useCallback(
+        (cat) => rulesData[cat] && Object.values(rulesData[cat])[0],
+        [rulesData]
+    )
 
-    const getKeywordSuggestions = () => []
+    const getKeywordSuggestions = useCallback(() => [], [])
 
-    const getSourceMap = () => {
+    const getSourceMap = useCallback(() => {
         if (!rulesData.database) return new Map()
         const map = new Map()
 
@@ -463,14 +468,14 @@ export const useRulesEngine = () => {
         })
 
         return map
-    }
+    }, [rulesData])
 
-    const getUncategorizedRules = () => {
+    const getUncategorizedRules = useCallback(() => {
         if (!rulesData.database) return []
         const allRefs = Object.keys(rulesData.database.referenceIds || {})
         const sourced = new Set(getSourceMap().keys())
         return allRefs.filter((r) => !sourced.has(r))
-    }
+    }, [rulesData, getSourceMap])
 
     /* ───────────────── return ──────────────────────────────────── */
     return {
