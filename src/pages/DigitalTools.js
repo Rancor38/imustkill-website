@@ -10,7 +10,7 @@ import {
     CardContent,
     CardActions,
 } from "@mui/material"
-import { MoreHoriz, MenuBook, Inventory, Assignment } from "@mui/icons-material"
+import { MoreHoriz, MenuBook, Assignment } from "@mui/icons-material"
 import HomeButton from "../components/HomeButton.js"
 
 const DigitalTools = () => {
@@ -79,14 +79,6 @@ const DigitalTools = () => {
                 "Create, edit, and manage your character with our interactive digital character sheet. Includes insight token management.",
             icon: <Assignment sx={{ fontSize: 40 }} />,
             path: "/digital-character-sheet",
-            available: true,
-        },
-        {
-            title: "Equipment Deck",
-            description:
-                "Browse and manage weapons, armor, and equipment with detailed stats and descriptions.",
-            icon: <Inventory sx={{ fontSize: 40 }} />,
-            path: "/equipment",
             available: true,
         },
         // Placeholder for future tools

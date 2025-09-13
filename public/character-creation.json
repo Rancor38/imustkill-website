@@ -133,31 +133,9 @@
                 ]
             },
             {
-                "id": "equipment-start",
-                "title": "Starting Equipment",
-                "subsections": [
-                    {
-                        "id": "random-start",
-                        "title": "Random Start",
-                        "description": "Draw 10 equipment cards from the Starter Deck per player at the table, and each player can choose up to 10 from the whole lot.",
-                        "keywords": [
-                            "random",
-                            "starter deck",
-                            "equipment cards"
-                        ]
-                    },
-                    {
-                        "id": "fixed-start",
-                        "title": "Fixed Start",
-                        "description": "Choose 10 cards from your character deck to outfit your hunter.",
-                        "keywords": ["fixed", "choose", "character deck"]
-                    }
-                ]
-            },
-            {
                 "id": "adventuring-assumptions",
                 "title": "Adventuring Assumptions",
-                "description": "Your character is competent, and capable of taking care of themselves under normal circumstances. Basic needs like bandages, water, and food are assumed to be met unless the GM specifies otherwise. Equipment from packs are key items, not exhaustive lists. Money is kept in general terms - you either have enough or you don't.",
+                "description": "Your character is competent, and capable of taking care of themselves under normal circumstances. Basic needs like bandages, water, and food are assumed to be met unless the GM specifies otherwise. Money is kept in general terms - you either have enough or you don't.",
                 "keywords": [
                     "assumptions",
                     "competent",
